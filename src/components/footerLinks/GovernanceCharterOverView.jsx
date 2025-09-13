@@ -6,16 +6,16 @@ import { FileText, Shield, Users, Gavel, Eye, Settings } from 'lucide-react';
 
 const GovernanceCharterOverview = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="bg-secondary py-12 md:py-16 lg;py-24 px-4">
     
 
       {/* Main Content */}
-      <main className=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className=" ">
         {/* Title Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-red-600 mb-4">
+        <div className="container mx-auto">
+          <h3 className="">
             Platform Governance Charter
-          </h1>
+          </h3>
           <div className="text-sm text-slate-600 space-y-1">
             <p>Platform: Glass File | Version 1.0 | Created: January 2024</p>
             <p>Platform Name: Glass File</p>

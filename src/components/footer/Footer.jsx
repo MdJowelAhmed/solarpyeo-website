@@ -7,16 +7,16 @@ import { File } from "../share/svg/howItWorkSvg";
 
 export default function Footer() {
   return (
-    <div className="flex flex-col bg-[#181A2F] text-white py-12 md:py-16 lg:py-24">
+    <div className="flex flex-col bg-[#181A2F] text-white py-12 md:py-16 lg:py-24 text-center md:text-left">
       {/* Header */}
       <footer className=" ">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Company Info */}
             <div className="col-span-1 md:col-span-1">
-              <div className="flex items-center space-x-4 mb-4">
+              <div className="flex items-center justify-center space-x-4 mb-4">
                 <div className=" flex items-center justify-center ">
-                 <Image src="/assets/logo.png" alt="logo" width={50} height={50} />
+                 <Image src="/assets/logo.png" alt="logo" width={50} height={50} className="m-2 mx-auto"/>
                 </div>
                 <span className="text-4xl ">Glass File</span>
               </div>
@@ -64,9 +64,9 @@ export default function Footer() {
                 <a href="/policy" className="block text-slate-400 hover:text-white transition-colors">
                   Privacy Policy
                 </a>
-                <a href="/security" className="block text-slate-400 hover:text-white transition-colors">
+                {/* <a href="/security" className="block text-slate-400 hover:text-white transition-colors">
                   Security
-                </a>
+                </a> */}
                 <a href="/fee-policy" className="block text-slate-400 hover:text-white transition-colors">
                   Fee Policy
                 </a>

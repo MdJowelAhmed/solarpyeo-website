@@ -1,56 +1,69 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Shield, 
-  Users, 
-  Gavel, 
-  FileText, 
-  Eye, 
-  Lock, 
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Shield,
+  Users,
+  Gavel,
+  FileText,
+  Eye,
+  Lock,
   MessageSquare,
   AlertTriangle,
   CheckCircle,
   XCircle,
-  ExternalLink
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function GovernanceAndAccountabilityOverview() {
   return (
     <div className="min-h-screen bg-secondary py-12 md:py-16 lg:py-24 container mx-auto">
       <div className=" mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-red-600 flex items-center justify-center gap-2">
-            <Shield className="w-8 h-8" />
-            Platform Governance & Accountability
-          </h1>
-          <p className="text-gray-600 max-w-4xl mx-auto">
-            Welcome to the <strong>Governance & Accountability</strong> page. This section outlines how the Platform is structured, how decisions are made and reviewed, and how we protect the ethical, procedural, and legal integrity of our community. For the Platform Governance Charter, 
-            <Button variant="link" className="text-blue-600 p-0 h-auto font-normal">
+        <div className="space-y-4">
+          <h3 className="mb-6">
+            {/* <Shield className="w-8 h-8" /> */}
+            🏛️ Platform Governance & Accountability
+          </h3>
+          <h4 className="mb-5">
+            Welcome to the Governance & Accountability page. This section
+            outlines how the Platform is structured, how decisions are made and
+            reviewed, and how we protect the ethical, procedural, and legal
+            integrity of our community. For the Platform Governance Charter,
+            view here
+            <Button
+              variant="link"
+              className="text-blue-600 p-0 h-auto font-normal"
+            >
               View Here
             </Button>
-          </p>
+          </h4>
         </div>
 
         {/* Platform Governance Structure */}
-        <Card>
+        <div>
           <CardHeader>
-            <CardTitle className="text-red-600 flex items-center gap-2">
-              <Shield className="w-6 h-6" />
-            ⚙️ Platform Governance Structure
-            </CardTitle>
+            <h3 className="">
+              {/* <Shield className="w-6 h-6" /> */}
+              ⚙️ Platform Governance Structure
+            </h3>
           </CardHeader>
           <CardContent className="space-y-6">
-            <p className="text-gray-600">The Platform operates under a multi-layered governance system, composed of:</p>
-            
+            <p className="text-gray-600">
+              The Platform operates under a multi-layered governance system,
+              composed of:
+            </p>
+
             {/* Governance Bodies */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-1 gap-6">
               <div className="space-y-4">
-                <div className="border-l-4 border-red-500 pl-4">
-                  <h3 className="font-semibold text-lg">1. Administrative Oversight Board</h3>
+                <div className=" ">
+                  <h2 className="font-semibold text-lg">
+                    1. Administrative Oversight Board
+                  </h2>
                   <ul className="text-gray-600 space-y-1 mt-2">
                     <li>• Policy development and revision</li>
                     <li>• Oversight of platform operations and security</li>
@@ -59,75 +72,102 @@ export default function GovernanceAndAccountabilityOverview() {
                   </ul>
                 </div>
 
-                <Alert className="bg-red-50 border-red-200">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <AlertDescription className="text-red-700">
-                    Composed Of Legal, Technology, Ethics, And Victim Advocacy Professionals. Updated Annually.
+                <div className="bg-primary-foreground border-l-4 border-red-700 py-4 rounded-md pl-4">
+                  {/* <AlertTriangle className="w-4 h-4 " /> */}
+                  <AlertDescription className="font-bold text-black">
+                    🛡️ Composed of legal, technology, ethics, and victim
+                    advocacy professionals. Updated annually.
                   </AlertDescription>
-                </Alert>
+                </div>
 
-                <div className="border-l-4 border-blue-500 pl-4">
-                  <h3 className="font-semibold text-lg">2. Moderator Panel</h3>
+                <div className="">
+                  <h3 className="mb-4">2. Moderator Panel</h3>
                   <ul className="text-gray-600 space-y-1 mt-2">
-                    <li>• Review submissions for eligibility and completeness</li>
+                    <li>
+                      • Review submissions for eligibility and completeness
+                    </li>
                     <li>• Mediate disputed or ambiguous cases</li>
-                    <li>• Facilitate the notice process and redaction of sensitive content</li>
-                    <li>• May halt or escalate cases that present safety concerns</li>
+                    <li>
+                      • Facilitate the notice process and redaction of sensitive
+                      content
+                    </li>
+                    <li>
+                      • May halt or escalate cases that present safety concerns
+                    </li>
                   </ul>
                   <p className="text-sm text-gray-500 mt-2">
-                    <strong>Note:</strong> Moderators do not vote on allegations but ensure fair play and integrity before juror review.
+                    <strong>Note:</strong> Moderators do not vote on allegations
+                    but ensure fair play and integrity before juror review.
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <div className="border-l-4 border-green-500 pl-4">
-                  <h3 className="font-semibold text-lg">3. Community Jurors</h3>
+                <div className="">
+                  <h3 className="">3. Community Jurors</h3>
                   <ul className="text-gray-600 space-y-1 mt-2">
                     <li>• Anonymous vetted users selected per case</li>
-                    <li>• Subject to Juror Ethics Code, orientation/testing, and background checks</li>
-                    <li>• Blind review and majority voting determine allegation status</li>
+                    <li>
+                      • Subject to Juror Ethics Code, orientation/testing, and
+                      background checks
+                    </li>
+                    <li>
+                      • Blind review and majority voting determine allegation
+                      status
+                    </li>
                   </ul>
                 </div>
 
-                <Alert className="bg-red-50 border-red-200">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <AlertDescription className="text-red-700">
-                    Juror Decisions Are Logged And Auditable By Governance If Formally Challenged.
+                <div className="bg-primary-foreground border-l-4 border-red-700 py-4 pl-4 rounded-md">
+                  {/* <AlertTriangle className="w-4 h-4 text-red-600" /> */}
+                  <AlertDescription className="font-bold text-black">
+                    Juror Decisions Are Logged And Auditable By Governance If
+                    Formally Challenged.
                   </AlertDescription>
-                </Alert>
+                </div>
 
-                <div className="border-l-4 border-purple-500 pl-4">
-                  <h3 className="font-semibold text-lg">4. Compliance & Safety Team</h3>
+                <div className="">
+                  <h3 className="">4. Compliance & Safety Team</h3>
                   <ul className="text-gray-600 space-y-1 mt-2">
                     <li>• User privacy and data integrity</li>
-                    <li>• Enforcement of platform terms, policies, and ethics rules</li>
-                    <li>• Investigation of user reports, misconduct, and abuses</li>
+                    <li>
+                      • Enforcement of platform terms, policies, and ethics
+                      rules
+                    </li>
+                    <li>
+                      • Investigation of user reports, misconduct, and abuses
+                    </li>
                     <li>• Interface with legal authorities when required</li>
                   </ul>
                 </div>
               </div>
             </div>
           </CardContent>
-        </Card>
+        </div>
 
         {/* Decision-Making and Appeals */}
-        <Card>
+        <div>
           <CardHeader>
-            <CardTitle className="text-red-600 flex items-center gap-2">
-              <Gavel className="w-6 h-6" />
-              Decision-Making And Appeals
-            </CardTitle>
+            <h3 className="mb-6 gap-2">
+              {/* <Gavel className="w-6 h-6" /> */}
+              📊 Decision-Making and Appeals
+            </h3>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+              <table className="w-full border-collapse mb-3">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="border p-3 text-left font-semibold">Tier</th>
-                    <th className="border p-3 text-left font-semibold">Decision Type</th>
-                    <th className="border p-3 text-left font-semibold">Authority</th>
-                    <th className="border p-3 text-left font-semibold">Appeal Possible?</th>
+                    <th className="border p-3 text-left font-semibold">
+                      Decision Type
+                    </th>
+                    <th className="border p-3 text-left font-semibold">
+                      Authority
+                    </th>
+                    <th className="border p-3 text-left font-semibold">
+                      Appeal Possible?
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -178,80 +218,105 @@ export default function GovernanceAndAccountabilityOverview() {
                 </tbody>
               </table>
             </div>
-            <Button variant="outline" className="mt-4">
-              <FileText className="w-4 h-4 mr-2" />
-              File An Appeal
-            </Button>
+            <Link href="/appeal" variant="outline" className="mt-6 text-blue-500 font-bold">
+              {/* <FileText className="w-4 h-4 mr-2" /> */}
+            📄 File an Appeal
+            </Link>
           </CardContent>
-        </Card>
+        </div>
 
         {/* Two Column Layout for remaining sections */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-1 gap-8">
           {/* Transparency & Accountability Logs */}
-          <Card>
+          <div>
             <CardHeader>
-              <CardTitle className="text-green-600 flex items-center gap-2">
-                <Eye className="w-6 h-6" />
-                Transparency & Accountability Logs
-              </CardTitle>
+              <h3 className="mb-5">
+                {/* <Eye className="w-6 h-6" /> */}
+               📩 File a Misuse Report Form
+              </h3>
             </CardHeader>
             <CardContent className="space-y-4">
               <ul className="space-y-2 text-gray-600">
-                <li>• <strong>Moderator Action Logs</strong> - available to internal audit</li>
-                <li>• <strong>Juror Vote Logs</strong> - anonymized, internally audited only</li>
-                <li>• <strong>Decision Timeline Records</strong> - visible to both Initiator and Respondent</li>
-                <li>• <strong>Case Retention & Sealing</strong> - visible to public view</li>
+                <li>
+                  • <strong>Moderator Action Logs</strong> - available to
+                  internal audit
+                </li>
+                <li>
+                  • <strong>Juror Vote Logs</strong> - anonymized, internally
+                  audited only
+                </li>
+                <li>
+                  • <strong>Decision Timeline Records</strong> - visible to both
+                  Initiator and Respondent
+                </li>
+                <li>
+                  • <strong>Case Retention & Sealing</strong> - visible to
+                  public view
+                </li>
               </ul>
               <p className="text-sm text-gray-600">
-                All platform users may request a review of moderator conduct or governance decisions.
+                All platform users may request a review of moderator conduct or
+                governance decisions.
               </p>
-              <Button variant="outline" className="w-full">
-                <FileText className="w-4 h-4 mr-2" />
-                File A Misuse Report Form
-              </Button>
+              <Link href="/misuse" variant="outline" className="w-full font-bold text-blue-600 underline">
+                {/* <FileText className="w-4 h-4 mr-2" /> */}
+               📩 File a Misuse Report Form
+              </Link>
             </CardContent>
-          </Card>
+          </div>
 
           {/* Data Protection & Legal Compliance */}
-          <Card>
+          <div>
             <CardHeader>
-              <CardTitle className="text-orange-600 flex items-center gap-2">
-                <Lock className="w-6 h-6" />
+              <h3 className="mb-5">
+                {/* <Lock className="w-6 h-6" /> */}
                 Data Protection & Legal Compliance
-              </CardTitle>
+              </h3>
             </CardHeader>
             <CardContent className="space-y-4">
               <ul className="space-y-2 text-gray-600">
-                <li>• Jurisdictional compliance with applicable civil and data privacy laws</li>
-                <li>• Transparent retention policies for submissions and verdicts</li>
-                <li>• Tamper-resistant evidence locking after juror voting begins</li>
+                <li>
+                  • Jurisdictional compliance with applicable civil and data
+                  privacy laws
+                </li>
+                <li>
+                  • Transparent retention policies for submissions and verdicts
+                </li>
+                <li>
+                  • Tamper-resistant evidence locking after juror voting begins
+                </li>
                 <li>• Secure redaction of sensitive or expired records</li>
               </ul>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Read The Full Privacy Policy
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  View Terms Of Use
-                </Button>
+              <div className="space-y-2  ">
+                <Link href="/privacy" variant="outline" className="w-full font-bold text-blue-600 underline mr-5">
+                  {/* <FileText className="w-4 h-4 mr-2" /> */}
+                 📩 🛡️ Read the Full Privacy Policy
+                </Link>
+                <Link href="/terms" variant="outline" className="w-full font-bold text-blue-600 underline">
+                  {/* <ExternalLink className="w-4 h-4 mr-2" /> */}
+                  📜 View Terms of Use
+                </Link>
               </div>
             </CardContent>
-          </Card>
+          </div>
 
           {/* Community Feedback & Policy Revision */}
-          <Card>
+          <div>
             <CardHeader>
-              <CardTitle className="text-blue-600 flex items-center gap-2">
-                <MessageSquare className="w-6 h-6" />
+              <h3 className="mb-5">
+                {/* <MessageSquare className="w-6 h-6" /> */}
                 Community Feedback & Policy Revision
-              </CardTitle>
+              </h3>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-gray-600">The Platform is committed to user inclusion in shaping our policies.</p>
+              <p className="text-gray-600">
+                The Platform is committed to user inclusion in shaping our
+                policies.
+              </p>
               <div>
-                <p className="font-semibold mb-2">Submit Feedback Or Proposed Changes To:</p>
+                <p className="font-semibold mb-2">
+                  Submit Feedback Or Proposed Changes To:
+                </p>
                 <ul className="space-y-1 text-gray-600 ml-4">
                   <li>• Juror rules</li>
                   <li>• Case types</li>
@@ -260,31 +325,34 @@ export default function GovernanceAndAccountabilityOverview() {
                 </ul>
               </div>
               <p className="text-sm text-gray-600">
-                All approved policy revisions are announced with a 7-day public notice window and will include archived version history.
+                All approved policy revisions are announced with a 7-day public
+                notice window and will include archived version history.
               </p>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Submit Policy Feedback Form
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Browse Governance Change Log
-                </Button>
+              <div className="space-y-2 ">
+                <Link href="/feedback" variant="outline" className="w-full font-bold text-blue-600 mr-10 underline">
+                  {/* <FileText className="w-4 h-4 mr-2" /> */}
+                 📝 Submit Policy Feedback Form
+                </Link>
+                <Link href="/changelog" variant="outline" className="w-full font-bold text-blue-600 underline">
+                  {/* <ExternalLink className="w-4 h-4 mr-2" /> */}
+                 📚 Browse Governance Change Log
+                </Link>
               </div>
             </CardContent>
-          </Card>
+          </div>
 
           {/* Ethics Review & Reporting */}
-          <Card>
+          <div>
             <CardHeader>
-              <CardTitle className="text-red-600 flex items-center gap-2">
-                <AlertTriangle className="w-6 h-6" />
+              <h3 className="mb-5">
+                {/* <AlertTriangle className="w-6 h-6" /> */}
                 Ethics Review & Reporting
-              </CardTitle>
+              </h3>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-gray-600">Users, jurors, and moderators may confidentially report:</p>
+              <p className="text-gray-600">
+                Users, jurors, and moderators may confidentially report:
+              </p>
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-2 text-sm">
                   <div>• Conflicts of interest</div>
@@ -307,40 +375,46 @@ export default function GovernanceAndAccountabilityOverview() {
                   </div>
                 </div>
               </div>
-              <Button variant="outline" className="w-full">
-                <FileText className="w-4 h-4 mr-2" />
-                File A Misuse Report Form
-              </Button>
+              <Link href="/report" variant="outline" className="w-full font-bold text-blue-600 underline">
+                {/* <FileText className="w-4 h-4 mr-2" /> */}
+               📩 File a Misuse Report Form
+              </Link>
             </CardContent>
-          </Card>
+          </div>
         </div>
 
         {/* Governance Charter & Platform Mission */}
-        <Card>
+        <div>
           <CardHeader>
-            <CardTitle className="text-blue-600 flex items-center gap-2">
-              <Shield className="w-6 h-6" />
+            <h3 className="">
+              {/* <Shield className="w-6 h-6" /> */}
               Governance Charter & Platform Mission
-            </CardTitle>
+            </h3>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert className="bg-red-50 border-red-200">
+            <div className="bg-primary-foreground border-l-4 border-red-700 py-4 pl-4 rounded-md">
               <AlertDescription className="text-red-700 font-medium">
-                "To Provide A Fair, Confidential, And Structured Digital Record System For Matters Of Personal Integrity And Harm, Using Due Process, Collective Review, And Ethics-Centered Technology."
+                "To Provide A Fair, Confidential, And Structured Digital Record
+                System For Matters Of Personal Integrity And Harm, Using Due
+                Process, Collective Review, And Ethics-Centered Technology."
               </AlertDescription>
-            </Alert>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="outline" className="flex-1">
-                <FileText className="w-4 h-4 mr-2" />
-                Read The Current Platform Governance Charter PDF
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Annual Governance Transparency Report - 2024
-              </Button>
+            </div>
+            <div className="flex items-center flex-col md:flex-row gap-10">
+            <div>
+                <Link href="/governance-charter" variant="outline" className="flex-1 font-bold text-blue-600 underline">
+                {/* <FileText className="w-4 h-4 mr-2" /> */}
+               🔗 Read the current Platform Governance Charter PDF
+              </Link>
+            </div>
+            <div>
+              <Link href="/annual-governance-transparency-report" variant="outline" className="flex-1 font-bold text-blue-600 underline">
+                
+                📋 Annual Governance Transparency Report – 2024
+              </Link>
+            </div>
             </div>
           </CardContent>
-        </Card>
+        </div>
       </div>
     </div>
   );
