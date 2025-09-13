@@ -19,8 +19,8 @@ import {
 
 export default function GovernanceAndAccountabilityOverview() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-secondary py-12 md:py-16 lg:py-24 container mx-auto">
+      <div className=" mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-red-600 flex items-center justify-center gap-2">

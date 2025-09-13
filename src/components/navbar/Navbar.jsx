@@ -406,7 +406,7 @@ export default function Navbar() {
     { name: "FAQ", path: "/faq" },
     { name: "Contact Us", path: "/contact" },
     { name: "Dashboard", path: "/dashboard" },
-    { name: "Profile", path: "/profile" },
+    // { name: "Profile", path: "/profile" },
   ];
 
   // Profile menu items with icons
