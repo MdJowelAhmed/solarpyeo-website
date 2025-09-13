@@ -1,319 +1,534 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { CheckCircle, Users, Scale, FileText, Shield, Clock, Vote, FileCheck, AlertTriangle, Award } from 'lucide-react';
+import React from "react";
 
-const JurorProtocolOverview = () => {
+export default function JurorProtocolOverview() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
- 
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Title Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Juror Protocol</h1>
-          <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
-        </div>
-
-        {/* Warning Alert */}
-        <Alert className="mb-8 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-800 dark:text-red-200">
-            <strong>Important:</strong> All information pertaining to this case, including evidence, testimony, and deliberations, 
-            must be kept strictly confidential. Failure to maintain confidentiality may result in legal consequences.
-          </AlertDescription>
-        </Alert>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-6">
-            {/* Purpose of Jurors */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-                <CardTitle className="flex items-center gap-3 text-blue-900 dark:text-blue-100">
-                  <Users className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">1.</span> Purpose of Jurors
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Jurors are trusted community members empowered to evaluate submitted claims — including complaints, 
-                  allegations, disputes, accusations, and other allegations — whether they have sufficient legal merit 
-                  to be considered for court proceedings or warrant judgment to defendants cite.
-                </p>
-                <Separator className="my-4" />
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Jurors serve to maintain fair, trusted, and wise review and analysis whether filing a voluntary grievance.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Juror Eligibility Criteria */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
-                <CardTitle className="flex items-center gap-3 text-green-900 dark:text-green-100">
-                  <CheckCircle className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">2.</span> Juror Eligibility Criteria
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-green-700 border-green-200">✓</Badge>
-                    <span className="text-slate-700 dark:text-slate-300">Be at least 21 years of age</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-green-700 border-green-200">✓</Badge>
-                    <span className="text-slate-700 dark:text-slate-300">Have no record of criminal conviction with ethical policy involved in the case</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-green-700 border-green-200">✓</Badge>
-                    <span className="text-slate-700 dark:text-slate-300">Have passed a jury competency and ethics test</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-green-700 border-green-200">✓</Badge>
-                    <span className="text-slate-700 dark:text-slate-300">Have read and agree to binding on the creation</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-green-700 border-green-200">✓</Badge>
-                    <span className="text-slate-700 dark:text-slate-300">Have no connection to the case or affiliation of any case</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Oath of Impartiality */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20">
-                <CardTitle className="flex items-center gap-3 text-purple-900 dark:text-purple-100">
-                  <Scale className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">3.</span> Oath of Impartiality
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <p className="text-slate-700 dark:text-slate-300 italic leading-relaxed">
-                  "Before participating as such, I swear by my moral values..."
-                </p>
-                <Alert className="mt-4 border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/10">
-                  <AlertDescription className="text-amber-800 dark:text-amber-200">
-                    This oath must be taken before participating in any case proceedings. All jurors must recite and sign this oath 
-                    before gaining access to case materials.
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
+    <div className="bg-secondary py-12 md:py-16 lg:py-24">
+      {/* Header */}
+      <div className="bg-secondary py-12 md:py-16 lg:py-24">
+        <div className="container mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="">⚖️ Juror Protocol</h1>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Case Review Workflow */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
-                <CardTitle className="flex items-center gap-3 text-orange-900 dark:text-orange-100">
-                  <FileText className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">4.</span> Case Review Workflow
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Step 1: Assignment</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Cases are randomly and anonymously assigned to a panel (e.g., 3 members)
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Step 2: Evidence Review</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Jurors independently review all the allegations, evidence, and witness statements.
-                    </p>
-                  </div>
-                </div>
-                
-                <Alert className="mt-4 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
-                  <AlertDescription className="text-red-800 dark:text-red-200">
-                    <strong>Important:</strong> All documents and evidence must remain fully confidential and cannot be shared outside the jury.
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
+          {/* Pink Alert Box */}
+          <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded mb-8">
+            <p className="text-red-800 text-sm">
+              Applies to all individuals participating as peer reviewers
+              ("Jurors") on the Platform
+            </p>
+          </div>
 
-            {/* Voting & Outcomes */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20">
-                <CardTitle className="flex items-center gap-3 text-teal-900 dark:text-teal-100">
-                  <Vote className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">5.</span> Voting & Outcomes
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-200 dark:border-slate-700">
-                        <th className="text-left py-2 font-semibold text-slate-900 dark:text-white">Option</th>
-                        <th className="text-left py-2 font-semibold text-slate-900 dark:text-white">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                      <tr>
-                        <td className="py-2">
-                          <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Accept</Badge>
-                        </td>
-                        <td className="py-2 text-slate-600 dark:text-slate-400">Case evidence submitted has merit reasonably enough</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2">
-                          <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Reject</Badge>
-                        </td>
-                        <td className="py-2 text-slate-600 dark:text-slate-400">Case evidence does not warrant consideration</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2">
-                          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Escalate</Badge>
-                        </td>
-                        <td className="py-2 text-slate-600 dark:text-slate-400">Escalate case to court</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Rules of Conduct */}
-            <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-              <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20">
-                <CardTitle className="flex items-center gap-3 text-indigo-900 dark:text-indigo-100">
-                  <Shield className="w-5 h-5" />
-                  <span className="text-red-600 font-bold">6.</span> Rules of Conduct
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full mt-2"></div>
-                    <span className="text-slate-700 dark:text-slate-300 text-sm">Remain anonymous throughout the process</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full mt-2"></div>
-                    <span className="text-slate-700 dark:text-slate-300 text-sm">No discussion outside with any external party (including other jurors)</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full mt-2"></div>
-                    <span className="text-slate-700 dark:text-slate-300 text-sm">Do not investigate if they encounter any party involved</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full mt-2"></div>
-                    <span className="text-slate-700 dark:text-slate-300 text-sm">Report unauthorized information contact from outside</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Section 1: Purpose of Jurors */}
+          <div className="">
+            <h2 className="text-2xl font-semibold mb-6 text-center gap-2">
+              {/* <span className="text-red-600">✓ 1.</span> */}
+              <span className="">Purpose Of Jurors</span>
+            </h2>
+            <div className="space-y-4 text-gray-700">
+              <p>
+                Jurors are trusted community members empowered to evaluate
+                submitted claims — including romantic misconduct, infidelity,
+                emotional/psychological abuse allegations, or uploaded court
+                documents — and to vote on whether the evidence supports or
+                disproves the claim.
+              </p>
+              <p>
+                Jurors serve as neutral fact-finders and must follow strict
+                ethical, procedural, and evidentiary guidelines.
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Additional Sections */}
-        <div className="grid md:grid-cols-2 gap-8 mt-8">
-          {/* Confidentiality Agreement */}
-          <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-            <CardHeader className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20">
-              <CardTitle className="flex items-center gap-3 text-rose-900 dark:text-rose-100">
-                <FileCheck className="w-5 h-5" />
-                <span className="text-red-600 font-bold">7.</span> Confidentiality Agreement
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Jurors agree to the following:
-              </p>
-              <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
-                <AlertDescription className="text-red-800 dark:text-red-200">
-                  All case information, evidence, and deliberations must remain confidential both during and after the proceedings. 
-                  Violation of confidentiality may result in legal action.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-
-          {/* Compensation */}
-          <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-            <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20">
-              <CardTitle className="flex items-center gap-3 text-emerald-900 dark:text-emerald-100">
-                <Award className="w-5 h-5" />
-                <span className="text-red-600 font-bold">8.</span> Compensation
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Juror compensation <strong>$25/case</strong> for cases processed and properly submitted. Based on:
-              </p>
-              <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                <p>• Case length</p>
-                <p>• Time investment</p>
-                <p>• Complexity as evaluated (minimum as agreed rate)</p>
-                <p>• Payments are processed per review cycle and may be reflected in cases of verified reimbursement.</p>
+      <div className="space-y-8">
+        {/* Section 2: Juror Eligibility Criteria */}
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
+            <h3 className="mb-6">✅ 2. Juror Eligibility Criteria</h3>
+            <div className="space-y-2 text-gray-700">
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Be at least 21 years of age</span>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Have no direct or indirect relationship with either party
+                  involved in the case
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Have passed a juror orientation and ethics test</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Have maintained good standing on the platform</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Agree to full confidentiality and abstain from external
+                  discussion of any case
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Final Sections */}
-        <div className="grid md:grid-cols-2 gap-8 mt-8">
-          {/* Juror Records & Quality Control */}
-          <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-            <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20">
-              <CardTitle className="flex items-center gap-3 text-violet-900 dark:text-violet-100">
-                <FileText className="w-5 h-5" />
-                <span className="text-red-600 font-bold">9.</span> Juror Records & Quality Control
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p className="text-slate-700 dark:text-slate-300 text-sm">
-                Data files are offerings and updated on feedback and questionnaire feedback. 
-                When the system determines things that how the incidents determine outcomes...
-              </p>
-            </CardContent>
-          </Card>
+        {/* Section 3: Oath of Impartiality */}
+        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
+            <h3 className="mb-6">🔐 3. Oath of Impartiality</h3>
+            <div className="space-y-4 text-gray-700">
+              <p>Before participating in each case, a juror must affirm:</p>
+              <div className="bg-primary-foreground border-l-4 border-red-700 py-4 pl-4 rounded">
+                <p className="text-red-800 text-sm italic">
+                  "I swear or affirm that I will review the evidence in this
+                  case impartially and in good faith, without bias or
+                  favoritism, and that I will keep all details confidential
+                  unless lawfully required to disclose them."
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          {/* Appeals & Overrides */}
-          <Card className="shadow-lg border-0 bg-white dark:bg-slate-800">
-            <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
-              <CardTitle className="flex items-center gap-3 text-amber-900 dark:text-amber-100">
-                <Clock className="w-5 h-5" />
-                <span className="text-red-600 font-bold">10.</span> Appeals & Overrides
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p className="text-slate-700 dark:text-slate-300 text-sm">
-                If there is no refusal, the case may be reconsidered with a different jury. 
-                A emotional governing team can override jury verdict on a final appeal request.
+        {/* Section 4: Case Review Workflow */}
+        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-green-600">🔍 4.</span>
+            <span className="text-red-600">Case Review Workflow</span>
+          </h3>
+          <div className="space-y-4 text-gray-700">
+            <p>Each case proceeds through the following steps:</p>
+
+            <div>
+              <p className="font-semibold mb-2">Step 1: Assignment</p>
+              <div className="ml-4 space-y-1">
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>
+                    Jurors are randomly and anonymously assigned to a panel
+                    (e.g., 3 members)
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>Jurors are shown only anonymized names and IDs</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>
+                    Each panel member has a 24-72 hour window, dependent on
+                    Standard or Expedited submission terms, to review and vote
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p className="font-semibold mb-2">Step 2: Evidence Review</p>
+              <div className="ml-4 space-y-1">
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>A factual summary of the allegation</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>Uploaded documents (with redactions for privacy)</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>Initiator's written statement</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>Respondent's rebuttal, evidence, or "Silence"</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-red-100 border border-red-200 p-4 rounded mt-4">
+              <p className="text-red-800 text-sm">
+                "Silence" is the Respondent's verified appearance after notice
+                with the choice to take no action in the case.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+
+            <div className="mt-4">
+              <p>Jurors must review:</p>
+              <div className="ml-4 space-y-1">
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>
+                    The credibility of documentation from both parties
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span>•</span>
+                  <span>
+                    Whether proof supports the claim (e.g., texts, timestamps,
+                    orders)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 5: Voting & Outcomes */}
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-blue-600">🗳️ 5.</span>
+            <span className="text-red-600">Voting & Outcomes</span>
+          </h3>
+
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 p-3 text-left font-semibold">
+                    Option
+                  </th>
+                  <th className="border border-gray-300 p-3 text-left font-semibold">
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 p-3">
+                    <span className="text-green-600 font-semibold">
+                      ✓ Verified
+                    </span>
+                  </td>
+                  <td className="border border-gray-300 p-3 text-gray-700">
+                    Clear evidence supports the claim beyond reasonable doubt
+                  </td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="border border-gray-300 p-3">
+                    <span className="text-red-600 font-semibold">
+                      ✗ Disproven
+                    </span>
+                  </td>
+                  <td className="border border-gray-300 p-3 text-gray-700">
+                    Clear evidence disproves the claim beyond reasonable doubt
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 p-3">
+                    <span className="text-gray-600 font-semibold">
+                      ○ Unable to Decide
+                    </span>
+                  </td>
+                  <td className="border border-gray-300 p-3 text-gray-700">
+                    Insufficient information provided
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-3">Voting Requirements:</p>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 p-3 text-left font-semibold">
+                      Decision
+                    </th>
+                    <th className="border border-gray-300 p-3 text-left font-semibold">
+                      Votes
+                    </th>
+                    <th className="border border-gray-300 p-3 text-left font-semibold">
+                      Record on
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 p-3">
+                      <span className="text-green-600 font-semibold">
+                        ✓ Verified
+                      </span>
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      100% voted as Verified
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      Respondent
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 p-3">
+                      <span className="text-yellow-600 font-semibold">
+                        ⚠ Not Disproven
+                      </span>
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      Majority voted as Verified
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      Respondent
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 p-3">
+                      <span className="text-red-600 font-semibold">
+                        ✗ Disproven
+                      </span>
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      100% voted as Disproven
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      Initiator
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 p-3">
+                      <span className="text-gray-600 font-semibold">
+                        ○ Unable to Decide
+                      </span>
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      Votes did not meet any final decision criteria
+                    </td>
+                    <td className="border border-gray-300 p-3 text-gray-700">
+                      N/A
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 6: Rules of Conduct */}
+        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-red-600">🛡️ 6.</span>
+            <span className="text-red-600">Rules Of Conduct</span>
+          </h3>
+
+          <div className="mb-4">
+            <p className="text-gray-700 font-semibold mb-3">Jurors must:</p>
+            <div className="space-y-2 text-gray-700">
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Remain anonymous throughout the process</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Refrain from researching parties outside the provided material
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Not discuss the case with any external party (including other
+                  jurors)
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Disclose immediately if they recognize any party involved
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Abstain from voting if emotionally compromised or biased
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Report unauthorized attempted contact from parties</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-gray-700 font-semibold mb-3">
+              Violation May Result In:
+            </p>
+            <div className="space-y-2 text-gray-700">
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Immediate removal from the jury pool</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Account suspension</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Legal consequences depending on the nature of the breach
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 7: Confidentiality Agreement */}
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-pink-600">🔒 7.</span>
+            <span className="text-red-600">Confidentiality Agreement</span>
+          </h3>
+
+          <div className="space-y-4 text-gray-700">
+            <p>Jurors agree to the following:</p>
+            <div className="bg-red-100 border border-red-200 p-4 rounded">
+              <p className="text-red-800 text-sm">
+                "I understand that all information I receive while serving as a
+                juror is confidential and must not be copied, shared, discussed,
+                or stored outside of this Platform. I understand that violations
+                may result in civil penalties, legal action, and/or platform
+                bans."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 8: Compensation */}
+        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-orange-600">💰 8.</span>
+            <span className="text-red-600">Compensation</span>
+          </h3>
+
+          <div className="space-y-3 text-gray-700">
+            <p>
+              Jurors may receive a <strong>Small Honorarium</strong> or{" "}
+              <strong>Platform Credit</strong> for each case reviewed and voted
+              on time, based on:
+            </p>
+            <div className="space-y-1 ml-4">
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Juror rank</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>Juror reputation tier</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span>•</span>
+                <span>
+                  Submission tier (Expedited submissions are valued double)
+                </span>
+              </div>
+            </div>
+            <p className="mt-3">
+              Payouts are processed per review cycle and may be forfeited in
+              cases of verified misconduct.
+            </p>
+          </div>
+        </div>
+
+        {/* Section 9: Juror Records & Quality Control */}
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-green-600">📊 9.</span>
+            <span className="text-red-600">
+              Juror Records & Quality Control
+            </span>
+          </h3>
+
+          <div className="space-y-2 text-gray-700 text-sm">
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                Juror has an internal reputation score based on participation
+                and strikes
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                Votes are stored anonymously but may be audited internally
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                Jurors who receive a strike may be suspended or retrained, which
+                may affect the Juror's rank. Strikes will remain on Juror's
+                internal record
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                Based on the case participation per strikes ratio, a Juror may
+                not be eligible for honorarium or platform credits
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                If a Juror reputation score becomes too low, a Juror may be
+                required to pay a set deposit ("Juror Bond") to the platform to
+                continue juror enrollment in the platform Juror program.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 10: Appeals & Overrides */}
+        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-purple-600">🔄 10.</span>
+            <span className="text-red-600">Appeals & Overrides</span>
+          </h3>
+
+          <div className="space-y-2 text-gray-700 text-sm">
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                If new evidence arises, the case may be reopened with a new jury
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span>•</span>
+              <span>
+                A separate panel may overrule the original decision upon a filed
+                appeal request
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Final Acknowledgment */}
-        <Card className="shadow-lg border-0 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 mt-8">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Final Acknowledgment</h3>
-            <p className="text-slate-700 dark:text-slate-300 mb-4">
-              Before beginning your duties, please acknowledge that you have read, understood, and agree to adhere to all protocols outlined in this document.
-            </p>
-            <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
-              <AlertDescription className="text-red-800 dark:text-red-200">
-                <strong>By proceeding, you agree to maintain strict confidentiality and conduct yourself with the highest ethical standards.</strong>
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-        </Card>
-      </main>
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span className="text-orange-600">📝</span>
+            <span className="text-red-600">Final Acknowledgment</span>
+          </h3>
 
-    
+          <div className="space-y-4 text-gray-700">
+            <p>
+              Before beginning each case, jurors must agree before viewing case
+              materials:
+            </p>
+            <div className="bg-red-100 border border-red-200 p-4 rounded">
+              <p className="text-red-800 text-sm">
+                "I understand and accept the rules and obligations of jury
+                service on this platform. I will act impartially, respectfully,
+                and confidentially."
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default JurorProtocolOverview;
+}

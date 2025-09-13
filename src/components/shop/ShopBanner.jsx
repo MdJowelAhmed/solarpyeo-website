@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FaStar } from "react-icons/fa";
-import image15 from "../.../../../../public/assests/marijoyana.png";
+import image15 from "../../../public/assests/image15.png";
 
 const allProducts = [
   {
