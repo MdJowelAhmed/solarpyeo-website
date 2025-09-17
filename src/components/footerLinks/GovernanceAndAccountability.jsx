@@ -29,17 +29,18 @@ export default function GovernanceAndAccountabilityOverview() {
             🏛️ Platform Governance & Accountability
           </h3>
           <h4 className="mb-5">
-            Welcome to the Governance & Accountability page. This section
+            Welcome to the <strong>Platform Governance & Accountability</strong> page. This section
             outlines how the Platform is structured, how decisions are made and
             reviewed, and how we protect the ethical, procedural, and legal
             integrity of our community. For the Platform Governance Charter,
             view here
-            <Button
-              variant="link"
-              className="text-blue-600 p-0 h-auto font-normal"
+            <a
+              href="/governance-charter"
+              // target="_blank"
+              className="text-blue-600 p-0 h-auto font-bold ml-2"
             >
               View Here
-            </Button>
+            </a>
           </h4>
         </div>
 
@@ -61,9 +62,9 @@ export default function GovernanceAndAccountabilityOverview() {
             <div className="grid md:grid-cols-1 gap-6">
               <div className="space-y-4">
                 <div className=" ">
-                  <h2 className="font-semibold text-lg">
+                  <h3 className="font-semibold text-lg mb-5">
                     1. Administrative Oversight Board
-                  </h2>
+                  </h3>
                   <ul className="text-gray-600 space-y-1 mt-2">
                     <li>• Policy development and revision</li>
                     <li>• Oversight of platform operations and security</li>
@@ -150,7 +151,7 @@ export default function GovernanceAndAccountabilityOverview() {
           <CardHeader>
             <h3 className="mb-6 gap-2">
               {/* <Gavel className="w-6 h-6" /> */}
-              📊 Decision-Making and Appeals
+              6 Decision-Making and Appeals
             </h3>
           </CardHeader>
           <CardContent>
@@ -218,7 +219,7 @@ export default function GovernanceAndAccountabilityOverview() {
                 </tbody>
               </table>
             </div>
-            <Link href="/appeal" variant="outline" className="mt-6 text-blue-500 font-bold">
+            <Link href="/appeal-request" variant="outline" className="mt-6 text-blue-500 font-bold underline">
               {/* <FileText className="w-4 h-4 mr-2" /> */}
             📄 File an Appeal
             </Link>
@@ -232,7 +233,7 @@ export default function GovernanceAndAccountabilityOverview() {
             <CardHeader>
               <h3 className="mb-5">
                 {/* <Eye className="w-6 h-6" /> */}
-               📩 File a Misuse Report Form
+               7 File a Misuse Report Form
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -258,7 +259,7 @@ export default function GovernanceAndAccountabilityOverview() {
                 All platform users may request a review of moderator conduct or
                 governance decisions.
               </p>
-              <Link href="/misuse" variant="outline" className="w-full font-bold text-blue-600 underline">
+              <Link href="/misuse-report" variant="outline" className="w-full font-bold text-blue-600 underline">
                 {/* <FileText className="w-4 h-4 mr-2" /> */}
                📩 File a Misuse Report Form
               </Link>
@@ -270,7 +271,7 @@ export default function GovernanceAndAccountabilityOverview() {
             <CardHeader>
               <h3 className="mb-5">
                 {/* <Lock className="w-6 h-6" /> */}
-                Data Protection & Legal Compliance
+                8 Data Protection & Legal Compliance
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -288,7 +289,7 @@ export default function GovernanceAndAccountabilityOverview() {
                 <li>• Secure redaction of sensitive or expired records</li>
               </ul>
               <div className="space-y-2  ">
-                <Link href="/privacy" variant="outline" className="w-full font-bold text-blue-600 underline mr-5">
+                <Link href="/policy" variant="outline" className="w-full font-bold text-blue-600 underline mr-5">
                   {/* <FileText className="w-4 h-4 mr-2" /> */}
                  📩 🛡️ Read the Full Privacy Policy
                 </Link>
@@ -305,7 +306,7 @@ export default function GovernanceAndAccountabilityOverview() {
             <CardHeader>
               <h3 className="mb-5">
                 {/* <MessageSquare className="w-6 h-6" /> */}
-                Community Feedback & Policy Revision
+                9 Community Feedback & Policy Revision
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -346,7 +347,7 @@ export default function GovernanceAndAccountabilityOverview() {
             <CardHeader>
               <h3 className="mb-5">
                 {/* <AlertTriangle className="w-6 h-6" /> */}
-                Ethics Review & Reporting
+                10 Ethics Review & Reporting
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -375,7 +376,7 @@ export default function GovernanceAndAccountabilityOverview() {
                   </div>
                 </div>
               </div>
-              <Link href="/report" variant="outline" className="w-full font-bold text-blue-600 underline">
+              <Link href="/misuse-report" variant="outline" className="w-full font-bold text-blue-600 underline">
                 {/* <FileText className="w-4 h-4 mr-2" /> */}
                📩 File a Misuse Report Form
               </Link>
@@ -388,7 +389,7 @@ export default function GovernanceAndAccountabilityOverview() {
           <CardHeader>
             <h3 className="">
               {/* <Shield className="w-6 h-6" /> */}
-              Governance Charter & Platform Mission
+              11 Governance Charter & Platform Mission
             </h3>
           </CardHeader>
           <CardContent className="space-y-4">

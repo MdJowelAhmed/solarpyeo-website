@@ -197,7 +197,7 @@ const FAQCom = () => {
                   <div key={item.id} className="px-6 py-4">
                     <button
                       onClick={() => toggleSection(item.id)}
-                      className="w-full flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg p-2 -m-2"
+                      className="w-full flex items-center justify-between text-left focus:outline-none  rounded-lg p-2 -m-2"
                     >
                       <span className="font-medium text-slate-900 pr-4">{item.question}</span>
                       <div className="flex-shrink-0">

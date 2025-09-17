@@ -541,11 +541,11 @@ const DashboardContainer = () => {
         onClose={() => setViewDetailsModal(false)} 
         submission={selectedSubmission} 
       />
-      <MessageModal 
+      {/* <MessageModal 
         isOpen={messageModal} 
         onClose={() => setMessageModal(false)} 
         submission={selectedSubmission} 
-      />
+      /> */}
     </div>
   );
 };
