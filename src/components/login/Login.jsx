@@ -71,9 +71,9 @@ const handleSubmit = async (e) => {
       </div>
 
       {/* Right side form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center  p-4 md:p-8">
-        <div className="bg-white/20 backdrop-blur-md rounded-lg p-6 border border-white md:p-8 w-full max-w-md mx-auto">
-          {/* <div className="flex justify-center mb-4">
+      <div className="w-full lg:w-1/2 flex items-center  justify-center  p-4 md:p-8">
+        <div className="bg-white backdrop-blur-md rounded-lg p-6 shadow-lg md:p-8 w-full max-w-md mx-auto">
+          <div className="flex justify-center mb-4">
             <Image
               src="/assests/logo.png"
               height={120}
@@ -81,16 +81,16 @@ const handleSubmit = async (e) => {
               alt="Logo"
               className="mx-auto"
             />
-          </div> */}
+          </div>
 
-          <h2 className="font-bold text-center mb-6 text-white text-xl md:text-2xl lg:text-6xl">
+          <h2 className="font-bold text-center mb-6 text-black text-xl md:text-2xl lg:text-6xl">
            Login
           </h2>
 
           <form onSubmit={handleSubmit}>
             {/* User Name or Email */}
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm mb-2 text-white">
+              <label htmlFor="email" className="block text-sm mb-2 text-black">
                 User name or email
               </label>
               <Input
@@ -99,7 +99,7 @@ const handleSubmit = async (e) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full py-2 md:py-6 text-white  border border-white placeholder:text-white"
+                className="w-full py-2 md:py-6 text-black  border border-black placeholder:text-black"
                 required
               />
             </div>
@@ -108,7 +108,7 @@ const handleSubmit = async (e) => {
             <div className="mb-6">
               <label
                 htmlFor="password"
-                className="block text-sm mb-2 text-white"
+                className="block text-sm mb-2 text-black"
               >
                 Password
               </label>
@@ -119,13 +119,13 @@ const handleSubmit = async (e) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full py-2 md:py-6 text-white  border border-white placeholder:text-white"
+                  className="w-full py-2 md:py-6 text-black  border border-black placeholder:text-black"
                   required
                 />
                 <button
                   type="button"
                   onClick={handleTogglePassword}
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white"
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 text-black"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -136,7 +136,7 @@ const handleSubmit = async (e) => {
 
               <Link
                 href="/forgot-password"
-                className="text-white hover:text-primary"
+                className="text-black hover:text-primary"
               >
                 Forgot password?
               </Link>
@@ -151,9 +151,9 @@ const handleSubmit = async (e) => {
             </Button>
 
             {/* Links */}
-            <div className="text-white text-sm text-center mt-6 md:mt-8 gap-4 md:gap-0">
+            <div className="text-black text-sm text-center mt-6 md:mt-8 gap-4 md:gap-0">
               Don`t have an account ? 
-              <Link href="/register" className="text-white hover:text-primary ml-1 font-bold">
+              <Link href="/register" className="text-black hover:text-primary ml-1 font-bold">
                Sign Up
               </Link>
             

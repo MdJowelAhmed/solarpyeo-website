@@ -90,7 +90,7 @@ const onSubmit = async (data) => {
 
       {/* Right side form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8">
-        <div className="bg-[#FCFCFC3B] border border-white backdrop-blur-md rounded-lg p-6 md:p-8 w-full max-w-lg mx-auto">
+        <div className="bg-white border  shadow-md rounded-lg p-6 md:p-8 w-full max-w-lg mx-auto">
           {/* <div className="flex justify-center mb-4">
             <Image
               src="/assests/logo.png"
@@ -101,14 +101,14 @@ const onSubmit = async (data) => {
             />
           </div> */}
 
-          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 text-center text-white">
+          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 text-center text-black">
            Sing Up
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Full Name */}
             <div>
-              <label htmlFor="userName" className="block text-sm mb-2 text-white">
+              <label htmlFor="userName" className="block text-sm mb-2 text-black">
 
                 User Name*
               </label>
@@ -117,7 +117,7 @@ const onSubmit = async (data) => {
                 placeholder="Enter your full name"
                 {...register("userName", { required: " Name is required" })}
 
-                className="w-full py-6 text-white  border border-white rounded-lg placeholder:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                className="w-full py-6 text-black  border border-black rounded-lg placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
 
               />
               {errors.userName && (
@@ -129,7 +129,7 @@ const onSubmit = async (data) => {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm mb-2 text-white">
+              <label htmlFor="email" className="block text-sm mb-2 text-black">
                 Email Address*
               </label>
               <Input
@@ -143,7 +143,7 @@ const onSubmit = async (data) => {
                     message: "Please enter a valid email address",
                   },
                 })}
-                className="w-full py-6 text-white  border border-white rounded-lg placeholder:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                className="w-full py-6 text-black  border border-black rounded-lg placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
 
               />
               {errors.email && (
@@ -157,7 +157,7 @@ const onSubmit = async (data) => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm mb-2 text-white"
+                className="block text-sm mb-2 text-black"
               >
                 Password*
               </label>
@@ -173,7 +173,7 @@ const onSubmit = async (data) => {
                       message: "Password must have at least 8 characters",
                     },
                   })}
-                  className="w-full py-6 text-white  border border-white rounded-lg placeholder:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                  className="w-full py-6 text-black  border border-black rounded-lg placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
                 />
                 <button
                   type="button"
@@ -187,7 +187,7 @@ const onSubmit = async (data) => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-5 h-5 text-white"
+                      className="w-5 h-5 text-black"
                     >
                       <path
                         strokeLinecap="round"
@@ -202,7 +202,7 @@ const onSubmit = async (data) => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-5 h-5 text-white"
+                      className="w-5 h-5 text-black"
                     >
                       <path
                         strokeLinecap="round"
@@ -229,7 +229,7 @@ const onSubmit = async (data) => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm mb-2 text-white"
+                className="block text-sm mb-2 text-black"
               >
                 Confirm Password*
               </label>
@@ -243,7 +243,7 @@ const onSubmit = async (data) => {
                     validate: (value) => 
                       value === getValues("password") || "Passwords do not match"
                   })}
-                  className="w-full py-6 text-white  border border-white rounded-lg placeholder:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                  className="w-full py-6 text-black  border border-black rounded-lg placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
                 />
                 <button
                   type="button"
@@ -257,7 +257,7 @@ const onSubmit = async (data) => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-5 h-5 text-white"
+                      className="w-5 h-5 text-black"
                     >
                       <path
                         strokeLinecap="round"
@@ -272,7 +272,7 @@ const onSubmit = async (data) => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-5 h-5 text-white"
+                      className="w-5 h-5 text-black"
                     >
                       <path
                         strokeLinecap="round"
@@ -311,10 +311,10 @@ const onSubmit = async (data) => {
             </p>
           )}
 
-          <p className="text-sm md:text-base mt-4 text-center text-white">
+          <p className="text-sm md:text-base mt-4 text-center text-black">
              Have an account ?
             <Link
-              className="text-white font-bold ml-1 hover:text-primary"
+              className="text-black font-bold ml-1 hover:text-primary"
               href="/login"
             >
               Login

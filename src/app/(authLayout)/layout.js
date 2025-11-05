@@ -15,7 +15,7 @@ const AuthLayout = ({ children }) => {
       ></div>
 
       {/* Gradient Overlay (optional) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"></div>
+      <div className="absolute "></div>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen">{children}</div>
