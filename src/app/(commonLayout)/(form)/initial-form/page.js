@@ -102,8 +102,8 @@ const InitialForm = () => {
             </div>
 
             {/* Information About The Initiator */}
-            <div className="py-12 padding bg-secondary-foreground px-4 md:px-8 lg:px-16">
-              <div className=" custom-padding    mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
+            <div className="py-12 custom-padding bg-secondary-foreground  ">
+              <div className="    mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
                 <CardHeader className="w-full lg:w-1/4">
                   <CardTitle className="text-lg text-primary">
                     Information About The Initiator

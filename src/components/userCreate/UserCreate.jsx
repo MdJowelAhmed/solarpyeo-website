@@ -51,7 +51,7 @@ const onSubmit = async (data) => {
 
       toast.success("Account created successfully!");
 
-      // যদি verification দরকার হয়
+
       if (response.needsVerification || !response.accessToken) {
         const email = encodeURIComponent(registrationData.email);
         router.push(`/otp-verify?email=${email}&type=registration`);

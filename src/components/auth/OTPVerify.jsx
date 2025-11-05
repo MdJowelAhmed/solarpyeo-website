@@ -81,7 +81,8 @@ const handleSubmit = async (e) => {
     // Send OTP and email to the backend to verify
     const response = await otpVerify({ email, oneTimeCode });
     console.log(response);
-    const success = response?.success;
+    const success = response?.data?.success;
+    console.log(success);
     const verifyToken = response?.data?.data?.verifyToken;
 
     if (success) {
@@ -94,7 +95,7 @@ const handleSubmit = async (e) => {
         console.log("Reset token:", verifyToken);
 
         router.push(`/reset-password?email=${encodeURIComponent(email)}`);
-      } else if (type === "user-registration") {
+      } else if (type === "registration") {
         router.push("/login");
       }
 
