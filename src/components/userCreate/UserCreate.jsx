@@ -75,7 +75,7 @@ const onSubmit = async (data) => {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row justify-center">
       {/* Left side image */}
-      {/* <div className="hidden lg:flex lg:w-1/2 items-center justify-center">
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center">
         <div className="h-auto  w-full max-w-[900px] p-4">
           <Image
             src="/assests/registerImage.png"
@@ -86,7 +86,7 @@ const onSubmit = async (data) => {
             priority
           />
         </div>
-      </div> */}
+      </div>
 
       {/* Right side form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8">

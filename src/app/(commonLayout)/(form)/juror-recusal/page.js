@@ -44,7 +44,7 @@ const JurorRecusalForm = () => {
               </h2>
             </div>
 
-            <div className="space-y-4 ">
+            <div className="space-y-4 mx-auto ">
               <div>
                 <span className="font-medium">Juror ID:</span> [Auto-generated]
               </div>

@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar, FileText, Shield } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
-export default function GlassFileIdentityForm() {
+export default function IdentityDisputeForm() {
   const [selectedReason, setSelectedReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");

@@ -140,10 +140,17 @@ const DashboardContainer = () => {
                 <p className="mb-2">Active Case</p>
                 <p className="text-sm">Displays all pending, in-review, or under-juror-evaluation submissions.</p>
               </div>
-              <FormDropdown
+              {/* <FormDropdown
                 buttonText="Start A New Submission"
                 buttonClassName="bg-red-600 hover:bg-red-700 text-white w-full md:w-auto"
-              />
+              /> */}
+                <Button
+                // href="/initial-submission"
+                onClick={() => (window.location.href = "/initial-submission")}
+                className="bg-red-600 hover:bg-red-700 text-white w-full md:w-auto"
+              >
+                Start A New Submission
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="p-0">

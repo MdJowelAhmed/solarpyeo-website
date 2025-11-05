@@ -144,6 +144,70 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.custom-padding{
+  padding: 10px 10px  10px 10px;
+}
+
+@media screen and (min-width: 568px) {
+  .custom-padding{
+    padding: 12px 12px 12px 12px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .custom-padding{
+    padding: 16px 16px 16px 16px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .custom-padding{
+    padding: 24px 24px 24px 24px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .custom-padding{
+    padding: 36px 36px 36px 36px;
+  }
+}
+@media screen and (min-width: 1536px) {
+  .custom-padding{
+    padding: 36 72px 36 72px;
+  }
+}
+
+.padding{
+  margin: 10px 10px 10px 10px;
+}
+@media screen and (min-width: 568px) {
+  .padding{
+    padding: 12px 12px 12px 12px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .padding{
+    padding: 16px 16px 16px 16px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .padding{
+    padding: 24px 24px 24px 24px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .padding{
+    padding: 36px 36px 36px 36px;
+  }
+}
+@media screen and (min-width: 1536px) {
+  .padding{
+    padding: 36 72px 36 72px;
+  }
+}
+
+
+
+
+
+
 /* Hover Effect */
 .bg-button:hover {
   background: #ca3939;

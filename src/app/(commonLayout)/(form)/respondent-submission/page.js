@@ -14,7 +14,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-export default function GlassFileForm() {
+export default function RespondentSubmissionForm() {
   const [selectedResponse, setSelectedResponse] = useState("deny");
   const [uploadedFile, setUploadedFile] = useState(null);
   const [digitalSignature, setDigitalSignature] = useState("");
