@@ -61,7 +61,7 @@ export default function ForgotPassword() {
 
       {/* Right side form - full width on small devices */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8">
-        <div className="bg-[#FCFCFC3B] border-2 border-[#A92C2C] backdrop-blur-md rounded-lg p-6 md:p-8 w-full max-w-md mx-auto">
+        <div className="bg-white rounded-lg p-6 md:p-8 w-full shadow-lg max-w-md mx-auto">
           {/* Email icon */}
           <div className="flex items-center justify-center mb-6 md:mb-10">
             <div className="flex items-center justify-center bg-white w-12 h-12 md:w-16 md:h-16 rounded-full">

@@ -91,7 +91,7 @@ const onSubmit = async (data) => {
       {/* Right side form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8">
         <div className="bg-white border  shadow-md rounded-lg p-6 md:p-8 w-full max-w-lg mx-auto">
-          {/* <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4">
             <Image
               src="/assests/logo.png"
               height={120}
@@ -99,7 +99,7 @@ const onSubmit = async (data) => {
               alt="Logo"
               className="mx-auto"
             />
-          </div> */}
+          </div>
 
           <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 text-center text-black">
            Sing Up
