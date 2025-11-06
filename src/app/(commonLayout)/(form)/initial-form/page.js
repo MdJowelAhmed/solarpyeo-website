@@ -306,7 +306,7 @@ const InitialForm = () => {
               <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
                 <CardHeader className="w-full lg:w-1/5">
                   <CardTitle className="">Upload Evidence</CardTitle>
-                  <h4 className="mb-4 text-justify ">
+                  <h4 className="mb-4 text-justify text-sm">
                     Upload any documentation you believe supports your claim,
                     including screenshots, messages, case submission links, etc.
                   </h4>
@@ -380,7 +380,7 @@ const InitialForm = () => {
               </div>
 
               {/* Declaration Section */}
-              <div className="bg-primary-foreground border-l-4 border-red-700 rounded-lg p-6 mb-8">
+              <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-6 mb-8">
                 <h2 className="font-bold  mb-3 text-lg">
                   DECLARATION UNDER PENALTY OF PERJURY
                 </h2>
@@ -412,7 +412,7 @@ const InitialForm = () => {
                   disabled={!isAgreed}
                   className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${
                     isAgreed
-                      ? "bg-red-600 hover:bg-red-700 cursor-pointer"
+                      ? "bg-primary hover:bg-primary/90 cursor-pointer"
                       : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >
