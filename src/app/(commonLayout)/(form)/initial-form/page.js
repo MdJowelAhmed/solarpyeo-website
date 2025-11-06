@@ -67,11 +67,10 @@ const InitialForm = () => {
                         State Of Residence
                       </CardTitle>
                     </CardHeader>
-                     {/* <FormDropdown
+                    {/* <FormDropdown
                 buttonText="Start A New Submission"
                 buttonClassName=""
               /> */}
-                   
                   </div>
                 </div>
               </div>
@@ -85,7 +84,7 @@ const InitialForm = () => {
                     Information About The Initiator
                   </CardTitle>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4  h-full lg:pl-10">
                   <div>
                     <Label htmlFor="initiator-first-name">First Name</Label>
@@ -136,32 +135,27 @@ const InitialForm = () => {
                     </Popover>
                   </div>
 
-
-              
-                      <div>
-                        <Label htmlFor="state-select" className="mb-2">
-                          What State do you reside in?
-                        </Label>
-                        <Select
-                          value={state}
-                          onValueChange={setState}
-                          // className="mt-2"
-                        >
-                          <SelectTrigger className="w-4/5">
-                            <SelectValue placeholder="California" />
-                          </SelectTrigger>
-                          <SelectContent className="w-full">
-                            <SelectItem value="california">
-                              California
-                            </SelectItem>
-                            <SelectItem value="texas">Texas</SelectItem>
-                            <SelectItem value="florida">Florida</SelectItem>
-                            <SelectItem value="new-york">New York</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-               
+                  <div>
+                    <Label htmlFor="state-select" className="mb-2">
+                      What State do you reside in?
+                    </Label>
+                    <Select
+                      value={state}
+                      onValueChange={setState}
+                      // className="mt-2"
+                    >
+                      <SelectTrigger className="w-4/5">
+                        <SelectValue placeholder="California" />
+                      </SelectTrigger>
+                      <SelectContent className="w-full">
+                        <SelectItem value="california">California</SelectItem>
+                        <SelectItem value="texas">Texas</SelectItem>
+                        <SelectItem value="florida">Florida</SelectItem>
+                        <SelectItem value="new-york">New York</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </CardContent>
               </div>
             </div>
@@ -237,60 +231,74 @@ const InitialForm = () => {
             </div>
 
             {/* Type Of Filing */}
-            <div className="py-12 md:py-16 lg:py-24 bg-secondary-foreground">
-              <Card className="mb-6 container mx-auto">
-                <CardHeader>
+            <div className="custom-padding bg-secondary-foreground">
+              <div className= "bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <CardHeader className="w-full lg:w-1/5">
                   <CardTitle className="text-lg text-red-600">
                     Type Of Filing
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <RadioGroup value={filingType} onValueChange={setFilingType}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="jurisdiction" id="jurisdiction" />
-                      <Label htmlFor="jurisdiction">Jurisdiction</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="procedural-issue"
-                        id="procedural-issue"
-                      />
-                      <Label htmlFor="procedural-issue">Procedural Issue</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="subject-matter"
-                        id="subject-matter"
-                      />
-                      <Label htmlFor="subject-matter">Subject Matter</Label>
-                    </div>
-                  </RadioGroup>
-
-                  <div className="mt-6 space-y-4">
-                    <div>
-                      <Label htmlFor="what-happened">What happened?</Label>
-                      <Textarea
-                        id="what-happened"
-                        placeholder="Allegation 1"
-                        className="min-h-32"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="allegation-2">Allegation 2</Label>
-                      <Textarea
-                        id="allegation-2"
-                        placeholder="Allegation 2"
-                        className="min-h-32"
-                      />
-                    </div>
+                  <div>
+                    <RadioGroup
+                      value={filingType}
+                      onValueChange={setFilingType}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="jurisdiction"
+                          id="jurisdiction"
+                        />
+                        <Label htmlFor="jurisdiction">Jurisdiction</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="procedural-issue"
+                          id="procedural-issue"
+                        />
+                        <Label htmlFor="procedural-issue">
+                          Procedural Issue
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="subject-matter"
+                          id="subject-matter"
+                        />
+                        <Label htmlFor="subject-matter">Subject Matter</Label>
+                      </div>
+                    </RadioGroup>
                   </div>
+                </CardHeader>
 
-                  <Button className="mt-4 text-accent bg-primary hover:bg-primary-foreground">
+                <div className="w-full lg:w-4/5">
+                  <CardContent className="w-full  grid grid-cols-1  gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
+                    <div className="mt-6 space-y-4">
+                      <div>
+                        <Label htmlFor="what-happened">What happened?</Label>
+                        <Textarea
+                          id="what-happened"
+                          placeholder="Allegation 1"
+                          className="min-h-32"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="allegation-2">Allegation 2</Label>
+                        <Textarea
+                          id="allegation-2"
+                          placeholder="Allegation 2"
+                          className="min-h-32"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+
+                 <div className="w-full flex items-center justify-end">
+                   <Button className="mt-4 py-6  text-accent ">
                     Add Another Allegation
                   </Button>
-                </CardContent>
-              </Card>
+                 </div>
+                </div>
+              </div>
             </div>
 
             {/* Upload Evidence */}
