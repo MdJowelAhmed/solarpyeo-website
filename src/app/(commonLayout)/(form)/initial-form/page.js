@@ -63,7 +63,7 @@ const InitialForm = () => {
                 <div className=" w-2/5">
                   <div>
                     <CardHeader>
-                      <CardTitle className="text-lg text-red-600 text-center">
+                      <CardTitle className="">
                         State Of Residence
                       </CardTitle>
                     </CardHeader>
@@ -80,7 +80,7 @@ const InitialForm = () => {
             <div className=" custom-padding bg-secondary-foreground  ">
               <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
                 <CardHeader className="w-full lg:w-1/5 ">
-                  <CardTitle className="text-lg text-primary">
+                  <CardTitle className="">
                     Information About The Initiator
                   </CardTitle>
                 </CardHeader>
@@ -164,7 +164,7 @@ const InitialForm = () => {
             <div className="custom-padding bg-secondary">
               <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
                 <CardHeader className="w-full lg:w-1/5">
-                  <CardTitle className="text-lg text-red-600">
+                  <CardTitle className="">
                     Information About The Respondent
                   </CardTitle>
                 </CardHeader>
@@ -232,9 +232,9 @@ const InitialForm = () => {
 
             {/* Type Of Filing */}
             <div className="custom-padding bg-secondary-foreground">
-              <div className= "bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+              <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
                 <CardHeader className="w-full lg:w-1/5">
-                  <CardTitle className="text-lg text-red-600">
+                  <CardTitle className="">
                     Type Of Filing
                   </CardTitle>
                   <div>
@@ -292,131 +292,132 @@ const InitialForm = () => {
                     </div>
                   </CardContent>
 
-                 <div className="w-full flex items-center justify-end">
-                   <Button className="mt-4 py-6  text-accent ">
-                    Add Another Allegation
-                  </Button>
-                 </div>
+                  <div className="w-full flex items-center justify-end">
+                    <Button className="mt-4 py-6  text-accent ">
+                      Add Another Allegation
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Upload Evidence */}
-            <div className="py-12 md:py-16 lg:py-24 bg-secondary">
-              <div className="mb-6 container mx-auto">
-                <CardHeader className="">
-                  <h3 className="text-lg text-red-600">Upload Evidence</h3>
-                  <h4 className="mb-4 text-center">
+            <div className="custom-padding bg-secondary">
+              <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <CardHeader className="w-full lg:w-1/5">
+                  <CardTitle className="">Upload Evidence</CardTitle>
+                  <h4 className="mb-4 text-justify ">
                     Upload any documentation you believe supports your claim,
                     including screenshots, messages, case submission links, etc.
                   </h4>
                 </CardHeader>
-                <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-3">
-                    Upload File 1:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      id="file1"
-                      onChange={(e) => handleFileChange(e, 1)}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="file1"
-                      className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                    >
-                      <span className="text-gray-700">
-                        {selectedFiles1 ? selectedFiles1.name : "Choose File"}
-                      </span>
-                      <span className="text-gray-500 text-sm">
-                        {selectedFiles1 ? "" : "No file chosen"}
-                      </span>
+                <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2  gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
+                  <div className="mb-6 ">
+                    <label className="block text-gray-700 font-medium mb-3">
+                      Upload File 1:
                     </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        id="file1"
+                        onChange={(e) => handleFileChange(e, 1)}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="file1"
+                        className="flex items-center justify-between  px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                      >
+                        <span className="text-gray-700">
+                          {selectedFiles1 ? selectedFiles1.name : "Choose File"}
+                        </span>
+                        <span className="text-gray-500 text-sm">
+                          {selectedFiles1 ? "" : "No file chosen"}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Upload File 2 */}
+                  <div className="mb-6">
+                    <label className="block text-gray-700 font-medium mb-3">
+                      Upload File 2:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        id="file2"
+                        onChange={(e) => handleFileChange(e, 2)}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="file2"
+                        className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                      >
+                        <span className="text-gray-700">
+                          {selectedFiles2 ? selectedFiles2.name : "Choose File"}
+                        </span>
+                        <span className="text-gray-500 text-sm">
+                          {selectedFiles2 ? "" : "No file chosen"}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Optional Link */}
+                  <div className="mb-8">
+                    <label className="block text-gray-700 font-medium mb-3">
+                      Optional Link (e.g., Case ID or Submission URL):
+                    </label>
+                    <input
+                      type="text"
+                      value={supportingLink}
+                      onChange={(e) => setSupportingLink(e.target.value)}
+                      placeholder="Enter Your Supporting Link"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    />
                   </div>
                 </div>
+              </div>
 
-                {/* Upload File 2 */}
-                <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-3">
-                    Upload File 2:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      id="file2"
-                      onChange={(e) => handleFileChange(e, 2)}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="file2"
-                      className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                    >
-                      <span className="text-gray-700">
-                        {selectedFiles2 ? selectedFiles2.name : "Choose File"}
-                      </span>
-                      <span className="text-gray-500 text-sm">
-                        {selectedFiles2 ? "" : "No file chosen"}
-                      </span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Optional Link */}
-                <div className="mb-8">
-                  <label className="block text-gray-700 font-medium mb-3">
-                    Optional Link (e.g., Case ID or Submission URL):
-                  </label>
+              {/* Declaration Section */}
+              <div className="bg-primary-foreground border-l-4 border-red-700 rounded-lg p-6 mb-8">
+                <h2 className="font-bold  mb-3 text-lg">
+                  DECLARATION UNDER PENALTY OF PERJURY
+                </h2>
+                <p className=" text-sm mb-4 leading-relaxed">
+                  I hereby declare and affirm in accordance with the laws of the
+                  jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
+                  foregoing is true and accurate to the best of my knowledge.
+                </p>
+                <div className="flex items-start space-x-3">
                   <input
-                    type="text"
-                    value={supportingLink}
-                    onChange={(e) => setSupportingLink(e.target.value)}
-                    placeholder="Enter Your Supporting Link"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    type="checkbox"
+                    id="agree"
+                    checked={isAgreed}
+                    onChange={(e) => setIsAgreed(e.target.checked)}
+                    className="mt-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
-                </div>
-
-                {/* Declaration Section */}
-                <div className="bg-primary-foreground border-l-4 border-red-700 rounded-lg p-6 mb-8">
-                  <h2 className="font-bold  mb-3 text-lg">
-                    DECLARATION UNDER PENALTY OF PERJURY
-                  </h2>
-                  <p className=" text-sm mb-4 leading-relaxed">
-                    I hereby declare and affirm in accordance with the laws of
-                    the jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that
-                    the foregoing is true and accurate to the best of my
-                    knowledge.
-                  </p>
-                  <div className="flex items-start space-x-3">
-                    <input
-                      type="checkbox"
-                      id="agree"
-                      checked={isAgreed}
-                      onChange={(e) => setIsAgreed(e.target.checked)}
-                      className="mt-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor="agree"
-                      className="text-red-700 text-sm font-medium cursor-pointer"
-                    >
-                      I Agree
-                    </label>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex justify-end">
-                  <button
-                    disabled={!isAgreed}
-                    className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${
-                      isAgreed
-                        ? "bg-red-600 hover:bg-red-700 cursor-pointer"
-                        : "bg-gray-400 cursor-not-allowed"
-                    }`}
+                  <label
+                    htmlFor="agree"
+                    className="text-red-700 text-sm font-medium cursor-pointer"
                   >
-                    Submit Securely
-                  </button>
+                    I Agree
+                  </label>
                 </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  disabled={!isAgreed}
+                  className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${
+                    isAgreed
+                      ? "bg-red-600 hover:bg-red-700 cursor-pointer"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  Submit Securely
+                </button>
               </div>
             </div>
           </div>
