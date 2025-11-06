@@ -71,31 +71,7 @@ const InitialForm = () => {
                 buttonText="Start A New Submission"
                 buttonClassName=""
               /> */}
-                    <CardContent>
-                      <div>
-                        <Label htmlFor="state-select" className="mb-2">
-                          What State do you reside in?
-                        </Label>
-                        <Select
-                          value={state}
-                          onValueChange={setState}
-                          className="mt-2"
-                        >
-                          <SelectTrigger className="w-4/5">
-                            <SelectValue placeholder="California" />
-                          </SelectTrigger>
-                          <SelectContent className="w-full">
-                            <SelectItem value="california">
-                              California
-                            </SelectItem>
-                            <SelectItem value="texas">Texas</SelectItem>
-                            <SelectItem value="florida">Florida</SelectItem>
-                            <SelectItem value="new-york">New York</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </CardContent>
+                   
                   </div>
                 </div>
               </div>
@@ -159,6 +135,33 @@ const InitialForm = () => {
                       </PopoverContent>
                     </Popover>
                   </div>
+
+
+              
+                      <div>
+                        <Label htmlFor="state-select" className="mb-2">
+                          What State do you reside in?
+                        </Label>
+                        <Select
+                          value={state}
+                          onValueChange={setState}
+                          // className="mt-2"
+                        >
+                          <SelectTrigger className="w-4/5">
+                            <SelectValue placeholder="California" />
+                          </SelectTrigger>
+                          <SelectContent className="w-full">
+                            <SelectItem value="california">
+                              California
+                            </SelectItem>
+                            <SelectItem value="texas">Texas</SelectItem>
+                            <SelectItem value="florida">Florida</SelectItem>
+                            <SelectItem value="new-york">New York</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+               
                 </CardContent>
               </div>
             </div>
@@ -171,7 +174,7 @@ const InitialForm = () => {
                     Information About The Respondent
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12">
+                <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                   <div>
                     <Label htmlFor="respondent-first-name">First Name</Label>
                     <Input
@@ -202,7 +205,7 @@ const InitialForm = () => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal"
+                          className="w-full justify-start text-left font-normal py-[23px]"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {respondentDob
