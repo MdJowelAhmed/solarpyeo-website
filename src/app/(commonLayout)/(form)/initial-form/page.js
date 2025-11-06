@@ -102,14 +102,15 @@ const InitialForm = () => {
             </div>
 
             {/* Information About The Initiator */}
-            <div className="py-12 custom-padding bg-secondary-foreground  ">
-              <div className="    mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
-                <CardHeader className="w-full lg:w-1/4">
+            <div className=" custom-padding bg-secondary-foreground  ">
+              <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
+                <CardHeader className="w-full lg:w-1/5 ">
                   <CardTitle className="text-lg text-primary">
                     Information About The Initiator
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 w-full lg:w-3/4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                
+                <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4  h-full lg:pl-10">
                   <div>
                     <Label htmlFor="initiator-first-name">First Name</Label>
                     <Input
@@ -140,7 +141,7 @@ const InitialForm = () => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal"
+                          className="w-full justify-start text-left font-normal py-[23px]"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {initiatorDob
@@ -163,14 +164,14 @@ const InitialForm = () => {
             </div>
 
             {/* Information About The Respondent */}
-            <div className="py-12 md:py-16 lg:py-24 bg-secondary">
-              <div className="mb-6 container mx-auto">
-                <CardHeader>
+            <div className="custom-padding bg-secondary">
+              <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <CardHeader className="w-full lg:w-1/5">
                   <CardTitle className="text-lg text-red-600">
                     Information About The Respondent
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12">
                   <div>
                     <Label htmlFor="respondent-first-name">First Name</Label>
                     <Input

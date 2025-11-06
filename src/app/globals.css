@@ -145,12 +145,12 @@
 }
 
 .custom-padding{
-  padding: 0px 10px;
+  padding: 16px 16px;
 }
 
 @media screen and (min-width: 568px) {
   .custom-padding{
-    padding:16px 16px;
+    padding:24px 24px;
   }
 }
 @media screen and (min-width: 768px) {
