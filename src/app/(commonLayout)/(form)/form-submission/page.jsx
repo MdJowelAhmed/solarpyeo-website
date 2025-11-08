@@ -24,7 +24,7 @@ import JurorRecusalForm from "../juror-recusal/page";
 const GlassFileForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   // URL থেকে form parameter পড়ুন, না থাকলে default "initial-submission"
   const [selectedFormId, setSelectedFormId] = useState(
     searchParams.get("form") || "initial-submission"
@@ -80,7 +80,9 @@ const GlassFileForm = () => {
         return (
           <Card className="bg-secondary">
             <CardHeader>
-              <CardTitle className="text-2xl text-red-600">Form Not Found</CardTitle>
+              <CardTitle className="text-2xl text-red-600">
+                Form Not Found
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
@@ -93,20 +95,30 @@ const GlassFileForm = () => {
   };
 
   return (
-    <div className="w-full pt-8">
-      <div className="px-6 mx-auto w-full flex justify-end">
-        <Select onValueChange={handleFormChange} value={selectedFormId}>
-          <SelectTrigger className="w-1/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
-            <SelectValue placeholder="Select a Form" />
-          </SelectTrigger>
-          <SelectContent className="max-h-96">
-            {formOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <div className="w-full pt-8 custom-padding">
+      <div className="px-6 mx-auto w-full flex flex-col md:flex-row justify-between gap-4">
+        <div className="text-left ">
+          <h1>Choose Your Submission Type</h1>
+          <p>
+            Please select the type of submission you would like to make. This
+            will help us process your request accurately and direct it to the
+            appropriate team.
+          </p>
+        </div>
+        <div className="w-full ">
+          <Select onValueChange={handleFormChange} value={selectedFormId}>
+            <SelectTrigger className="w-full lg:w-1/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
+              <SelectValue placeholder="Select a Form" />
+            </SelectTrigger>
+            <SelectContent className="max-h-96">
+              {formOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {renderForm()}
