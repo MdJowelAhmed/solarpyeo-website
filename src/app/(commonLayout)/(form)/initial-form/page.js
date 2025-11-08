@@ -188,7 +188,7 @@ for (let pair of formData.entries()) {
             <div className="w-full">
               <div className="py-12 md:py-16 lg:py-24 bg-secondary">
                 <div className="mb-6 container mx-auto  flex items-center justify-between bg-secondary gap-8">
-                  <div className="w-3/5 ml-10">
+                  <div className="w-full lg:w-3/5 ml-10">
                     <h1>Initial Submission Form</h1>
                     <h4 className="text-start max-w-xl">
                       For respondents, legal guardians, advocates & verifiied
@@ -196,7 +196,7 @@ for (let pair of formData.entries()) {
                     </h4>
                   </div>
                   {/* Sidebar */}
-                  <div className=" w-2/5">
+                  {/* <div className=" w-2/5">
                     <div>
                       <CardHeader>
                         <CardTitle className="">
@@ -204,7 +204,7 @@ for (let pair of formData.entries()) {
                         </CardTitle>
                       </CardHeader>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
