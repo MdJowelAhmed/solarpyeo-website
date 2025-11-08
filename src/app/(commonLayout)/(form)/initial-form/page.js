@@ -186,30 +186,17 @@ for (let pair of formData.entries()) {
           <form onSubmit={handleSubmit}>
             {/* Main Form */}
             <div className="w-full">
-              <div className="py-12 md:py-16 lg:py-24 bg-secondary">
-                <div className="mb-6 container mx-auto  flex items-center justify-between bg-secondary gap-8">
-                  <div className="w-full lg:w-3/5 ml-10">
-                    <h1>Initial Submission Form</h1>
-                    <h4 className="text-start max-w-xl">
+            
+
+              {/* Information About The Initiator */}
+              <div className=" custom-padding bg-secondary-foreground  ">
+                  <div className="w-full mb-10 flex flex-col justify-center">
+                    <h2 className="text-xl md:text-2xl lg:text-4xl font-bold text-center mb-4">Initial Submission Form</h2>
+                    <h4 className="text-center max-w-md mx-auto">
                       For respondents, legal guardians, advocates & verifiied
                       persons to make an appeal to the competent court.
                     </h4>
                   </div>
-                  {/* Sidebar */}
-                  {/* <div className=" w-2/5">
-                    <div>
-                      <CardHeader>
-                        <CardTitle className="">
-                          State Of Residence
-                        </CardTitle>
-                      </CardHeader>
-                    </div>
-                  </div> */}
-                </div>
-              </div>
-
-              {/* Information About The Initiator */}
-              <div className=" custom-padding bg-secondary-foreground  ">
                 <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
                   <CardHeader className="w-full lg:w-1/5 ">
                     <CardTitle className="">

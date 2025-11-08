@@ -25,7 +25,6 @@ const GlassFileForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // URL থেকে form parameter পড়ুন, না থাকলে default "initial-submission"
   const [selectedFormId, setSelectedFormId] = useState(
     searchParams.get("form") || "initial-submission"
   );
@@ -42,7 +41,6 @@ const GlassFileForm = () => {
     { name: "Juror Recusal Form", id: "juror-recusal" },
   ];
 
-  // URL parameter change হলে state update করুন
   useEffect(() => {
     const formParam = searchParams.get("form");
     if (formParam && formParam !== selectedFormId) {
@@ -50,7 +48,7 @@ const GlassFileForm = () => {
     }
   }, [searchParams]);
 
-  // Form select করলে URL update করুন
+
   const handleFormChange = (value) => {
     setSelectedFormId(value);
     router.push(`?form=${value}`, { scroll: false });
@@ -95,9 +93,9 @@ const GlassFileForm = () => {
   };
 
   return (
-    <div className="w-full pt-8 custom-padding">
-      <div className="px-6 mx-auto w-full flex flex-col md:flex-row justify-between gap-4">
-        <div className="text-left ">
+    <div className="w-full pt-8 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-48 pb-0">
+      <div className="px-6 mx-auto w-full flex flex-col md:flex-row justify-between gap-4 ">
+        <div className="text-left w-full lg:w-3/5">
           <h1>Choose Your Submission Type</h1>
           <p>
             Please select the type of submission you would like to make. This
@@ -105,9 +103,9 @@ const GlassFileForm = () => {
             appropriate team.
           </p>
         </div>
-        <div className="w-full ">
+        <div className=" flex-1 flex justify-end w-full lg:w-2/5">
           <Select onValueChange={handleFormChange} value={selectedFormId}>
-            <SelectTrigger className="w-full lg:w-1/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
+            <SelectTrigger className="w-full lg:w-2/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
               <SelectValue placeholder="Select a Form" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
