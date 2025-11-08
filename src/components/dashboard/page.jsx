@@ -146,7 +146,7 @@ const DashboardContainer = () => {
               /> */}
                 <Button
                 // href="/initial-submission"
-                onClick={() => (window.location.href = "/initial-submission")}
+                onClick={() => (window.location.href = "/form-submission")}
                 className="bg-red-600 hover:bg-red-700 text-white w-full md:w-auto"
               >
                 Start A New Submission

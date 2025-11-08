@@ -1,98 +1,117 @@
-"use client";
+// "use client";
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import React, { useEffect, useState } from "react";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
-import InitialForm from "../initial-form/page";
-import MisuseReportForm from "../misuse-report/page";
-import SealExpungeForm from "../seal-expunge/page";
-import TechnicalSupportForm from "../technical-support/page";
-import JurorEthics from "../../(profile)/juror-ethics/page";
-import RespondentSubmissionForm from "../respondent-submission/page";
-import IdentityDisputeForm from "../identity-dispute/page";
-import AppealRequestForm from "../appeal-request/page";
-import JurorRecusalForm from "../juror-recusal/page";
+// import InitialForm from "../initial-form/page";
+// import MisuseReportForm from "../misuse-report/page";
+// import SealExpungeForm from "../seal-expunge/page";
+// import TechnicalSupportForm from "../technical-support/page";
+// import JurorEthics from "../../(profile)/juror-ethics/page";
+// import RespondentSubmissionForm from "../respondent-submission/page";
+// import IdentityDisputeForm from "../identity-dispute/page";
+// import AppealRequestForm from "../appeal-request/page";
+// import JurorRecusalForm from "../juror-recusal/page";
 
-const GlassFileForm = () => {
-  const [selectedFormId, setSelectedFormId] = useState("initial-submission");
+// const GlassFileForm = () => {
+//   const router = useRouter();
+//   const searchParams = useSearchParams();
+  
+//   // URL থেকে form parameter পড়ুন, না থাকলে default "initial-submission"
+//   const [selectedFormId, setSelectedFormId] = useState(
+//     searchParams.get("form") || "initial-submission"
+//   );
 
-  const formOptions = [
-    { name: "Initial Submission Form", id: "initial-submission" },
-    { name: "Misuse Report Form", id: "misuse-report" },
-    { name: "Request to Seal or Expunge", id: "seal-expunge" },
-    { name: "Technical Support Request Form", id: "technical-support" },
-    { name: "Application for Juror Program", id: "juror-enrollment" },
-    { name: "Respondent Submission Form", id: "respondent-submission" },
-    { name: "Identity Dispute Claim Form", id: "identity-dispute" },
-    { name: "Appeal Request Form", id: "appeal-request" },
-    { name: "Juror Recusal Form", id: "juror-recusal" },
-  ];
+//   const formOptions = [
+//     { name: "Initial Submission Form", id: "initial-submission" },
+//     { name: "Misuse Report Form", id: "misuse-report" },
+//     { name: "Request to Seal or Expunge", id: "seal-expunge" },
+//     { name: "Technical Support Request Form", id: "technical-support" },
+//     { name: "Application for Juror Program", id: "juror-enrollment" },
+//     { name: "Respondent Submission Form", id: "respondent-submission" },
+//     { name: "Identity Dispute Claim Form", id: "identity-dispute" },
+//     { name: "Appeal Request Form", id: "appeal-request" },
+//     { name: "Juror Recusal Form", id: "juror-recusal" },
+//   ];
 
-  const renderForm = () => {
-    switch (selectedFormId) {
-      case "initial-submission":
-        return <InitialForm />;
-      case "misuse-report":
-        return <MisuseReportForm />;
-      case "seal-expunge":
-        return <SealExpungeForm />;
-      case "technical-support":
-        return <TechnicalSupportForm />;
-      case "juror-enrollment":
-        return <JurorEthics />;
-      case "respondent-submission":
-        return <RespondentSubmissionForm />;
-      case "identity-dispute":
-        return <IdentityDisputeForm />;
-      case "appeal-request":
-        return <AppealRequestForm />;
-      case "juror-recusal":
-        return <JurorRecusalForm />;
-      default:
-        return (
-          <Card className="bg-secondary">
-            <CardHeader>
-              <CardTitle className="text-2xl text-red-600">Form Not Found</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                The selected form could not be loaded.
-              </p>
-            </CardContent>
-          </Card>
-        );
-    }
-  };
+//   // URL parameter change হলে state update করুন
+//   useEffect(() => {
+//     const formParam = searchParams.get("form");
+//     if (formParam && formParam !== selectedFormId) {
+//       setSelectedFormId(formParam);
+//     }
+//   }, [searchParams]);
 
-  return (
-    <div className=" w-full pt-8">
-      <div className="px-6 mx-auto w-full flex justify-end">
-        {/* Shadcn Select Dropdown */}
-        <Select onValueChange={(value) => setSelectedFormId(value)} value={selectedFormId}>
-          <SelectTrigger className="w-1/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
-            <SelectValue placeholder="Select a Form" />
-          </SelectTrigger>
-          <SelectContent className="max-h-96">
-            {formOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+//   // Form select করলে URL update করুন
+//   const handleFormChange = (value) => {
+//     setSelectedFormId(value);
+//     router.push(`?form=${value}`, { scroll: false });
+//   };
 
-      {/* Render the selected form */}
-      {renderForm()}
-    </div>
-  );
-};
+//   const renderForm = () => {
+//     switch (selectedFormId) {
+//       case "initial-submission":
+//         return <InitialForm />;
+//       case "misuse-report":
+//         return <MisuseReportForm />;
+//       case "seal-expunge":
+//         return <SealExpungeForm />;
+//       case "technical-support":
+//         return <TechnicalSupportForm />;
+//       case "juror-enrollment":
+//         return <JurorEthics />;
+//       case "respondent-submission":
+//         return <RespondentSubmissionForm />;
+//       case "identity-dispute":
+//         return <IdentityDisputeForm />;
+//       case "appeal-request":
+//         return <AppealRequestForm />;
+//       case "juror-recusal":
+//         return <JurorRecusalForm />;
+//       default:
+//         return (
+//           <Card className="bg-secondary">
+//             <CardHeader>
+//               <CardTitle className="text-2xl text-red-600">Form Not Found</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p className="text-gray-600">
+//                 The selected form could not be loaded.
+//               </p>
+//             </CardContent>
+//           </Card>
+//         );
+//     }
+//   };
 
-export default GlassFileForm;
+//   return (
+//     <div className="w-full pt-8">
+//       <div className="px-6 mx-auto w-full flex justify-end">
+//         <Select onValueChange={handleFormChange} value={selectedFormId}>
+//           <SelectTrigger className="w-1/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
+//             <SelectValue placeholder="Select a Form" />
+//           </SelectTrigger>
+//           <SelectContent className="max-h-96">
+//             {formOptions.map((option) => (
+//               <SelectItem key={option.id} value={option.id}>
+//                 {option.name}
+//               </SelectItem>
+//             ))}
+//           </SelectContent>
+//         </Select>
+//       </div>
+
+//       {renderForm()}
+//     </div>
+//   );
+// };
+
+// export default GlassFileForm;
