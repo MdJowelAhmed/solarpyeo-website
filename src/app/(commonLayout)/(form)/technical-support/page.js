@@ -545,7 +545,7 @@ export default function TechnicalSupportForm() {
               <CardHeader className="w-full lg:w-1/5">
                 <CardTitle className=""> Impact</CardTitle>
               </CardHeader>
-              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-5">
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 grid grid-cols-1 lg:grid-cols-2 space-y-5">
                 <div>
                   <Label className="text-sm font-medium">
                     How urgent is the issue/request?
@@ -610,12 +610,12 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 7: Support Preferences */}
-          <div className="bg-secondary py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <CardHeader className="">
-                <h3 className="">Section 7: Support Preferences</h3>
+          <div className="bg-secondary-foreground custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className="">Support Preferences</CardTitle>
               </CardHeader>
-              <CardContent className=" space-y-5">
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 grid grid-cols-1 lg:grid-cols-2 lg:pl-10">
                 <div>
                   <Label className="text-sm font-medium">
                     What is your preferred method to receive support?
