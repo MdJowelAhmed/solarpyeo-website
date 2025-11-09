@@ -65,8 +65,8 @@ export default function MisuseReportForm() {
   };
 
   const handleMisuseNatureChange = (value, checked) => {
-    setMisuseNature(prev =>
-      checked ? [...prev, value] : prev.filter(item => item !== value)
+    setMisuseNature((prev) =>
+      checked ? [...prev, value] : prev.filter((item) => item !== value)
     );
   };
 
@@ -75,8 +75,8 @@ export default function MisuseReportForm() {
   };
 
   const handleResolutionChange = (value, checked) => {
-    setResolutionRequested(prev =>
-      checked ? [...prev, value] : prev.filter(item => item !== value)
+    setResolutionRequested((prev) =>
+      checked ? [...prev, value] : prev.filter((item) => item !== value)
     );
   };
 
@@ -122,8 +122,11 @@ export default function MisuseReportForm() {
       const formData = new FormData();
 
       // Match exact Postman field names
-      formData.append("knowThisPerson", isKnowledgeable === "yes" ? "true" : "false");
-      
+      formData.append(
+        "knowThisPerson",
+        isKnowledgeable === "yes" ? "true" : "false"
+      );
+
       // Nature of Misuse - send as single comma-separated string or array
       misuseNature.forEach((nature, index) => {
         formData.append(`natureOfTheReported[${index}]`, nature);
@@ -145,7 +148,10 @@ export default function MisuseReportForm() {
       });
 
       // Affirmation & Signature
-      formData.append("affirmationAndSignature", affirmation ? "true" : "false");
+      formData.append(
+        "affirmationAndSignature",
+        affirmation ? "true" : "false"
+      );
 
       // Supporting Documents
       if (selectedFiles1) {
@@ -157,7 +163,7 @@ export default function MisuseReportForm() {
 
       // Debug FormData contents
       for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ', pair[1]);
+        console.log(pair[0] + ": ", pair[1]);
       }
 
       // Submit the form
@@ -185,10 +191,11 @@ export default function MisuseReportForm() {
       setAffirmation(false);
       setSignature("");
       setDateOfBirth(undefined);
-
     } catch (error) {
       console.error("Submission error:", error);
-      toast.error(error?.data?.message || "Failed to submit report. Please try again.");
+      toast.error(
+        error?.data?.message || "Failed to submit report. Please try again."
+      );
     }
   };
 
@@ -196,103 +203,105 @@ export default function MisuseReportForm() {
     <div className="min-h-screen">
       <div className="bg-secondary py-12 md:py-16 lg:py-24">
         {/* Title Section */}
-        <div className="bg-secondary-foreground">
-          <div className="flex items-center justify-between gap-2 mb-4">
-            <div className="w-1/2 flex flex-col justify-between h-full gap-16 lg:gap-24 xl:gap-42">
-              <div className="flex justify-start flex-col">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-8 w-8 text-red-500" />
-                  <h1 className="text-3xl font-bold text-gray-900">
-                    Misuse Report Form
-                  </h1>
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Use this form to report any misuse of power, fraud, waste,
-                  abuse of authority, or any violation of law or policy. Your
-                  report will be treated confidentially to the extent permitted
-                  by law.
-                </p>
+        <div className="bg-secondary-foreground custom-padding py-12 md:py-16 lg:py-24">
+          <div className="">
+            <div className="mb-6">
+              <div className="flex items-center justify-center gap-2">
+                <AlertTriangle className="h-8 w-8 text-red-500" />
+                <h2 className="text-2xl lg:text-4xl font-bold text-center">
+                  Misuse Report Form
+                </h2>
+                
               </div>
-
-              <div>
-                <p className="text-sm font-medium mb-2">
-                  Are you personally knowledgeable about the problem or event
-                  reported? (or this disclosure):
-                </p>
-                <RadioGroup 
-                  value={isKnowledgeable} 
-                  onValueChange={setIsKnowledgeable}
-                  className="flex gap-6"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="yes" />
-                    <Label htmlFor="yes">Yes</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="no" />
-                    <Label htmlFor="no">No</Label>
-                  </div>
-                </RadioGroup>
-              </div>
+              <p className="text-gray-600 text-sm leading-relaxed text-center max-w-2xl mx-auto mt-3">
+                Use this form to report any misuse of power, fraud, waste, abuse
+                of authority, or any violation of law or policy. Your report
+                will be treated confidentially to the extent permitted by law.
+              </p>
             </div>
+            <div className="">
+              <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+                <CardHeader className="pb-4 w-full lg:w-1/5">
+                  <CardTitle>Section 1: Reporter Information</CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Please provide your contact information. Anonymous reporting
+                    is allowed.
+                  </p>
 
-            <div className="w-1/2">
-              <CardHeader>
-                <h3>Section 1: Reporter Information</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Please provide your contact information. Anonymous reporting
-                  is allowed.
-                </p>
-              </CardHeader>
-              <CardContent className="p-6 space-y-4">
-                <div className="grid md:grid-cols-1 gap-4">
                   <div>
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input
-                      id="fullName"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
+                    <p className="text-sm font-medium mb-2">
+                      Are you personally knowledgeable about the problem or
+                      event reported? (or this disclosure):
+                    </p>
+                    <RadioGroup
+                      value={isKnowledgeable}
+                      onValueChange={setIsKnowledgeable}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="yes" />
+                        <Label htmlFor="yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="no" />
+                        <Label htmlFor="no">No</Label>
+                      </div>
+                    </RadioGroup>
                   </div>
-                  <div>
-                    <Label htmlFor="username">Username (if applicable)</Label>
-                    <Input
-                      id="username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                  </div>
-                </div>
+                </CardHeader>
 
-                <div className="grid md:grid-cols-1 gap-4">
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={emailAddress}
-                      onChange={(e) => setEmailAddress(e.target.value)}
-                    />
+                <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+                  <div className="grid md:grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="fullName">Full Name *</Label>
+                      <Input
+                        id="fullName"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="username">Username (if applicable)</Label>
+                      <Input
+                        id="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="caseID">If yes specify Case ID</Label>
-                    <Input
-                      id="caseID"
-                      value={caseID}
-                      onChange={(e) => setCaseID(e.target.value)}
-                    />
-                  </div>
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="anonymous"
-                    checked={anonymousPreferred}
-                    onCheckedChange={setAnonymousPreferred}
-                  />
-                  <Label htmlFor="anonymous">Prefer to remain anonymous</Label>
-                </div>
-              </CardContent>
+                  <div className="grid md:grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={emailAddress}
+                        onChange={(e) => setEmailAddress(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="caseID">If yes specify Case ID</Label>
+                      <Input
+                        id="caseID"
+                        value={caseID}
+                        onChange={(e) => setCaseID(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="anonymous"
+                      checked={anonymousPreferred}
+                      onCheckedChange={setAnonymousPreferred}
+                    />
+                    <Label htmlFor="anonymous">
+                      Prefer to remain anonymous
+                    </Label>
+                  </div>
+                </CardContent>
+              </div>
             </div>
           </div>
         </div>
@@ -502,8 +511,8 @@ export default function MisuseReportForm() {
             </CardHeader>
             <CardContent>
               <h4 className="mb-6 text-center">
-                Check the outcome that you believe would correct or redress
-                the violation:
+                Check the outcome that you believe would correct or redress the
+                violation:
               </h4>
 
               <div className="grid md:grid-cols-1 gap-6">
@@ -552,8 +561,8 @@ export default function MisuseReportForm() {
                   correct to the best of my knowledge and belief. I understand
                   that this information may be investigated and may result in
                   legal action against the named individual(s). I also
-                  understand that knowingly filing a false complaint may
-                  subject me to criminal penalties.
+                  understand that knowingly filing a false complaint may subject
+                  me to criminal penalties.
                 </p>
               </div>
 
@@ -609,11 +618,15 @@ export default function MisuseReportForm() {
         {/* Submit Section */}
         <div className="container mx-auto">
           <p className="mb-4">
-            Upon submission, you will receive a confirmation receipt and tracking number. A member of the Platform`s <strong>Compliance & Integrity Division</strong> will review your report within <strong>5–10 business days</strong>. You may be contacted for clarification or further evidence if needed.
+            Upon submission, you will receive a confirmation receipt and
+            tracking number. A member of the Platform`s{" "}
+            <strong>Compliance & Integrity Division</strong> will review your
+            report within <strong>5–10 business days</strong>. You may be
+            contacted for clarification or further evidence if needed.
           </p>
 
           <div className="flex w-full items-center justify-end">
-            <Button 
+            <Button
               onClick={handleSubmit}
               disabled={!affirmation || isLoading}
               className={`flex ${
