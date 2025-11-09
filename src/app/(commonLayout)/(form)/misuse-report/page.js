@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -253,7 +253,7 @@ export default function MisuseReportForm() {
                 <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
                   <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="fullName">Full Name *</Label>
+                      <p htmlFor="fullName">Full Name *</p>
                       <Input
                         id="fullName"
                         value={fullName}
@@ -261,7 +261,7 @@ export default function MisuseReportForm() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="username">Username (if applicable)</Label>
+                      <p htmlFor="username">Username (if applicable)</p>
                       <Input
                         id="username"
                         value={username}
@@ -269,7 +269,7 @@ export default function MisuseReportForm() {
                       />
                     </div>
                       <div>
-                      <Label htmlFor="email">Email Address *</Label>
+                      <p htmlFor="email">Email Address *</p>
                       <Input
                         id="email"
                         type="email"
@@ -327,9 +327,9 @@ export default function MisuseReportForm() {
                         handleMisuseNatureChange(item, checked)
                       }
                     />
-                    <Label htmlFor={`misuse-${index}`} className="text-sm">
+                    <p htmlFor={`misuse-${index}`} className="text-sm">
                       {item}
-                    </Label>
+                    </p>
                   </div>
                 ))}
               </div>
@@ -345,9 +345,9 @@ export default function MisuseReportForm() {
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-4">
               <div>
-                <Label>
+                <p>
                   Name of the Person Being or Mayor Employer (if known): *
-                </Label>
+                </p>
                 <Input
                   value={complaintSubject}
                   onChange={(e) => setComplaintSubject(e.target.value)}
@@ -355,7 +355,7 @@ export default function MisuseReportForm() {
               </div>
 
               <div>
-                <Label>Email of the person (if known):</Label>
+                <p>Email of the person (if known):</p>
                 <Input
                   type="email"
                   value={subjectEmail}
@@ -364,7 +364,7 @@ export default function MisuseReportForm() {
               </div>
 
               <div>
-                <Label>What was alleged official or employee:</Label>
+                <p>What was alleged official or employee:</p>
                 <div className="mt-2 space-y-2">
                   {[
                     "initiator",
@@ -381,9 +381,9 @@ export default function MisuseReportForm() {
                           handleAllegedOfficialChange(item, checked)
                         }
                       />
-                      <Label htmlFor={`official-${index}`} className="text-sm">
+                      <p htmlFor={`official-${index}`} className="text-sm">
                         {item}
-                      </Label>
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -406,7 +406,7 @@ export default function MisuseReportForm() {
          
 
               <div>
-                <Label>Description of Incident(s): *</Label>
+                <p>Description of Incident(s): *</p>
                 <Textarea
                   className="h-40"
                   value={incidentDetails}
@@ -431,9 +431,9 @@ export default function MisuseReportForm() {
        
 
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-3">
+                <p className="block text-gray-700 font-medium mb-3">
                   Upload File 1:
-                </label>
+                </p>
                 <div className="relative">
                   <input
                     type="file"
@@ -441,7 +441,7 @@ export default function MisuseReportForm() {
                     onChange={(e) => handleFileChange(e, 1)}
                     className="hidden"
                   />
-                  <label
+                  <p
                     htmlFor="file1"
                     className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
@@ -451,14 +451,14 @@ export default function MisuseReportForm() {
                     <span className="text-gray-500 text-sm">
                       {selectedFiles1 ? "" : "No file chosen"}
                     </span>
-                  </label>
+                  </p>
                 </div>
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-3">
+                <p className="block text-gray-700 font-medium mb-3">
                   Upload File 2:
-                </label>
+                </p>
                 <div className="relative">
                   <input
                     type="file"
@@ -466,7 +466,7 @@ export default function MisuseReportForm() {
                     onChange={(e) => handleFileChange(e, 2)}
                     className="hidden"
                   />
-                  <label
+                  <p
                     htmlFor="file2"
                     className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
@@ -476,14 +476,14 @@ export default function MisuseReportForm() {
                     <span className="text-gray-500 text-sm">
                       {selectedFiles2 ? "" : "No file chosen"}
                     </span>
-                  </label>
+                  </p>
                 </div>
               </div>
 
               <div className="mb-8">
-                <label className="block text-gray-700 font-medium mb-3">
+                <p className="block text-gray-700 font-medium mb-3">
                   Optional Link (e.g., Case ID or Submission URL):
-                </label>
+                </p>
                 <input
                   type="text"
                   value={supportingLink}
@@ -497,16 +497,17 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 6: Resolution Requested */}
-        <div className="py-12 md:py-16 lg:py-24 bg-secondary-foreground">
-          <div className="container mx-auto">
-            <CardHeader>
-              <h3>Section 6: Resolution Requested</h3>
-            </CardHeader>
-            <CardContent>
-              <h4 className="mb-6 text-center">
+        <div className="custom-padding bg-secondary">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle>Resolution Requested</CardTitle>
+                <p className="mb-6 text-justify">
                 Check the outcome that you believe would correct or redress the
                 violation:
-              </h4>
+              </p>
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+            
 
               <div className="grid md:grid-cols-1 gap-6">
                 {[
@@ -527,9 +528,9 @@ export default function MisuseReportForm() {
                         handleResolutionChange(item, checked)
                       }
                     />
-                    <Label htmlFor={`resolution-${index}`} className="text-sm">
+                    <p htmlFor={`resolution-${index}`} className="text-sm">
                       {item}
-                    </Label>
+                    </p>
                   </div>
                 ))}
               </div>
@@ -538,16 +539,12 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 7: Affirmation & Signature */}
-        <div className="py-12 md:py-16 lg:py-24 bg-secondary">
-          <div className="container mx-auto">
-            <CardHeader>
-              <h3>Section 7: Affirmation & Signature</h3>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-lg">
-                <p className="text-xl font-medium mb-2">
-                  Perjury Declaration & Affidavit: Compliance Advice
-                </p>
+    
+          <div className="custom-padding bg-secondary">
+           
+            <CardContent className="">
+              <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-md">
+                
                 <p className="text-sm">
                   I swear or affirm under penalty of perjury that the
                   information I have provided in this complaint is true and
@@ -559,20 +556,20 @@ export default function MisuseReportForm() {
                 </p>
               </div>
 
-              <div className="flex items-start space-x-2">
+              <div className="flex items-start space-x-2 mt-6">
                 <Checkbox
                   id="affirmation"
                   checked={affirmation}
                   onCheckedChange={setAffirmation}
                 />
-                <Label htmlFor="affirmation" className="text-sm">
+                <p htmlFor="affirmation" className="text-sm">
                   I affirm and attest to the absolute statement. *
-                </Label>
+                </p>
               </div>
 
-              <div className="grid md:grid-cols-1 gap-4">
+              {/* <div className="grid md:grid-cols-1 gap-4">
                 <div>
-                  <Label>Report Signature: *</Label>
+                  <p>Report Signature: *</p>
                   <Input
                     className="mt-1"
                     value={signature}
@@ -580,7 +577,7 @@ export default function MisuseReportForm() {
                   />
                 </div>
                 <div>
-                  <Label>Date of Birth *</Label>
+                  <p>Date of Birth *</p>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -603,7 +600,7 @@ export default function MisuseReportForm() {
                     </PopoverContent>
                   </Popover>
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </div>
         </div>
@@ -618,7 +615,7 @@ export default function MisuseReportForm() {
             contacted for clarification or further evidence if needed.
           </p>
 
-          <div className="flex w-full items-center justify-end">
+          <div className="flex w-full items-center mb-10 justify-end">
             <Button
               onClick={handleSubmit}
               disabled={!affirmation || isLoading}
@@ -631,7 +628,7 @@ export default function MisuseReportForm() {
               {isLoading ? "Submitting..." : "Submit Securely"}
             </Button>
           </div>
-        </div>
+       
       </div>
     </div>
   );
