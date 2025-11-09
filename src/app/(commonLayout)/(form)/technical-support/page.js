@@ -15,6 +15,11 @@ import { useCreateTechnicalSupportMutation } from "@/redux/featured/technicalSup
 export default function TechnicalSupportForm() {
   const [createTechnicalSupport, { isLoading }] = useCreateTechnicalSupportMutation();
   
+  // Get user ID from your auth system (Redux, Context, or localStorage)
+  // Example: const userId = useSelector(state => state.auth.user?._id);
+  // Or: const userId = localStorage.getItem('userId');
+  const userId = "YOUR_USER_ID_HERE"; // Replace this with actual user ID
+  
   const [selectedFile, setSelectedFile] = useState(null);
   const [initiatorDob, setInitiatorDob] = useState(null);
   
@@ -73,43 +78,92 @@ export default function TechnicalSupportForm() {
 
   const handleSubmit = async () => {
     try {
-      // Validation
-      if (!formData.name || !formData.email || !formData.description) {
-        alert("Please fill in all required fields");
+      // Validation - check all required fields
+      if (!formData.name) {
+        alert("Please enter your name");
+        return;
+      }
+      if (!formData.phone) {
+        alert("Please enter your phone number");
+        return;
+      }
+      if (!formData.description) {
+        alert("Please enter issue description");
+        return;
+      }
+      if (!formData.dateAndTime) {
+        alert("Please enter date and time of issue");
+        return;
+      }
+      if (formData.deviceType.length === 0) {
+        alert("Please select device type");
+        return;
+      }
+      if (formData.browserApp.length === 0) {
+        alert("Please select browser/app");
+        return;
+      }
+      if (!formData.receiveSupport) {
+        alert("Please select preferred support method");
+        return;
+      }
+      if (!formData.scheduleCall) {
+        alert("Please select if you want to schedule a call");
         return;
       }
 
       // Create FormData object
       const submitData = new FormData();
       
-      // Append all text fields
+      // User ID (Required by backend)
+      submitData.append("user", userId); // This is required!
+      
+      // Required fields
       submitData.append("name", formData.name);
-      submitData.append("userName", formData.userName);
-      submitData.append("email", formData.email);
       submitData.append("phone", formData.phone);
-      submitData.append("issueClassification", formData.issueClassification.length > 0 ? formData.issueClassification.join(", ") : "");
       submitData.append("description", formData.description);
       submitData.append("dateAndTime", formData.dateAndTime);
-      submitData.append("deviceType", formData.deviceType.length > 0 ? formData.deviceType.join(", ") : "");
-      submitData.append("browserApp", formData.browserApp.length > 0 ? formData.browserApp.join(", ") : "");
-      submitData.append("impact", formData.impact);
-      submitData.append("affectedUser", formData.affectedUser);
+      submitData.append("deviceType", formData.deviceType.join(", "));
+      submitData.append("browserApp", formData.browserApp.join(", "));
       submitData.append("receiveSupport", formData.receiveSupport);
-      submitData.append("scheduleCall", formData.scheduleCall ? "true" : "false");
-      submitData.append("digitalSignature", formData.digitalSignature);
-      submitData.append("submissionType", formData.submissionType);
-      submitData.append("DOB", initiatorDob ? initiatorDob.toISOString().split('T')[0] : "");
+      submitData.append("scheduleCall", formData.scheduleCall);
       
+      // Optional fields
+      if (formData.userName) {
+        submitData.append("userName", formData.userName);
+      }
+      if (formData.email) {
+        submitData.append("email", formData.email);
+      }
+      if (formData.issueClassification.length > 0) {
+        submitData.append("issueClassification", formData.issueClassification.join(", "));
+      }
+      if (formData.impact) {
+        submitData.append("impact", formData.impact);
+      }
+      if (formData.affectedUser) {
+        submitData.append("affectedUser", formData.affectedUser);
+      }
+      if (formData.digitalSignature) {
+        submitData.append("digitalSignature", formData.digitalSignature);
+      }
+      if (formData.submissionType) {
+        submitData.append("submissionType", formData.submissionType);
+      }
+      if (initiatorDob) {
+        submitData.append("DOB", initiatorDob.toISOString().split('T')[0]);
+      }
       if (formData.otherIssueDescription) {
         submitData.append("otherIssueDescription", formData.otherIssueDescription);
       }
-      
       if (formData.browserUsedOther) {
         submitData.append("browserUsed", formData.browserUsedOther);
       }
-      
       if (formData.otherDetails) {
         submitData.append("otherDetails", formData.otherDetails);
+      }
+      if (formData.browserUsed.length > 0) {
+        submitData.append("browserUsed", formData.browserUsed.join(", "));
       }
       
       // Append file if exists
