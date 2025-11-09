@@ -7,25 +7,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, AlertTriangle, X, Loader2 } from "lucide-react";
-// import { useCreateAppealFormMutation } from "@/redux/api/appealFormApi";
-import { toast } from "sonner"; // or your toast library
+import { toast } from "sonner";
 import { useCreateAppealFormMutation } from "@/redux/featured/appealForm/appealFormApi";
 
 const AppealRequestForm = () => {
   const [selectedGrounds, setSelectedGrounds] = useState([]);
   const [reviewOption, setReviewOption] = useState("");
-
   const [justification, setJustification] = useState("");
   const [appealBasis, setAppealBasis] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
 
   const [createAppealForm, { isLoading }] = useCreateAppealFormMutation();
 
-  // Add two different states at the top
   const [files1, setFiles1] = useState([]);
   const [files2, setFiles2] = useState([]);
 
-  // Separate handlers
   const handleFileUpload1 = (event) => {
     const uploadedFiles = Array.from(event.target.files);
     if (files1.length + uploadedFiles.length > 15) {
@@ -54,7 +50,6 @@ const AppealRequestForm = () => {
     setFiles2([...files2, ...uploadedFiles]);
   };
 
-  // Separate remove functions
   const removeFile1 = (index) =>
     setFiles1(files1.filter((_, i) => i !== index));
   const removeFile2 = (index) =>
@@ -67,29 +62,6 @@ const AppealRequestForm = () => {
       setSelectedGrounds(selectedGrounds.filter((g) => g !== ground));
     }
   };
-
-  // const handleFileUpload = (event) => {
-  //   const uploadedFiles = Array.from(event.target.files);
-
-  //   // Validate file count
-  //   if (files.length + uploadedFiles.length > 15) {
-  //     toast.error("Maximum 15 files allowed");
-  //     return;
-  //   }
-
-  //   // Validate file size (32MB = 33554432 bytes)
-  //   const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
-  //   if (oversizedFiles.length > 0) {
-  //     toast.error("Some files exceed 32MB limit");
-  //     return;
-  //   }
-
-  //   setFiles([...files, ...uploadedFiles]);
-  // };
-
-  // const removeFile = (index) => {
-  //   setFiles(files.filter((_, i) => i !== index));
-  // };
 
   const validateForm = () => {
     if (selectedGrounds.length === 0) {
@@ -124,26 +96,53 @@ const AppealRequestForm = () => {
     if (!validateForm()) return;
 
     try {
-      // Create FormData object
       const formData = new FormData();
 
-      // Append text fields
+      // Log what we're sending
+      console.log("=== FORM SUBMISSION DEBUG ===");
+      console.log("Selected Grounds:", selectedGrounds);
+      console.log("Review Option:", reviewOption);
+      console.log("Appeal Basis:", appealBasis);
+      console.log("Justification:", justification);
+      console.log("Digital Signature:", digitalSignature);
+      console.log("Files Group 1 count:", files1.length);
+      console.log("Files Group 2 count:", files2.length);
+
       formData.append("appealGrounds", JSON.stringify(selectedGrounds));
       formData.append("justification", justification);
       formData.append("reviewOption", reviewOption);
       formData.append("declarationAndSubmission", appealBasis);
+      formData.append("digitalSignature", digitalSignature);
 
-      // Append files
-     files1.forEach((file) => formData.append("supportingDocumentGroup1", file));
-files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
+      // Log file field names
+      console.log("Appending all files to field: supportingDocuments");
+      files1.forEach((file, index) => {
+        console.log(`  Group 1 File ${index + 1}:`, file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+        formData.append("supportingDocuments", file);
+      });
 
+      files2.forEach((file, index) => {
+        console.log(`  Group 2 File ${index + 1}:`, file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+        formData.append("supportingDocuments", file);
+      });
 
-      // Submit form
+      // Log all FormData entries
+      console.log("\n=== FormData Contents ===");
+      for (let pair of formData.entries()) {
+        if (pair[1] instanceof File) {
+          console.log(pair[0], ':', 'FILE -', pair[1].name);
+        } else {
+          console.log(pair[0], ':', pair[1]);
+        }
+      }
+      console.log("========================\n");
+
+      console.log("Sending request to API...");
       const response = await createAppealForm(formData).unwrap();
+      console.log("✅ Success! Response:", response);
 
       toast.success("Appeal submitted successfully!");
 
-      // Reset form
       setSelectedGrounds([]);
       setReviewOption("");
       setFiles1([]);
@@ -152,7 +151,14 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
       setAppealBasis("");
       setDigitalSignature("");
     } catch (error) {
-      console.error("Error submitting appeal:", error);
+      console.error("❌ ERROR submitting appeal:", error);
+      console.error("Error details:", {
+        message: error?.data?.message,
+        status: error?.status,
+        data: error?.data,
+        fullError: error
+      });
+      
       toast.error(
         error?.data?.message || "Failed to submit appeal. Please try again."
       );
@@ -163,7 +169,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
     <div className="">
       <div className="">
         {/* Header */}
-        <div className="bg-secondary-foreground custom-padding py-12 md:py-16 lg:py-24  ">
+        <div className="bg-secondary-foreground custom-padding py-12 md:py-16 lg:py-24">
           <div className="mb-6">
             <h2 className="text-2xl lg:text-4xl font-bold text-center">
               📄 Appeal Request Form
@@ -184,7 +190,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
           </div>
 
           {/* Section 1: Appeal Grounds */}
-          <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <div className="container mx-auto flex flex-col lg:flex-row items-center">
               <CardHeader className="pb-4 w-full lg:w-1/5">
                 <CardTitle className="">🔍 SECTION 1: Appeal Grounds</CardTitle>
@@ -316,7 +322,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
         </div>
 
         {/* Section 2: Supporting Materials */}
-        <div className="bg-secondary custom-padding ">
+        <div className="bg-secondary custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
             <CardContent className="w-full lg:w-1/5">
               <div className="">
@@ -326,31 +332,25 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
               </div>
             </CardContent>
 
-            <div className="space-y-4 w-full lg:w-4/5  lg:border-l-4 h-full lg:pl-10">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4  md:gap-x-8 lg:gap-x-12">
+            <div className="space-y-4 w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12">
                 <div className="space-y-2">
                   <Label
-                    htmlFor="file-upload"
+                    htmlFor="file-upload-1"
                     className="text-sm font-medium text-gray-700"
                   >
-                    Upload File
+                    Upload File Group 1
                   </Label>
                   <div className="flex items-center gap-4">
                     <Input
+                      id="file-upload-1"
                       type="file"
                       onChange={handleFileUpload1}
                       multiple
                       accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     />
-                    {files1.map((file, index) => (
-                      <div key={index}>
-                        {file.name}
-                        <button onClick={() => removeFile1(index)}>❌</button>
-                      </div>
-                    ))}
                   </div>
 
-                  {/* Display uploaded files */}
                   {files1.length > 0 && (
                     <div className="mt-4 space-y-2">
                       <p className="text-sm font-medium text-gray-700">
@@ -370,7 +370,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
                           </div>
                           <button
                             type="button"
-                            onClick={() => removeFile(index)}
+                            onClick={() => removeFile1(index)}
                             className="text-red-600 hover:text-red-800"
                           >
                             <X className="w-4 h-4" />
@@ -382,27 +382,21 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
                 </div>
                 <div className="space-y-2">
                   <Label
-                    htmlFor="file-upload"
+                    htmlFor="file-upload-2"
                     className="text-sm font-medium text-gray-700"
                   >
-                    Upload File
+                    Upload File Group 2
                   </Label>
                   <div className="flex items-center gap-4">
                     <Input
+                      id="file-upload-2"
                       type="file"
                       onChange={handleFileUpload2}
                       multiple
                       accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     />
-                    {files2.map((file, index) => (
-                      <div key={index}>
-                        {file.name}
-                        <button onClick={() => removeFile2(index)}>❌</button>
-                      </div>
-                    ))}
                   </div>
 
-                  {/* Display uploaded files */}
                   {files2.length > 0 && (
                     <div className="mt-4 space-y-2">
                       <p className="text-sm font-medium text-gray-700">
@@ -422,7 +416,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
                           </div>
                           <button
                             type="button"
-                            onClick={() => removeFile(index)}
+                            onClick={() => removeFile2(index)}
                             className="text-red-600 hover:text-red-800"
                           >
                             <X className="w-4 h-4" />
@@ -437,7 +431,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
               <p className="text-sm text-gray-700 mb-2">
                 Upload supporting documents or media{" "}
                 <span className="font-medium">
-                  (Max 15 files, PDF, JPEG, JPG, HEIC, PNG, DOCX, MP4):
+                  (Max 15 files per group, PDF, JPEG, JPG, HEIC, PNG, DOCX, MP4):
                 </span>
               </p>
 
@@ -454,7 +448,7 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="">SECTION 3: Written Justification</CardTitle>
             </CardHeader>
-            <CardContent className="w-full lg:w-4/5   lg:border-l-4 h-full lg:pl-10">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
               <p className="text-sm text-gray-700 mb-4">
                 Provide a detailed written argument explaining why this appeal
                 should be granted. Be specific and cite dates, documents, or
@@ -472,12 +466,12 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
         </div>
 
         {/* Section 4: Review Option */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="mb-6">🧠 SECTION 4: Review Option</h3>
+        <div className="bg-secondary py-12 custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="">SECTION 4: Review Option</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
               <Label className="mb-5">
                 Please select the appropriate option. *
               </Label>
@@ -486,46 +480,45 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    id="expedited"
+                    id="NewJurorPanel"
                     name="review-option"
-                    value="expedited"
-                    checked={reviewOption === "expedited"}
+                    value="NewJurorPanel"
+                    checked={reviewOption === "NewJurorPanel"}
                     onChange={(e) => setReviewOption(e.target.value)}
                     className="w-4 h-4 text-red-600"
                   />
-                  <Label htmlFor="expedited" className="text-sm text-gray-700">
-                    Expedited (Advanced) max 3 business days
+                  <Label htmlFor="NewJurorPanel" className="text-sm text-gray-700">
+                   New juror panel (default post Jury Verdict)
                   </Label>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    id="regular"
+                    id="ModeratorOnlyReview"
                     name="review-option"
-                    value="regular"
-                    checked={reviewOption === "regular"}
+                    value="ModeratorOnlyReview"
+                    checked={reviewOption === "ModeratorOnlyReview"}
                     onChange={(e) => setReviewOption(e.target.value)}
                     className="w-4 h-4 text-red-600"
                   />
-                  <Label htmlFor="regular" className="text-sm text-gray-700">
-                    Regular (economy) estimate 14 calendar days (approximately
-                    10 business days)
+                  <Label htmlFor="ModeratorOnlyReview" className="text-sm text-gray-700">
+                    Moderator-only review (applicable for other reasons selected in Section 1)
                   </Label>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    id="default"
+                    id="PlatformAppealsBoard"
                     name="review-option"
-                    value="default"
-                    checked={reviewOption === "default"}
+                    value="PlatformAppealsBoard"
+                    checked={reviewOption === "PlatformAppealsBoard"}
                     onChange={(e) => setReviewOption(e.target.value)}
                     className="w-4 h-4 text-red-600"
                   />
-                  <Label htmlFor="default" className="text-sm text-gray-700">
-                    Default (standard)
+                  <Label htmlFor="PlatformAppealsBoard" className="text-sm text-gray-700">
+                   Platform appeals board
                   </Label>
                 </div>
               </div>
@@ -534,16 +527,17 @@ files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
         </div>
 
         {/* Section 5: Declaration & Submission */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="mb-6">SECTION 5: Declaration & Submission</h3>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <Label className="font-bold mb-3">
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="mb-6">SECTION 5: Declaration & Submission</CardTitle>
+                      <Label className="font-bold mb-3">
                   Declaration Under Penalty of Perjury:
                 </Label>
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
+              <div className="mb-4">
+        
                 <p className="mb-6 text-sm">
                   I declare and affirm in accordance with the laws of the
                   jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
