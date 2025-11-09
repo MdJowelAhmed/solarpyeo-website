@@ -296,10 +296,10 @@ export default function TechnicalSupportForm() {
             <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           
                 <CardHeader className="w-full lg:w-1/5">
-                  <h3 className="">Section 2: Issue Classification</h3>
-                  <h4 className="text-center mb-6">
+                  <CardTitle className="">Issue Classification</CardTitle>
+                  <p className="text-justify mb-6">
                     (Select the category that best describes your issue)
-                  </h4>
+                  </p>
                 </CardHeader>
                 <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
                   <div className="grid md:grid-cols-1 gap-4">
@@ -323,15 +323,15 @@ export default function TechnicalSupportForm() {
                             handleCheckboxChange("issueClassification", item, checked)
                           }
                         />
-                        <Label htmlFor={`issue-${index}`} className="text-sm">
+                        <p htmlFor={`issue-${index}`} className="text-sm">
                           {item}
-                        </Label>
+                        </p>
                       </div>
                     ))}
                   </div>
                   <div>
                     <Input
-                      className="mt-1"
+                      className="mt-4"
                       value={formData.otherIssueDescription}
                       onChange={(e) => handleInputChange("otherIssueDescription", e.target.value)}
                       placeholder="If other, please specify"
@@ -343,16 +343,17 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 3: Description of The Issue */}
-          <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <CardHeader className="">
-                <h3 className="">Section 3: Description Of The Issue</h3>
-              </CardHeader>
-              <CardContent className="">
-                <p className="text-center mb-6">
+          <div className="bg-secondary-foreground custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className="">Description Of The Issue</CardTitle>
+                   <p className="text-justify ">
                   Please describe in detail what happened, including any error
                   messages, and the steps to reproduce the issue.
                 </p>
+              </CardHeader>
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+             
 
                 <div>
                   <Label>Detailed Issue Description*</Label>
