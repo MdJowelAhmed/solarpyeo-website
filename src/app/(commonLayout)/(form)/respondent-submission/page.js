@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FileText,
   Upload,
@@ -23,7 +23,8 @@ export default function RespondentSubmissionForm() {
   const [digitalSignature, setDigitalSignature] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [createRespondentSubmission, { isLoading }] = useCreateRespondentSubmissionMutation();
+  const [createRespondentSubmission, { isLoading }] =
+    useCreateRespondentSubmissionMutation();
 
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -32,7 +33,7 @@ export default function RespondentSubmissionForm() {
       return;
     }
 
-    const validFiles = files.filter(file => {
+    const validFiles = files.filter((file) => {
       const maxSize = 32 * 1024 * 1024; // 32MB
       if (file.size > maxSize) {
         toast.error(`${file.name} exceeds 32MB limit`);
@@ -85,39 +86,42 @@ export default function RespondentSubmissionForm() {
 
       // Submit to backend
       const result = await createRespondentSubmission(formData).unwrap();
-      
+
       toast.success("Response submitted successfully!");
-      
+
       // Reset form
       setSelectedResponse("deny");
       setUploadedFiles([]);
       setDigitalSignature("");
-      
+
       // Optional: Redirect or perform other actions
       // router.push('/submission-confirmation');
-      
     } catch (error) {
       console.error("Submission error:", error);
-      toast.error(error?.data?.message || "Failed to submit response. Please try again.");
+      toast.error(
+        error?.data?.message || "Failed to submit response. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const removeFile = (indexToRemove) => {
-    setUploadedFiles(files => files.filter((_, index) => index !== indexToRemove));
+    setUploadedFiles((files) =>
+      files.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return (
     <div className="">
       <form onSubmit={handleSubmit}>
         {/* Form Header */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <h2 className="text-2xl lg:text-4xl font-semibold mb-6 text-center">
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="mb-6">
+            <h3 className="text-2xl lg:text-4xl font-semibold mb-6 text-center">
               📄 Respondent Submission Form
-            </h2>
-            <div className="space-y-2 text-sm ">
+            </h3>
+            <div className="space-y-2 text-sm max-w-xl mx-auto">
               <div>
                 <span className="font-medium">Platform Case Reference ID:</span>{" "}
                 [Auto-populated]
@@ -128,72 +132,69 @@ export default function RespondentSubmissionForm() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Section 1: Response Declaration */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardContent className="">
+          {/* Section 1: Response Declaration */}
+
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
               <div className="mb-6">
-                <h3 className="">📑 SECTION 1: RESPONSE DECLARATION</h3>
+                <CardTitle className="">📑 SECTION 1: RESPONSE DECLARATION</CardTitle>
               </div>
-
-              <Label className="mb-5">
+              <p className="text-justify">
                 Please choose how you wish to respond to the allegation(s) in
                 question:
-              </Label>
+              </p>
+            </CardHeader>
 
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <RadioGroup
-                value={selectedResponse}
-                onValueChange={setSelectedResponse}
-                className="space-y-5"
-              >
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem value="deny" id="deny" />
-                  <Label htmlFor="deny" className="">
-                    I <span className="font-medium">deny</span> the
-                    allegation(s) and will provide rebuttal evidence.
-                  </Label>
-                </div>
+              value={selectedResponse}
+              onValueChange={setSelectedResponse}
+              className="space-y-5"
+            >
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="deny" id="deny" />
+                <p htmlFor="deny" className="">
+                  I <span className="font-medium">deny</span> the allegation(s)
+                  and will provide rebuttal evidence.
+                </p>
+              </div>
 
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="partially" id="partially" />
-                  <Label htmlFor="partially" className="text-sm text-gray-700">
-                    I <span className="font-medium">partially agree</span> the
-                    allegations and will provide clarifying context.
-                  </Label>
-                </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="partially" id="partially" />
+                <p htmlFor="partially" className="text-sm text-gray-700">
+                  I <span className="font-medium">partially agree</span> the
+                  allegations and will provide clarifying context.
+                </p>
+              </div>
 
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="agree" id="agree" />
-                  <Label htmlFor="agree" className="text-sm text-gray-700">
-                    I <span className="font-medium">agree with</span> the
-                    allegation(s) as presented.
-                  </Label>
-                </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="agree" id="agree" />
+                <p htmlFor="agree" className="text-sm text-gray-700">
+                  I <span className="font-medium">agree with</span> the
+                  allegation(s) as presented.
+                </p>
+              </div>
 
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="mistaken" id="mistaken" />
-                  <Label htmlFor="mistaken" className="text-sm text-gray-700">
-                    I believe I have been{" "}
-                    <span className="font-medium">mistakenly identified</span>{" "}
-                    and am not the intended respondent.
-                  </Label>
-                </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="mistaken" id="mistaken" />
+                <p htmlFor="mistaken" className="text-sm text-gray-700">
+                  I believe I have been{" "}
+                  <span className="font-medium">mistakenly identified</span> and
+                  am not the intended respondent.
+                </p>
+              </div>
 
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="not-respond" id="not-respond" />
-                  <Label
-                    htmlFor="not-respond"
-                    className="text-sm text-gray-700"
-                  >
-                    I will <span className="font-medium">not respond</span>, but
-                    understand that silence may be considered during juror
-                    evaluation.
-                  </Label>
-                </div>
-              </RadioGroup>
-            </CardContent>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="not-respond" id="not-respond" />
+                <p htmlFor="not-respond" className="text-sm text-gray-700">
+                  I will <span className="font-medium">not respond</span>, but
+                  understand that silence may be considered during juror
+                  evaluation.
+                </p>
+              </div>
+            </RadioGroup>
+          </CardContent>
           </div>
         </div>
 
@@ -244,8 +245,13 @@ export default function RespondentSubmissionForm() {
                       Uploaded Files: ({uploadedFiles.length}/15)
                     </p>
                     {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between bg-green-50 p-2 rounded">
-                        <span className="text-sm text-green-700">{file.name}</span>
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-green-50 p-2 rounded"
+                      >
+                        <span className="text-sm text-green-700">
+                          {file.name}
+                        </span>
                         <button
                           type="button"
                           onClick={() => removeFile(index)}
@@ -327,7 +333,7 @@ export default function RespondentSubmissionForm() {
                     IP Address and Timestamp: [auto-captured by platform]
                   </span>
                 </div>
-                
+
                 {/* Warning Notice */}
                 <div className="bg-secondary-foreground border-l-4 border-red-700 p-4 rounded-lg mb-6">
                   <div className="flex items-start gap-2">
@@ -341,7 +347,7 @@ export default function RespondentSubmissionForm() {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Submit Button */}
                 <div className="flex justify-end">
                   <Button
@@ -350,7 +356,9 @@ export default function RespondentSubmissionForm() {
                     size="lg"
                     disabled={isLoading || isSubmitting}
                   >
-                    {isLoading || isSubmitting ? "Submitting..." : "Submit Response"}
+                    {isLoading || isSubmitting
+                      ? "Submitting..."
+                      : "Submit Response"}
                   </Button>
                 </div>
               </div>
