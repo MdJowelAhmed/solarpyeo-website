@@ -393,16 +393,17 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 4: Incident Details */}
-        <div className="py-12 md:py-16 lg:py-24 bg-secondary-foreground">
-          <div className="container mx-auto">
-            <CardHeader>
-              <h3>Section 4: Incident Details</h3>
-            </CardHeader>
-            <CardContent>
-              <h4 className="text-center mb-6">
+        <div className="custom-padding bg-secondary">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="text-red-700">Incident Details</CardTitle>
+                   <hp className="text-justify">
                 Please describe the event(s), behavior(s), and any associated
                 case(s). Include dates, communication, or submissions if known.
-              </h4>
+              </hp>
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+         
 
               <div>
                 <Label>Description of Incident(s): *</Label>
@@ -417,16 +418,17 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 5: Supporting Evidence */}
-        <div className="py-12 md:py-16 lg:py-24 bg-secondary">
-          <div className="container mx-auto">
-            <CardHeader>
-              <h3>Section 5: Supporting Evidence</h3>
-            </CardHeader>
-            <CardContent>
-              <h4 className="text-center mb-6">
+        <div className="custom-padding bg-secondary-foreground">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle >Supporting Evidence</CardTitle>
+                     <p className="text-justify ">
                 Attach any documents you cite and the documents that you can
                 provide to support maintaining an administrative filing etc.
-              </h4>
+              </p>
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:pl-10">
+       
 
               <div className="mb-6">
                 <label className="block text-gray-700 font-medium mb-3">
@@ -441,7 +443,7 @@ export default function MisuseReportForm() {
                   />
                   <label
                     htmlFor="file1"
-                    className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
                     <span className="text-gray-700">
                       {selectedFiles1 ? selectedFiles1.name : "Choose File"}
@@ -466,7 +468,7 @@ export default function MisuseReportForm() {
                   />
                   <label
                     htmlFor="file2"
-                    className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
                     <span className="text-gray-700">
                       {selectedFiles2 ? selectedFiles2.name : "Choose File"}
