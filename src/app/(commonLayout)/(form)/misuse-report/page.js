@@ -205,7 +205,7 @@ export default function MisuseReportForm() {
         {/* Title Section */}
         <div className="bg-secondary-foreground custom-padding ">
           <div className="">
-            <div className="">
+            <div className="mb-6">
               <div className="flex items-center justify-center gap-2">
                 <AlertTriangle className="h-8 w-8 text-red-500" />
                 <h2 className="text-2xl lg:text-4xl font-bold text-center">
@@ -301,9 +301,9 @@ export default function MisuseReportForm() {
         <div className="custom-padding bg-secondary">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
             <CardHeader className="w-full lg:w-1/5">
-              <h3 className="text-red-700">
-                Section 2: Nature Of The Reported Misuse
-              </h3>
+              <CardTitle className="text-red-700">
+                Nature Of The Reported Misuse
+              </CardTitle>
               <h4 className="text-center mb-6">(Select all that apply)</h4>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
@@ -338,12 +338,12 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 3: Subject of Complaint */}
-        <div className="py-12 md:py-16 lg:py-12 bg-secondary">
-          <div className="container mx-auto">
-            <div>
-              <h3 className="mb-6">Section 3: Subject of The Complaint</h3>
-            </div>
-            <CardContent className="space-y-4">
+        <div className="custom-padding bg-secondary-foreground">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="text-red-700">Subject of The Complaint</CardTitle>
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-4">
               <div>
                 <Label>
                   Name of the Person Being or Mayor Employer (if known): *
