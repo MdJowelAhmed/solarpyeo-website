@@ -122,14 +122,14 @@ const SealExpungeForm = () => {
             </CardContent>
 
             <CardContent className="flex flex-col lg:flex-row gap-4 space-y-4 mt-4 w-full">
-              <div className="mb-4">
+              <div className="w-full">
                 <Label htmlFor="platform-account-email">
                   Platform Account Email
                 </Label>
                 <Input id="court-info" placeholder="Write email address" />
               </div>
 
-              <div>
+              <div className="w-full">
                 <Label htmlFor="full-legal-name">Full Legal Name</Label>
                 <Input
                   id="full-legal-name"
@@ -143,77 +143,73 @@ const SealExpungeForm = () => {
       </div>
 
       {/* Section 2: Type of Request */}
-      <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader>
-            <h3 className="">SECTION 1:Record Details</h3>
-            <p className="mb-6 text-center">
+      <div className="bg-secondary-foreground custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="">Record Details</CardTitle>
+            <p className="mb-6 text-justify">
               Record Type to be Sealed or Expunged:
             </p>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              <>Allegation Record</>,
-              <>
-                Verified Proven <span className="font-bold">VP</span> Record
-              </>,
-              <>
-                Allegation Not Disproven <span className="font-bold">AND</span>{" "}
-                Record
-              </>,
-              <>
-                Duly Disproven <span className="font-bold">DD</span> Record
-              </>,
-              <>
-                Withdrawn <span className="font-bold">WD</span> Record
-              </>,
-              <>
-                Withdrawn Case with Notice{" "}
-                <span className="font-bold">WDN</span> Record
-              </>,
-              <>Protection Order Entry</>,
-              <>Moderation Rejection Log (Request Sealing Only)</>,
-              <>Identity Mistake Record</>,
-              <>Appeal Record</>,
-              <>Juror Voting or Interaction Log</>,
-            ].map((item, index) => (
-              <div key={index} className="flex items-start space-x-2">
-                <Checkbox
-                  id={`legal-${index}`}
-                  checked={legalBasis.includes(`legal-${index}`)}
-                  onCheckedChange={(checked) =>
-                    handleLegalBasisChange(`legal-${index}`, checked)
-                  }
-                  className="mt-1"
-                />
-                <Label
-                  htmlFor={`legal-${index}`}
-                  className="text-sm leading-relaxed"
-                >
-                  {item}
-                </Label>
-              </div>
-            ))}
-
-            <div className="mt-4">
-              <h4 className="mb-6">
-                🔎 Note: Juror Voting or Interaction Logs are eligible for
-                sealing or expungement only under verified circumstances such as
-                mistaken assignment, account error, or breach of internal
-                platform policy.
-              </h4>
-              <Label htmlFor="other-explanation">
-                Enter Your Reference ID:
-              </Label>
-              <Input
-                id="reference-id"
-                placeholder="Enter Your Reference ID"
-                className="w-1/2 "
-              />
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {[
+                <>Allegation Record</>,
+                <>
+                  Verified Proven <span className="font-bold">VP</span> Record
+                </>,
+                <>
+                  Allegation Not Disproven{" "}
+                  <span className="font-bold">AND</span> Record
+                </>,
+                <>
+                  Duly Disproven <span className="font-bold">DD</span> Record
+                </>,
+                <>
+                  Withdrawn <span className="font-bold">WD</span> Record
+                </>,
+                <>
+                  Withdrawn Case with Notice{" "}
+                  <span className="font-bold">WDN</span> Record
+                </>,
+                <>Protection Order Entry</>,
+                <>Moderation Rejection Log (Request Sealing Only)</>,
+                <>Identity Mistake Record</>,
+                <>Appeal Record</>,
+                <>Juror Voting or Interaction Log</>,
+              ].map((item, index) => (
+                <div key={index} className="flex items-start space-x-2">
+                  <Checkbox
+                    id={`legal-${index}`}
+                    checked={legalBasis.includes(`legal-${index}`)}
+                    onCheckedChange={(checked) =>
+                      handleLegalBasisChange(`legal-${index}`, checked)
+                    }
+                    className="mt-1"
+                  />
+                  <p
+                    htmlFor={`legal-${index}`}
+                    className="text-sm leading-relaxed"
+                  >
+                    {item}
+                  </p>
+                </div>
+              ))}
             </div>
 
-            <div className="mt-6">
-              <div>
+            <div  className="mt-4 flex items-center justify-center gap-10">
+              <div className="w-1/2">
+                <Label htmlFor="other-explanation">
+                  Enter Your Reference ID:
+                </Label>
+                <Input
+                  id="reference-id"
+                  placeholder="Enter Your Reference ID"
+                 
+                />
+              </div>
+
+              <div className="w-1/2">
                 <Label className="text-sm font-medium mb-2">
                   Date of Record Entry or Interaction:
                 </Label>
@@ -221,7 +217,7 @@ const SealExpungeForm = () => {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="w-full justify-start text-left font-normal"
+                      className="w-full justify-start text-left font-normal py-[23px]"
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {dateOfRecord
@@ -239,25 +235,6 @@ const SealExpungeForm = () => {
                   </PopoverContent>
                 </Popover>
               </div>
-
-              {/* <div className="mt-2 space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm">
-                          Choose File
-                        </Button>
-                        <span className="text-sm text-gray-500">
-                          No file chosen
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm">
-                          Choose File
-                        </Button>
-                        <span className="text-sm text-gray-500">
-                          No file chosen
-                        </span>
-                      </div>
-                    </div> */}
             </div>
           </CardContent>
         </div>
