@@ -138,7 +138,7 @@ export default function RespondentSubmissionForm() {
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <div className="mb-6">
-                <CardTitle className="">📑 SECTION 1: RESPONSE DECLARATION</CardTitle>
+                <CardTitle className="">RESPONSE DECLARATION</CardTitle>
               </div>
               <p className="text-justify">
                 Please choose how you wish to respond to the allegation(s) in
@@ -146,77 +146,67 @@ export default function RespondentSubmissionForm() {
               </p>
             </CardHeader>
 
-          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <RadioGroup
-              value={selectedResponse}
-              onValueChange={setSelectedResponse}
-              className="space-y-5"
-            >
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem value="deny" id="deny" />
-                <p htmlFor="deny" className="">
-                  I <span className="font-medium">deny</span> the allegation(s)
-                  and will provide rebuttal evidence.
-                </p>
-              </div>
+                value={selectedResponse}
+                onValueChange={setSelectedResponse}
+                className="space-y-5"
+              >
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="deny" id="deny" />
+                  <p htmlFor="deny" className="">
+                    I <span className="font-medium">deny</span> the
+                    allegation(s) and will provide rebuttal evidence.
+                  </p>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="partially" id="partially" />
-                <p htmlFor="partially" className="text-sm text-gray-700">
-                  I <span className="font-medium">partially agree</span> the
-                  allegations and will provide clarifying context.
-                </p>
-              </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="partially" id="partially" />
+                  <p htmlFor="partially" className="text-sm text-gray-700">
+                    I <span className="font-medium">partially agree</span> the
+                    allegations and will provide clarifying context.
+                  </p>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="agree" id="agree" />
-                <p htmlFor="agree" className="text-sm text-gray-700">
-                  I <span className="font-medium">agree with</span> the
-                  allegation(s) as presented.
-                </p>
-              </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="agree" id="agree" />
+                  <p htmlFor="agree" className="text-sm text-gray-700">
+                    I <span className="font-medium">agree with</span> the
+                    allegation(s) as presented.
+                  </p>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="mistaken" id="mistaken" />
-                <p htmlFor="mistaken" className="text-sm text-gray-700">
-                  I believe I have been{" "}
-                  <span className="font-medium">mistakenly identified</span> and
-                  am not the intended respondent.
-                </p>
-              </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="mistaken" id="mistaken" />
+                  <p htmlFor="mistaken" className="text-sm text-gray-700">
+                    I believe I have been{" "}
+                    <span className="font-medium">mistakenly identified</span>{" "}
+                    and am not the intended respondent.
+                  </p>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="not-respond" id="not-respond" />
-                <p htmlFor="not-respond" className="text-sm text-gray-700">
-                  I will <span className="font-medium">not respond</span>, but
-                  understand that silence may be considered during juror
-                  evaluation.
-                </p>
-              </div>
-            </RadioGroup>
-          </CardContent>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="not-respond" id="not-respond" />
+                  <p htmlFor="not-respond" className="text-sm text-gray-700">
+                    I will <span className="font-medium">not respond</span>, but
+                    understand that silence may be considered during juror
+                    evaluation.
+                  </p>
+                </div>
+              </RadioGroup>
+            </CardContent>
           </div>
         </div>
 
         {/* Section 2: Evidence Submission */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardContent className="">
+        <div className="bg-secondary custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
               <div className="">
-                <h3 className="mb-6">📎 SECTION 2: EVIDENCE SUBMISSION</h3>
+                <CardTitle className="mb-6">EVIDENCE SUBMISSION</CardTitle>
               </div>
-
-              <p className="text-sm text-gray-700 mb-2">
-                Upload supporting documents or media{" "}
-                <span className="font-medium">
-                  (Max 15 files, PDF, JPEG, JPG, HEIC, PNG, DOCX, MP4):
-                </span>
-              </p>
-
-              <p className="text-sm text-gray-600 mb-4">
-                Maximum file size limit: 32MB
-              </p>
-
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="space-y-2">
                 <Label
                   htmlFor="file-upload"
@@ -229,7 +219,7 @@ export default function RespondentSubmissionForm() {
                     id="file-upload"
                     type="file"
                     onChange={handleFileUpload}
-                    className="w-1/5 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                    className="w-full lg:w-1/2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
                     accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     multiple
                   />
@@ -264,6 +254,16 @@ export default function RespondentSubmissionForm() {
                   </div>
                 )}
               </div>
+              <p className="text-sm text-black mb-2">
+                Upload supporting documents or media{" "}
+                <span className="">
+                  (Max 15 files, PDF, JPEG, JPG, HEIC, PNG, DOCX, MP4):
+                </span>
+              </p>
+
+              <p className="text-sm text-gray-600 mb-4">
+                Maximum file size limit: 32MB
+              </p>
             </CardContent>
           </div>
         </div>
