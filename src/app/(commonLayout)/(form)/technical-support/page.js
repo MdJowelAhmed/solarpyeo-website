@@ -370,7 +370,7 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 4: Technical Details */}
-          <div className="bg-secondary-foreground custom-padding">
+          <div className="bg-secondary custom-padding">
             <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
               <CardHeader className="w-full lg:w-1/5">
                 <CardTitle className="">Technical Details (If Known)</CardTitle>
@@ -499,16 +499,17 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 5: Attachments */}
-          <div className="bg-secondary py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <CardHeader className="">
-                <h3 className="">Section 5: Attachments (Optional)</h3>
-              </CardHeader>
-              <CardContent className="">
-                <h4 className="text-center mb-6">
+          <div className="bg-secondary-foreground custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className="">Attachments (Optional)</CardTitle>
+                   <p className="text-justify ">
                   Upload screenshots or screen recordings if possible to help
                   our team investigate.
-                </h4>
+                </p>
+              </CardHeader>
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+             
 
                 <div className="mb-6">
                   <label className="block text-gray-700 font-medium mb-3">
