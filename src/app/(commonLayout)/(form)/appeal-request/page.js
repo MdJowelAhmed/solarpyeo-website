@@ -530,10 +530,10 @@ const AppealRequestForm = () => {
         <div className="bg-secondary-foreground custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
             <CardHeader className="w-full lg:w-1/5">
-              <CardTitle className="mb-6">SECTION 5: Declaration & Submission</CardTitle>
-                      <Label className="font-bold mb-3">
+              <CardTitle className="">Declaration & Submission</CardTitle>
+                      <p className="">
                   Declaration Under Penalty of Perjury:
-                </Label>
+                </p>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
               <div className="mb-4">
@@ -565,14 +565,14 @@ const AppealRequestForm = () => {
                 />
               </div>
 
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <Label className="text-sm font-medium text-gray-700">
                   Appeal Fee: $30.00
                 </Label>
                 <p className="text-xs text-gray-500 mt-1">
                   Date: {new Date().toLocaleDateString()}
                 </p>
-              </div>
+              </div> */}
 
               {/* Important Notice */}
               <div className="bg-primary-foreground border-l-4 border-red-700 rounded-lg p-4 mb-6">
