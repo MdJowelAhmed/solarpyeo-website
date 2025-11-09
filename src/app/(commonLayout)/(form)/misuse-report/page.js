@@ -201,9 +201,9 @@ export default function MisuseReportForm() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-secondary py-12 md:py-16 lg:py-24">
+      <div className="">
         {/* Title Section */}
-        <div className="bg-secondary-foreground custom-padding py-12 md:py-16 lg:py-24">
+        <div className="bg-secondary-foreground custom-padding ">
           <div className="">
             <div className="mb-6">
               <div className="flex items-center justify-center gap-2">
