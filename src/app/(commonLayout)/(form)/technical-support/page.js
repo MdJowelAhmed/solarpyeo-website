@@ -540,12 +540,12 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 6: Impact */}
-          <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <CardHeader className="">
-                <h3 className="">Section 6: Impact</h3>
+          <div className="bg-secondary custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className=""> Impact</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-5">
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-5">
                 <div>
                   <Label className="text-sm font-medium">
                     How urgent is the issue/request?
@@ -565,12 +565,12 @@ export default function TechnicalSupportForm() {
                             value={level}
                             id={`urgency-${index}`}
                           />
-                          <Label
+                          <p
                             htmlFor={`urgency-${index}`}
                             className="text-sm"
                           >
                             {level.charAt(0).toUpperCase() + level.slice(1)}
-                          </Label>
+                          </p>
                         </div>
                       )
                     )}
@@ -598,9 +598,9 @@ export default function TechnicalSupportForm() {
                           value={scope.value}
                           id={`users-${index}`}
                         />
-                        <Label htmlFor={`users-${index}`} className="text-sm">
+                        <p htmlFor={`users-${index}`} className="text-sm">
                           {scope.label}
-                        </Label>
+                        </p>
                       </div>
                     ))}
                   </RadioGroup>
