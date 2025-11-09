@@ -213,7 +213,7 @@ export default function MisuseReportForm() {
                 </h2>
                 
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed text-center max-w-2xl mx-auto mt-3">
+              <p className="text-gray-600 text-sm leading-relaxed text-justify max-w-2xl mx-auto mt-3">
                 Use this form to report any misuse of power, fraud, waste, abuse
                 of authority, or any violation of law or policy. Your report
                 will be treated confidentially to the extent permitted by law.
@@ -222,14 +222,14 @@ export default function MisuseReportForm() {
             <div className="">
               <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
                 <CardHeader className="pb-4 w-full lg:w-1/5">
-                  <CardTitle>Section 1: Reporter Information</CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <CardTitle>Reporter Information</CardTitle>
+                  <p className="text-sm text-gray-600 mt-1 ">
                     Please provide your contact information. Anonymous reporting
                     is allowed.
                   </p>
 
                   <div>
-                    <p className="text-sm font-medium mb-2">
+                    <p className="text-sm font-medium mb-2 text-justify mt-4">
                       Are you personally knowledgeable about the problem or
                       event reported? (or this disclosure):
                     </p>
@@ -240,18 +240,18 @@ export default function MisuseReportForm() {
                     >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="yes" />
-                        <Label htmlFor="yes">Yes</Label>
+                        <p htmlFor="yes">Yes</p>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="no" id="no" />
-                        <Label htmlFor="no">No</Label>
+                        <p htmlFor="no">No</p>
                       </div>
                     </RadioGroup>
                   </div>
                 </CardHeader>
 
                 <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-                  <div className="grid md:grid-cols-1 gap-4">
+                  <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="fullName">Full Name *</Label>
                       <Input
@@ -268,10 +268,7 @@ export default function MisuseReportForm() {
                         onChange={(e) => setUsername(e.target.value)}
                       />
                     </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-1 gap-4">
-                    <div>
+                      <div>
                       <Label htmlFor="email">Email Address *</Label>
                       <Input
                         id="email"
@@ -280,25 +277,19 @@ export default function MisuseReportForm() {
                         onChange={(e) => setEmailAddress(e.target.value)}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="caseID">If yes specify Case ID</Label>
-                      <Input
-                        id="caseID"
-                        value={caseID}
-                        onChange={(e) => setCaseID(e.target.value)}
-                      />
-                    </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+               
+
+                  <div className="flex items-center  space-x-2 mt-6">
                     <Checkbox
                       id="anonymous"
                       checked={anonymousPreferred}
                       onCheckedChange={setAnonymousPreferred}
                     />
-                    <Label htmlFor="anonymous">
+                    <p htmlFor="anonymous">
                       Prefer to remain anonymous
-                    </Label>
+                    </p>
                   </div>
                 </CardContent>
               </div>
