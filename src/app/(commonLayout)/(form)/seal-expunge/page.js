@@ -422,19 +422,20 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
         </div>
       </div>
 
-      {/* Section 5: Declaration & Signature */}
-      <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader>
-            <h3 className="">✍️ SECTION 5: Declaration & Signature</h3>
-            <h4 className="mb-6 max-w-4xl mx-auto">
+      {/* Section 6: Declaration & Signature */}
+      <div className="bg-secondary-foreground custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="">Declaration & Signature</CardTitle>
+           
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+           <h4 className="mb-6 max-w-4xl mx-auto">
               Please describe in your own words why you believe the record
               should be sealed or expunged. Be specific. If this relates to
               juror conduct, describe the case interaction, what occurred, and
               what remedy you are seeking.
             </h4>
-          </CardHeader>
-          <CardContent className="space-y-8">
             <div>
               <Label htmlFor="print-signature">Digital Signature</Label>
               <Input
@@ -455,7 +456,14 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
               </div>
             </div>
 
-            <div className="bg-primary-foreground border-l-4 border-red-700 rounded-lg p-4">
+       
+          </CardContent>
+        </div>
+      </div>
+
+
+      <div className="bg-secondary custom-padding">
+             <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-4">
               <h4 className="font-medium mb-2">Final Warning</h4>
               <p className="text-sm ">
                 KNOWINGLY MAKING A MATERIALLY FALSE STATEMENT ON THIS FORM IS A
@@ -466,13 +474,11 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
               </p>
             </div>
 
-            <div className="w-full  flex justify-end">
-              <Button className="md:w-1/2 lg:w-1/5">
+            <div className="w-full mt-6 flex justify-end">
+              <Button className="md:w-1/2 py-6 lg:w-1/5">
                 Submit Request For Review
               </Button>
             </div>
-          </CardContent>
-        </div>
       </div>
     </div>
   );
