@@ -123,7 +123,7 @@ const AppealRequestForm = () => {
       <div className="">
         {/* Header */}
         <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
+          <div className="">
             <h2 className="text-2xl lg:text-4xl font-bold text-center">
               📄 Appeal Request Form
             </h2>
