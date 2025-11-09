@@ -241,13 +241,13 @@ const SealExpungeForm = () => {
       </div>
 
       {/* Section 3: Legal or Procedural Basis */}
-      <div className="bg-secondary py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader>
-            <h3 className="mb-6">⚖️ SECTION 2: Type of Request</h3>
+      <div className="bg-secondary custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="mb-6">Type of Request</CardTitle>
           </CardHeader>
 
-          <CardContent className="space-y-4">
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="seal"
@@ -256,12 +256,12 @@ const SealExpungeForm = () => {
                   setRequestType(checked ? "seal" : "")
                 }
               />
-              <Label htmlFor="seal">
+              <p htmlFor="seal">
                 Seal the Record. (Type the justification)
-              </Label>
+              </p>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mt-4">
               <Checkbox
                 id="expunge"
                 checked={requestType === "expunge"}
@@ -269,27 +269,27 @@ const SealExpungeForm = () => {
                   setRequestType(checked ? "expunge" : "")
                 }
               />
-              <Label htmlFor="expunge">
+              <p htmlFor="expunge">
                 Expunge the Record (permanent deletion)
-              </Label>
+              </p>
             </div>
           </CardContent>
         </div>
       </div>
 
       {/* Section 4: Statement of Request */}
-      <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader>
-            <h3 className="">
-              📄 SECTION 3: Legal or Procedural Basis for Request
-            </h3>
-            <h4 className="mb-6 text-center">
+      <div className="bg-secondary-foreground custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="mb-6">Legal or Procedural Basis for Request</CardTitle>
+             <p className="mb-6 text-justify">
               Please describe the event(s), behavior(s), and any associated
               case(s). Include dates, communication, or submissions if known.
-            </h4>
+            </p>
           </CardHeader>
-          <CardContent className="space-y-6">
+
+         
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             {/* Checkbox List */}
             {[
               "I was the subject of mistaken identity and this has been verified",
@@ -332,8 +332,8 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
             </div>
 
             {/* Date Picker + File Upload */}
-            <div className="space-y-4">
-              <div className="mb-6">
+            <div className="space-y-4 w-full flex flex-col lg:flex-row items-center gap-10 mt-6">
+              <div className="mb-6 w-full">
                 <label className="block text-gray-700 font-medium mb-3">
                   Upload File 1:
                 </label>
@@ -346,7 +346,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
                   />
                   <label
                     htmlFor="file1"
-                    className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
                     <span className="text-gray-700">
                       {selectedFiles1 ? selectedFiles1.name : "Choose File"}
@@ -359,7 +359,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
               </div>
 
               {/* Upload File 2 */}
-              <div className="mb-6">
+              <div className="mb-6 w-full">
                 <label className="block text-gray-700 font-medium mb-3">
                   Upload File 2:
                 </label>
@@ -372,7 +372,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
                   />
                   <label
                     htmlFor="file2"
-                    className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
                     <span className="text-gray-700">
                       {selectedFiles2 ? selectedFiles2.name : "Choose File"}
@@ -385,7 +385,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
               </div>
 
               {/* Optional Link */}
-              <div className="mb-8">
+              {/* <div className="mb-8">
                 <label className="block text-gray-700 font-medium mb-3">
                   Optional Link (e.g., Case ID or Submission URL):
                 </label>
@@ -396,7 +396,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
                   placeholder="Enter Your Supporting Link"
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 />
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </div>
