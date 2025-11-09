@@ -370,12 +370,12 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 4: Technical Details */}
-          <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <CardHeader className="">
-                <h3 className="">Section 4: Technical Details (If Known)</h3>
+          <div className="bg-secondary-foreground custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className="">Technical Details (If Known)</CardTitle>
               </CardHeader>
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
                 <div>
                   <Label className="text-base font-medium">
                     Date and Time Issue Occurred:
@@ -386,10 +386,10 @@ export default function TechnicalSupportForm() {
                     value={formData.dateAndTime}
                     onChange={(e) => handleInputChange("dateAndTime", e.target.value)}
                   />
-                  <div className="mt-3 space-y-8">
+                  <div className="mt-3 space-y-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
                       <Label>Device Type:</Label>
-                      <div className="mt-5 space-y-5">
+                      <div className="mt-5 space-y-3">
                         {["Desktop / Laptop", "Tablet", "Mobile"].map(
                           (device, index) => (
                             <div
@@ -403,12 +403,12 @@ export default function TechnicalSupportForm() {
                                   handleCheckboxChange("deviceType", device, checked)
                                 }
                               />
-                              <Label
+                              <p
                                 htmlFor={`device-${index}`}
                                 className="text-sm"
                               >
                                 {device}
-                              </Label>
+                              </p>
                             </div>
                           )
                         )}
@@ -417,7 +417,7 @@ export default function TechnicalSupportForm() {
 
                     <div>
                       <Label>Browser Used:</Label>
-                      <div className="mt-5 space-y-5">
+                      <div className="mt-5 space-y-3">
                         {[
                           "Windows",
                           "MacOS",
@@ -437,9 +437,9 @@ export default function TechnicalSupportForm() {
                                 handleCheckboxChange("browserUsed", os, checked)
                               }
                             />
-                            <Label htmlFor={`os-${index}`} className="text-sm">
+                            <p htmlFor={`os-${index}`} className="text-sm">
                               {os}
-                            </Label>
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -455,7 +455,7 @@ export default function TechnicalSupportForm() {
 
                     <div>
                       <Label>Browser/App:</Label>
-                      <div className="mt-5 space-y-5">
+                      <div className="mt-5 space-y-3">
                         {["Chrome", "Firefox", "Safari", "Edge", "Other"].map(
                           (app, index) => (
                             <div
@@ -469,20 +469,19 @@ export default function TechnicalSupportForm() {
                                   handleCheckboxChange("browserApp", app, checked)
                                 }
                               />
-                              <Label
+                              <p
                                 htmlFor={`app-${index}`}
                                 className="text-sm"
                               >
                                 {app}
-                              </Label>
+                              </p>
                             </div>
                           )
                         )}
                       </div>
-                    </div>
 
-                    <div>
-                      <Label>Other:</Label>
+                         <div>
+                      <p>Other:</p>
                       <Input
                         className="mt-1"
                         placeholder="Please specify other details"
@@ -490,6 +489,9 @@ export default function TechnicalSupportForm() {
                         onChange={(e) => handleInputChange("otherDetails", e.target.value)}
                       />
                     </div>
+                    </div>
+
+                 
                   </div>
                 </div>
               </CardContent>
