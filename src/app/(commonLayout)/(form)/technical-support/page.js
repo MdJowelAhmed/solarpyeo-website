@@ -669,11 +669,11 @@ export default function TechnicalSupportForm() {
           </div>
 
           {/* Section 8: Submission Declaration */}
-          <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="bg-secondary custom-padding">
             <div className="container mx-auto">
-              <CardHeader className="">
+              {/* <CardHeader className="">
                 <h3 className="">Section 8: Submission Declaration</h3>
-              </CardHeader>
+              </CardHeader> */}
               <CardContent className="space-y-6">
                 <div className="flex items-start space-x-3">
                   <Checkbox
@@ -686,7 +686,7 @@ export default function TechnicalSupportForm() {
                   </Label>
                 </div>
 
-                <div className="grid md:grid-cols-1 gap-4">
+                {/* <div className="grid md:grid-cols-1 gap-4">
                   <div>
                     <Label>Digital Signature*</Label>
                     <Input
@@ -749,9 +749,9 @@ export default function TechnicalSupportForm() {
                       </div>
                     </PopoverContent>
                   </Popover>
-                </div>
+                </div> */}
 
-                <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-lg">
+                <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-md">
                   <p className="">
                     I certify that the information provided above is accurate to
                     the best of my knowledge and that this request relates to a
@@ -762,7 +762,7 @@ export default function TechnicalSupportForm() {
 
               <p className="mt-4">
                 You will receive a confirmation receipt with a tracking ID. Most
-                technical issues are addressed within 1–3 business days
+                technical issues are addressed within 1-3 business days
                 depending on severity.
               </p>
 
@@ -773,7 +773,7 @@ export default function TechnicalSupportForm() {
                     <Button
                       onClick={handleSubmit}
                       disabled={isLoading}
-                      className="bg-red-600 hover:bg-red-700 text-white px-12 py-2"
+                      className="b text-white px-12 py-2"
                       size="lg"
                     >
                       {isLoading ? "Submitting..." : "Submit Request"}
