@@ -269,41 +269,55 @@ export default function RespondentSubmissionForm() {
         </div>
 
         {/* Section 3: Notice Confirmation */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <div className="">
-              <CardContent className="">
-                <div className="mb-4">
-                  <h3 className="">📬 SECTION 3: NOTICE CONFIRMATION</h3>
-                </div>
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardContent className="">
+              <div className="mb-4">
+                <CardTitle className="text-center">
+                  {" "}
+                  NOTICE CONFIRMATION
+                </CardTitle>
+              </div>
 
-                <h4 className="mb-6 text-center">
-                  Through this submission, I acknowledge I have received full
-                  digital notice of the allegation, and understand my rights to
-                  respond or remain silent.
-                </h4>
-              </CardContent>
-            </div>
+              <h4 className="mb-6 text-center">
+                Through this submission, I acknowledge I have received full
+                digital notice of the allegation, and understand my rights to
+                respond or remain silent.
+              </h4>
+            </CardContent>
           </div>
         </div>
 
         {/* Section 4: Declaration Under Penalty of Perjury */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardContent className="p-6">
-              <div className="mb-8">
-                <h3 className="">
-                  🧾 SECTION 4: DECLARATION UNDER PENALTY OF PERJURY
-                </h3>
+        <div className="bg-secondary custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5 ">
+              <div className="mb-8 space-y-3">
+                <CardTitle className="">
+                  DECLARATION UNDER PENALTY OF PERJURY
+                </CardTitle>
+
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Calendar className="w-4 h-4" />
+                  <span>Date: {new Date().toLocaleDateString()}</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <MapPin className="w-7 h-7" />
+                  <span>
+                    IP Address and Timestamp: [auto-captured by platform]
+                  </span>
+                </div>
               </div>
-
-              <p className="text-center mb-4">
-                I hereby declare and affirm in accordance with the laws of the
-                jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
-                foregoing is true and accurate to the best of my knowledge.
-              </p>
-
+            </CardHeader>
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="space-y-5">
+                <p className="text-justify ">
+                  I hereby declare and affirm in accordance with the laws of the
+                  jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
+                  foregoing is true and accurate to the best of my knowledge.
+                </p>
+
                 <div>
                   <Label
                     htmlFor="digital-signature"
@@ -321,48 +335,36 @@ export default function RespondentSubmissionForm() {
                     required
                   />
                 </div>
-
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="w-4 h-4" />
-                  <span>Date: {new Date().toLocaleDateString()}</span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <MapPin className="w-4 h-4" />
-                  <span>
-                    IP Address and Timestamp: [auto-captured by platform]
-                  </span>
-                </div>
-
-                {/* Warning Notice */}
-                <div className="bg-secondary-foreground border-l-4 border-red-700 p-4 rounded-lg mb-6">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-red-700">
-                      Once submitted, your response will be locked and reviewed
-                      by the assigned juror panel. You may not edit it
-                      afterward. If you choose not to make a response and
-                      receive an unfavourable outcome, you will have to file an
-                      appeal with applicable fees to do so.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 font-medium"
-                    size="lg"
-                    disabled={isLoading || isSubmitting}
-                  >
-                    {isLoading || isSubmitting
-                      ? "Submitting..."
-                      : "Submit Response"}
-                  </Button>
-                </div>
               </div>
             </CardContent>
+          </div>
+        </div>
+
+        <div className="custom-padding">
+          {/* Warning Notice */}
+          <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-lg mb-6">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-red-700">
+                Once submitted, your response will be locked and reviewed by the
+                assigned juror panel. You may not edit it afterward. If you
+                choose not to make a response and receive an unfavourable
+                outcome, you will have to file an appeal with applicable fees to
+                do so.
+              </p>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 font-medium"
+              size="lg"
+              disabled={isLoading || isSubmitting}
+            >
+              {isLoading || isSubmitting ? "Submitting..." : "Submit Response"}
+            </Button>
           </div>
         </div>
       </form>
