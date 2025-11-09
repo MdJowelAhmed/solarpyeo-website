@@ -196,7 +196,7 @@ export default function MisuseReportForm() {
     <div className="min-h-screen">
       <div className="bg-secondary py-12 md:py-16 lg:py-24">
         {/* Title Section */}
-        <div className="container mx-auto">
+        <div className="bg-secondary-foreground">
           <div className="flex items-center justify-between gap-2 mb-4">
             <div className="w-1/2 flex flex-col justify-between h-full gap-16 lg:gap-24 xl:gap-42">
               <div className="flex justify-start flex-col">

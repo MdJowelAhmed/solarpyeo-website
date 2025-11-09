@@ -1,115 +1,172 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Calendar,
-  FileText,
-  Wrench,
-  AlertTriangle,
-  Calculator,
-  CalendarIcon,
-} from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Calendar } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useCreateTechnicalSupportMutation } from "@/redux/featured/technicalSupport/technicalSupportApi";
+// import { useCreateTechnicalSupportMutation } from "@/redux/api/technicalSupportApi";
 
 export default function TechnicalSupportForm() {
-  const [selectedFiles1, setSelectedFiles1] = useState(null);
-  const [selectedFiles2, setSelectedFiles2] = useState(null);
-  const [supportingLink, setSupportingLink] = useState("");
-  const [isAgreed, setIsAgreed] = useState(false);
+  const [createTechnicalSupport, { isLoading }] = useCreateTechnicalSupportMutation();
+  
+  const [selectedFile, setSelectedFile] = useState(null);
   const [initiatorDob, setInitiatorDob] = useState(null);
-
-  const handleFileChange = (event, fileNumber) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      if (fileNumber === 1) {
-        setSelectedFiles1(files[0]);
-      } else {
-        setSelectedFiles2(files[0]);
-      }
-    }
-  };
+  
   const [formData, setFormData] = useState({
-    userInfo: {
-      fullName: "",
-      department: "",
-      emailAddress: "",
-      phoneNumber: "",
-      jobTitle: "",
-      requestType: "",
-    },
+    name: "",
+    userName: "",
+    email: "",
+    phone: "",
     issueClassification: [],
-    issueDescription: "",
-    technicalDetails: {
-      operatingSystem: "",
-      browserType: "",
-      systemSpecs: "",
-      errorMessages: "",
-    },
-    attachments: [],
-    impact: {
-      severity: "",
-      affectedUsers: "",
-      businessImpact: "",
-    },
-    supportPreferences: {
-      preferredContact: "",
-      urgency: "",
-    },
-    declaration: false,
-    signature: "",
-    date: new Date().toISOString().split("T")[0],
+    otherIssueDescription: "",
+    description: "",
+    dateAndTime: "",
+    deviceType: [],
+    browserUsed: [],
+    browserUsedOther: "",
+    browserApp: [],
+    otherDetails: "",
+    impact: "",
+    affectedUser: "",
+    receiveSupport: "",
+    scheduleCall: "",
+    digitalSignature: "",
+    submissionType: "",
+    agreed: false,
   });
 
-  const handleInputChange = (section, field, value) => {
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setSelectedFile(files[0]);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
+      [field]: value,
     }));
   };
 
-  const handleCheckboxChange = (section, value, checked) => {
+  const handleCheckboxChange = (field, value, checked) => {
     setFormData((prev) => ({
       ...prev,
-      [section]: checked
-        ? [...prev[section], value]
-        : prev[section].filter((item) => item !== value),
+      [field]: checked
+        ? [...(prev[field] || []), value]
+        : (prev[field] || []).filter((item) => item !== value),
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Technical Support Request submitted:", formData);
-    alert("Technical Support Request submitted successfully!");
+  const handleRadioChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Validation
+      if (!formData.name || !formData.email || !formData.description) {
+        alert("Please fill in all required fields");
+        return;
+      }
+
+      // Create FormData object
+      const submitData = new FormData();
+      
+      // Append all text fields
+      submitData.append("name", formData.name);
+      submitData.append("userName", formData.userName);
+      submitData.append("email", formData.email);
+      submitData.append("phone", formData.phone);
+      submitData.append("issueClassification", formData.issueClassification.length > 0 ? formData.issueClassification.join(", ") : "");
+      submitData.append("description", formData.description);
+      submitData.append("dateAndTime", formData.dateAndTime);
+      submitData.append("deviceType", formData.deviceType.length > 0 ? formData.deviceType.join(", ") : "");
+      submitData.append("browserApp", formData.browserApp.length > 0 ? formData.browserApp.join(", ") : "");
+      submitData.append("impact", formData.impact);
+      submitData.append("affectedUser", formData.affectedUser);
+      submitData.append("receiveSupport", formData.receiveSupport);
+      submitData.append("scheduleCall", formData.scheduleCall ? "true" : "false");
+      submitData.append("digitalSignature", formData.digitalSignature);
+      submitData.append("submissionType", formData.submissionType);
+      submitData.append("DOB", initiatorDob ? initiatorDob.toISOString().split('T')[0] : "");
+      
+      if (formData.otherIssueDescription) {
+        submitData.append("otherIssueDescription", formData.otherIssueDescription);
+      }
+      
+      if (formData.browserUsedOther) {
+        submitData.append("browserUsed", formData.browserUsedOther);
+      }
+      
+      if (formData.otherDetails) {
+        submitData.append("otherDetails", formData.otherDetails);
+      }
+      
+      // Append file if exists
+      if (selectedFile) {
+        submitData.append("attachment", selectedFile);
+      }
+
+      // Submit the form
+      const response = await createTechnicalSupport(submitData).unwrap();
+      
+      alert("Technical Support Request submitted successfully!");
+      console.log("Response:", response);
+      
+      // Reset form
+      resetForm();
+      
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(`Failed to submit request: ${error?.data?.message || error.message || "Unknown error"}`);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      userName: "",
+      email: "",
+      phone: "",
+      issueClassification: [],
+      otherIssueDescription: "",
+      description: "",
+      dateAndTime: "",
+      deviceType: [],
+      browserUsed: [],
+      browserUsedOther: "",
+      browserApp: [],
+      otherDetails: "",
+      impact: "",
+      affectedUser: "",
+      receiveSupport: "",
+      scheduleCall: "",
+      digitalSignature: "",
+      submissionType: "",
+      agreed: false,
+    });
+    setSelectedFile(null);
+    setInitiatorDob(null);
   };
 
   return (
     <div className="">
-      <div className=" ">
+      <div className="">
         {/* Title Section */}
         <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto flex ">
+          <div className="container mx-auto flex">
             <div className="w-1/2">
-              {" "}
-              <div className="flex  gap-2 mb-4">
+              <div className="flex gap-2 mb-4">
                 <h1 className="">🛠️ Technical Support Request Form</h1>
               </div>
               <p className="">
@@ -132,33 +189,19 @@ export default function TechnicalSupportForm() {
                     <Label htmlFor="fullName">Full Name*</Label>
                     <Input
                       id="fullName"
-                      value={formData.userInfo.fullName}
+                      value={formData.name}
                       placeholder="Enter your full name"
-                      onChange={(e) =>
-                        handleInputChange(
-                          "userInfo",
-                          "fullName",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => handleInputChange("name", e.target.value)}
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="department">
-                      Username (if registered):*
-                    </Label>
+                    <Label htmlFor="userName">Username (if registered):*</Label>
                     <Input
-                      id="department"
-                      value={formData.userInfo.department}
+                      id="userName"
+                      value={formData.userName}
                       placeholder="Enter your username"
-                      onChange={(e) =>
-                        handleInputChange(
-                          "userInfo",
-                          "department",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => handleInputChange("userName", e.target.value)}
                       required
                     />
                   </div>
@@ -171,14 +214,8 @@ export default function TechnicalSupportForm() {
                       id="email"
                       type="email"
                       placeholder="user@example.com"
-                      value={formData.userInfo.emailAddress}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "userInfo",
-                          "emailAddress",
-                          e.target.value
-                        )
-                      }
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
                       required
                     />
                   </div>
@@ -186,15 +223,9 @@ export default function TechnicalSupportForm() {
                     <Label htmlFor="phone">Phone Number</Label>
                     <Input
                       id="phone"
-                      value={formData.userInfo.phoneNumber}
+                      value={formData.phone}
                       placeholder="Enter your phone number"
-                      onChange={(e) =>
-                        handleInputChange(
-                          "userInfo",
-                          "phoneNumber",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => handleInputChange("phone", e.target.value)}
                     />
                   </div>
                 </div>
@@ -231,12 +262,9 @@ export default function TechnicalSupportForm() {
                       <div key={index} className="flex items-center space-x-2">
                         <Checkbox
                           id={`issue-${index}`}
+                          checked={formData.issueClassification.includes(item)}
                           onCheckedChange={(checked) =>
-                            handleCheckboxChange(
-                              "issueClassification",
-                              item,
-                              checked
-                            )
+                            handleCheckboxChange("issueClassification", item, checked)
                           }
                         />
                         <Label htmlFor={`issue-${index}`} className="text-sm">
@@ -249,12 +277,7 @@ export default function TechnicalSupportForm() {
                     <Input
                       className="mt-1"
                       value={formData.otherIssueDescription}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          otherIssueDescription: e.target.value,
-                        }))
-                      }
+                      onChange={(e) => handleInputChange("otherIssueDescription", e.target.value)}
                       placeholder="If other, please specify"
                     />
                   </div>
@@ -279,13 +302,8 @@ export default function TechnicalSupportForm() {
                   <Label>Detailed Issue Description*</Label>
                   <Textarea
                     className="mt-1 h-32"
-                    value={formData.issueDescription}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        issueDescription: e.target.value,
-                      }))
-                    }
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
                     placeholder="Please describe your issue in detail..."
                     required
                   />
@@ -294,7 +312,7 @@ export default function TechnicalSupportForm() {
             </div>
           </div>
 
-          {/* Section 4: Technical Details (If Known) */}
+          {/* Section 4: Technical Details */}
           <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
             <div className="container mx-auto">
               <CardHeader className="">
@@ -308,30 +326,31 @@ export default function TechnicalSupportForm() {
                   <Input
                     type="text"
                     placeholder="write occurred date and time"
-                    value={formData.issueDate}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        issueDate: e.target.value,
-                      }))
-                    }
+                    value={formData.dateAndTime}
+                    onChange={(e) => handleInputChange("dateAndTime", e.target.value)}
                   />
                   <div className="mt-3 space-y-8">
                     <div>
-                      <Label>Device Type::</Label>
+                      <Label>Device Type:</Label>
                       <div className="mt-5 space-y-5">
-                        {["Desktop / Laptop", " Tablet", "Mobile"].map(
-                          (browser, index) => (
+                        {["Desktop / Laptop", "Tablet", "Mobile"].map(
+                          (device, index) => (
                             <div
                               key={index}
                               className="flex items-center space-x-2"
                             >
-                              <Checkbox id={`browser-${index}`} />
+                              <Checkbox 
+                                id={`device-${index}`}
+                                checked={formData.deviceType.includes(device)}
+                                onCheckedChange={(checked) =>
+                                  handleCheckboxChange("deviceType", device, checked)
+                                }
+                              />
                               <Label
-                                htmlFor={`browser-${index}`}
+                                htmlFor={`device-${index}`}
                                 className="text-sm"
                               >
-                                {browser}
+                                {device}
                               </Label>
                             </div>
                           )
@@ -354,7 +373,13 @@ export default function TechnicalSupportForm() {
                             key={index}
                             className="flex items-center space-x-2"
                           >
-                            <Checkbox id={`os-${index}`} />
+                            <Checkbox 
+                              id={`os-${index}`}
+                              checked={formData.browserUsed.includes(os)}
+                              onCheckedChange={(checked) =>
+                                handleCheckboxChange("browserUsed", os, checked)
+                              }
+                            />
                             <Label htmlFor={`os-${index}`} className="text-sm">
                               {os}
                             </Label>
@@ -365,35 +390,11 @@ export default function TechnicalSupportForm() {
                         <Input
                           className="mt-1"
                           placeholder="Please specify other details"
+                          value={formData.browserUsedOther}
+                          onChange={(e) => handleInputChange("browserUsedOther", e.target.value)}
                         />
                       </div>
                     </div>
-
-                    {/* <div>
-                    <Label>Device:</Label>
-                    <div className="mt-2 space-y-2">
-                      {[
-                        "Desktop",
-                        "Laptop",
-                        "Tablet",
-                        "Smartphone",
-                        "Other",
-                      ].map((device, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox id={`device-${index}`} />
-                          <Label
-                            htmlFor={`device-${index}`}
-                            className="text-sm"
-                          >
-                            {device}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div> */}
 
                     <div>
                       <Label>Browser/App:</Label>
@@ -404,7 +405,13 @@ export default function TechnicalSupportForm() {
                               key={index}
                               className="flex items-center space-x-2"
                             >
-                              <Checkbox id={`app-${index}`} />
+                              <Checkbox 
+                                id={`app-${index}`}
+                                checked={formData.browserApp.includes(app)}
+                                onCheckedChange={(checked) =>
+                                  handleCheckboxChange("browserApp", app, checked)
+                                }
+                              />
                               <Label
                                 htmlFor={`app-${index}`}
                                 className="text-sm"
@@ -422,6 +429,8 @@ export default function TechnicalSupportForm() {
                       <Input
                         className="mt-1"
                         placeholder="Please specify other details"
+                        value={formData.otherDetails}
+                        onChange={(e) => handleInputChange("otherDetails", e.target.value)}
                       />
                     </div>
                   </div>
@@ -430,7 +439,7 @@ export default function TechnicalSupportForm() {
             </div>
           </div>
 
-          {/* Section 5: Attachments (Optional) */}
+          {/* Section 5: Attachments */}
           <div className="bg-secondary py-12 md:py-16 lg:py-24">
             <div className="container mx-auto">
               <CardHeader className="">
@@ -444,68 +453,28 @@ export default function TechnicalSupportForm() {
 
                 <div className="mb-6">
                   <label className="block text-gray-700 font-medium mb-3">
-                    Upload File 1:
+                    Upload File:
                   </label>
                   <div className="relative">
                     <input
                       type="file"
-                      id="file1"
-                      onChange={(e) => handleFileChange(e, 1)}
+                      id="file"
+                      onChange={handleFileChange}
                       className="hidden"
                     />
                     <label
-                      htmlFor="file1"
-                      className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                      htmlFor="file"
+                      className="flex items-center justify-between w-1/2 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                     >
                       <span className="text-gray-700">
-                        {selectedFiles1 ? selectedFiles1.name : "Choose File"}
+                        {selectedFile ? selectedFile.name : "Choose File"}
                       </span>
                       <span className="text-gray-500 text-sm">
-                        {selectedFiles1 ? "" : "No file chosen"}
+                        {selectedFile ? "" : "No file chosen"}
                       </span>
                     </label>
                   </div>
                 </div>
-
-                {/* Upload File 2 */}
-                <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-3">
-                    Upload File 2:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      id="file2"
-                      onChange={(e) => handleFileChange(e, 2)}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="file2"
-                      className="flex items-center justify-between w-1/4 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                    >
-                      <span className="text-gray-700">
-                        {selectedFiles2 ? selectedFiles2.name : "Choose File"}
-                      </span>
-                      <span className="text-gray-500 text-sm">
-                        {selectedFiles2 ? "" : "No file chosen"}
-                      </span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Optional Link */}
-                {/* <div className="mb-8">
-                  <label className="block text-gray-700 font-medium mb-3">
-                    Optional Link (e.g., Case ID or Submission URL):
-                  </label>
-                  <input
-                    type="text"
-                    value={supportingLink}
-                    onChange={(e) => setSupportingLink(e.target.value)}
-                    placeholder="Enter Your Supporting Link"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  />
-                </div> */}
               </CardContent>
             </div>
           </div>
@@ -521,22 +490,26 @@ export default function TechnicalSupportForm() {
                   <Label className="text-sm font-medium">
                     How urgent is the issue/request?
                   </Label>
-                  <RadioGroup className="mt-3">
-                    {["Critical", "High", "Medium", "Low"].map(
+                  <RadioGroup 
+                    className="mt-3"
+                    value={formData.impact}
+                    onValueChange={(value) => handleRadioChange("impact", value)}
+                  >
+                    {["critical", "high", "medium", "low"].map(
                       (level, index) => (
                         <div
                           key={index}
-                          className="flex items-center space-x-3 "
+                          className="flex items-center space-x-3"
                         >
                           <RadioGroupItem
-                            value={level.toLowerCase()}
+                            value={level}
                             id={`urgency-${index}`}
                           />
                           <Label
                             htmlFor={`urgency-${index}`}
                             className="text-sm"
                           >
-                            {level}
+                            {level.charAt(0).toUpperCase() + level.slice(1)}
                           </Label>
                         </div>
                       )
@@ -548,21 +521,25 @@ export default function TechnicalSupportForm() {
                   <Label className="text-sm font-medium">
                     How many users are affected by this issue/request?
                   </Label>
-                  <RadioGroup className="mt-3">
+                  <RadioGroup 
+                    className="mt-3"
+                    value={formData.affectedUser}
+                    onValueChange={(value) => handleRadioChange("affectedUser", value)}
+                  >
                     {[
-                      "Just me",
-                      "My team (2-10)",
-                      "My department (10+)",
-                      "Multiple departments",
-                      "Entire organization",
+                      { value: "justMe", label: "Just me" },
+                      { value: "myTeam", label: "My team (2-10)" },
+                      { value: "myDepartment", label: "My department (10+)" },
+                      { value: "multipleDepartments", label: "Multiple departments" },
+                      { value: "entireOrganization", label: "Entire organization" },
                     ].map((scope, index) => (
                       <div key={index} className="flex items-center space-x-3">
                         <RadioGroupItem
-                          value={`users-${index}`}
+                          value={scope.value}
                           id={`users-${index}`}
                         />
                         <Label htmlFor={`users-${index}`} className="text-sm">
-                          {scope}
+                          {scope.label}
                         </Label>
                       </div>
                     ))}
@@ -583,15 +560,19 @@ export default function TechnicalSupportForm() {
                   <Label className="text-sm font-medium">
                     What is your preferred method to receive support?
                   </Label>
-                  <RadioGroup className="mt-3">
-                    {["Email", "Phone"].map((method, index) => (
+                  <RadioGroup 
+                    className="mt-3"
+                    value={formData.receiveSupport}
+                    onValueChange={(value) => handleRadioChange("receiveSupport", value)}
+                  >
+                    {["email", "phone"].map((method, index) => (
                       <div key={index} className="flex items-center space-x-3">
                         <RadioGroupItem
-                          value={method.toLowerCase()}
+                          value={method}
                           id={`contact-${index}`}
                         />
                         <Label htmlFor={`contact-${index}`} className="text-sm">
-                          {method}
+                          {method.charAt(0).toUpperCase() + method.slice(1)}
                         </Label>
                       </div>
                     ))}
@@ -602,18 +583,22 @@ export default function TechnicalSupportForm() {
                   <Label className="text-sm font-medium">
                     Would you like to schedule a call or remote assistance?
                   </Label>
-                  <RadioGroup className="mt-3">
-                    {["Yes", "No"].map((option, index) => (
+                  <RadioGroup 
+                    className="mt-3"
+                    value={formData.scheduleCall}
+                    onValueChange={(value) => handleRadioChange("scheduleCall", value)}
+                  >
+                    {["true", "false"].map((option, index) => (
                       <div key={index} className="flex items-center space-x-3">
                         <RadioGroupItem
-                          value={option.toLowerCase()}
+                          value={option}
                           id={`schedule-${index}`}
                         />
                         <Label
                           htmlFor={`schedule-${index}`}
                           className="text-sm"
                         >
-                          {option}
+                          {option === "true" ? "Yes" : "No"}
                         </Label>
                       </div>
                     ))}
@@ -633,9 +618,8 @@ export default function TechnicalSupportForm() {
                 <div className="flex items-start space-x-3">
                   <Checkbox
                     id="declaration"
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => ({ ...prev, declaration: checked }))
-                    }
+                    checked={formData.agreed}
+                    onCheckedChange={(checked) => handleInputChange("agreed", checked)}
                   />
                   <Label htmlFor="declaration" className="text-sm">
                     I agree
@@ -647,34 +631,33 @@ export default function TechnicalSupportForm() {
                     <Label>Digital Signature*</Label>
                     <Input
                       className=""
-                      value={formData.signature}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          signature: e.target.value,
-                        }))
-                      }
+                      value={formData.digitalSignature}
+                      onChange={(e) => handleInputChange("digitalSignature", e.target.value)}
                       placeholder="Type your full name"
                       required
                     />
                   </div>
 
-                  <RadioGroup className="mt-3">
-                    {["Frequently", "Constant / Always"].map(
+                  <RadioGroup 
+                    className="mt-3"
+                    value={formData.submissionType}
+                    onValueChange={(value) => handleRadioChange("submissionType", value)}
+                  >
+                    {["frequently", "constant"].map(
                       (method, index) => (
                         <div
                           key={index}
                           className="flex items-center space-x-3"
                         >
                           <RadioGroupItem
-                            value={method.toLowerCase()}
-                            id={`contact-${index}`}
+                            value={method}
+                            id={`submission-${index}`}
                           />
                           <Label
-                            htmlFor={`contact-${index}`}
+                            htmlFor={`submission-${index}`}
                             className="text-sm"
                           >
-                            {method}
+                            {method === "frequently" ? "Frequently" : "Constant / Always"}
                           </Label>
                         </div>
                       )
@@ -690,19 +673,20 @@ export default function TechnicalSupportForm() {
                         variant="outline"
                         className="w-full justify-start text-left font-normal"
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <Calendar className="mr-2 h-4 w-4" />
                         {initiatorDob
                           ? initiatorDob.toLocaleDateString()
                           : "Pick a date"}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-6 ">
-                      <Calendar
-                        mode="single"
-                        selected={initiatorDob}
-                        onSelect={setInitiatorDob}
-                        initialFocus
-                      />
+                    <PopoverContent className="w-auto p-6">
+                      <div className="space-y-2">
+                        <Input
+                          type="date"
+                          value={initiatorDob ? initiatorDob.toISOString().split('T')[0] : ''}
+                          onChange={(e) => setInitiatorDob(new Date(e.target.value))}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -728,10 +712,11 @@ export default function TechnicalSupportForm() {
                   <div className="flex justify-center">
                     <Button
                       onClick={handleSubmit}
+                      disabled={isLoading}
                       className="bg-red-600 hover:bg-red-700 text-white px-12 py-2"
                       size="lg"
                     >
-                      Submit Request
+                      {isLoading ? "Submitting..." : "Submit Request"}
                     </Button>
                   </div>
                 </CardContent>
