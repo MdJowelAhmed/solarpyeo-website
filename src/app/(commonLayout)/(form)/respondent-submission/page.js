@@ -13,22 +13,104 @@ import {
   MapPin,
   AlertTriangle,
 } from "lucide-react";
+// import { useCreateRespondentSubmissionMutation } from "@/redux/api/respondentSubmissionApi";
+import { toast } from "sonner"; // or your toast library
+import { useCreateRespondentSubmissionMutation } from "@/redux/featured/RespondentSubmission/RespondentSubmissionApi";
 
 export default function RespondentSubmissionForm() {
   const [selectedResponse, setSelectedResponse] = useState("deny");
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [digitalSignature, setDigitalSignature] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [createRespondentSubmission, { isLoading }] = useCreateRespondentSubmissionMutation();
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadedFile(file.name);
+    const files = Array.from(event.target.files);
+    if (files.length > 15) {
+      toast.error("Maximum 15 files allowed");
+      return;
     }
+
+    const validFiles = files.filter(file => {
+      const maxSize = 32 * 1024 * 1024; // 32MB
+      if (file.size > maxSize) {
+        toast.error(`${file.name} exceeds 32MB limit`);
+        return false;
+      }
+      return true;
+    });
+
+    setUploadedFiles(validFiles);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (!digitalSignature.trim()) {
+      toast.error("Please enter your digital signature");
+      return;
+    }
+
+    if (selectedResponse === "deny" && uploadedFiles.length === 0) {
+      toast.error("Please upload evidence to support your response");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Create FormData object
+      const formData = new FormData();
+
+      // Add response declaration
+      formData.append("responseDeclaration", selectedResponse);
+
+      // Add evidence files
+      uploadedFiles.forEach((file) => {
+        formData.append("evidence", file);
+      });
+
+      // Add signature
+      formData.append("signature", digitalSignature);
+
+      // Add signature date (ISO format)
+      const signatureDate = new Date().toISOString();
+      formData.append("signatureDate", signatureDate);
+
+      // Add IP address (in real scenario, backend should handle this)
+      // For now, adding a placeholder
+      formData.append("ipAddress", "10.10.7.4");
+
+      // Submit to backend
+      const result = await createRespondentSubmission(formData).unwrap();
+      
+      toast.success("Response submitted successfully!");
+      
+      // Reset form
+      setSelectedResponse("deny");
+      setUploadedFiles([]);
+      setDigitalSignature("");
+      
+      // Optional: Redirect or perform other actions
+      // router.push('/submission-confirmation');
+      
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error(error?.data?.message || "Failed to submit response. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const removeFile = (indexToRemove) => {
+    setUploadedFiles(files => files.filter((_, index) => index !== indexToRemove));
   };
 
   return (
     <div className="">
-      <div className="">
+      <form onSubmit={handleSubmit}>
         {/* Form Header */}
         <div className="bg-secondary py-12 md:py-16 lg:py-24">
           <div className="container mx-auto">
@@ -120,7 +202,6 @@ export default function RespondentSubmissionForm() {
           <div className="container mx-auto">
             <CardContent className="">
               <div className="">
-                {/* <Upload className="w-5 h-5 text-red-600" /> */}
                 <h3 className="mb-6">📎 SECTION 2: EVIDENCE SUBMISSION</h3>
               </div>
 
@@ -151,16 +232,30 @@ export default function RespondentSubmissionForm() {
                     accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     multiple
                   />
-                  {!uploadedFile && (
+                  {uploadedFiles.length === 0 && (
                     <span className="text-sm text-gray-500">
                       No file chosen
                     </span>
                   )}
                 </div>
-                {uploadedFile && (
-                  <p className="text-sm text-green-600">
-                    Uploaded: {uploadedFile}
-                  </p>
+                {uploadedFiles.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-sm font-medium text-gray-700">
+                      Uploaded Files: ({uploadedFiles.length}/15)
+                    </p>
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between bg-green-50 p-2 rounded">
+                        <span className="text-sm text-green-700">{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -208,7 +303,7 @@ export default function RespondentSubmissionForm() {
                     htmlFor="digital-signature"
                     className="text-sm font-medium text-gray-700"
                   >
-                    Digital Signature (type full legal name)
+                    Digital Signature (type full legal name) *
                   </Label>
                   <Input
                     id="digital-signature"
@@ -217,12 +312,13 @@ export default function RespondentSubmissionForm() {
                     onChange={(e) => setDigitalSignature(e.target.value)}
                     placeholder="Enter your legal full name"
                     className="mt-1"
+                    required
                   />
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="w-4 h-4" />
-                  <span>Date: [Auto-filled]</span>
+                  <span>Date: {new Date().toLocaleDateString()}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -231,6 +327,7 @@ export default function RespondentSubmissionForm() {
                     IP Address and Timestamp: [auto-captured by platform]
                   </span>
                 </div>
+                
                 {/* Warning Notice */}
                 <div className="bg-secondary-foreground border-l-4 border-red-700 p-4 rounded-lg mb-6">
                   <div className="flex items-start gap-2">
@@ -244,22 +341,23 @@ export default function RespondentSubmissionForm() {
                     </p>
                   </div>
                 </div>
-                  {/* Submit Button */}
-        <div className="flex justify-end">
-          <Button
-            className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 font-medium"
-            size="lg"
-          >
-            Submit Response
-          </Button>
-        </div>
+                
+                {/* Submit Button */}
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 font-medium"
+                    size="lg"
+                    disabled={isLoading || isSubmitting}
+                  >
+                    {isLoading || isSubmitting ? "Submitting..." : "Submit Response"}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </div>
         </div>
-
-     
-      </div>
+      </form>
     </div>
   );
 }
