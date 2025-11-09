@@ -14,12 +14,51 @@ import { useCreateAppealFormMutation } from "@/redux/featured/appealForm/appealF
 const AppealRequestForm = () => {
   const [selectedGrounds, setSelectedGrounds] = useState([]);
   const [reviewOption, setReviewOption] = useState("");
-  const [files, setFiles] = useState([]);
+
   const [justification, setJustification] = useState("");
   const [appealBasis, setAppealBasis] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
 
   const [createAppealForm, { isLoading }] = useCreateAppealFormMutation();
+
+  // Add two different states at the top
+  const [files1, setFiles1] = useState([]);
+  const [files2, setFiles2] = useState([]);
+
+  // Separate handlers
+  const handleFileUpload1 = (event) => {
+    const uploadedFiles = Array.from(event.target.files);
+    if (files1.length + uploadedFiles.length > 15) {
+      toast.error("Maximum 15 files allowed for first upload");
+      return;
+    }
+    const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
+    if (oversizedFiles.length > 0) {
+      toast.error("Some files exceed 32MB limit");
+      return;
+    }
+    setFiles1([...files1, ...uploadedFiles]);
+  };
+
+  const handleFileUpload2 = (event) => {
+    const uploadedFiles = Array.from(event.target.files);
+    if (files2.length + uploadedFiles.length > 15) {
+      toast.error("Maximum 15 files allowed for second upload");
+      return;
+    }
+    const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
+    if (oversizedFiles.length > 0) {
+      toast.error("Some files exceed 32MB limit");
+      return;
+    }
+    setFiles2([...files2, ...uploadedFiles]);
+  };
+
+  // Separate remove functions
+  const removeFile1 = (index) =>
+    setFiles1(files1.filter((_, i) => i !== index));
+  const removeFile2 = (index) =>
+    setFiles2(files2.filter((_, i) => i !== index));
 
   const handleGroundChange = (ground, checked) => {
     if (checked) {
@@ -29,28 +68,28 @@ const AppealRequestForm = () => {
     }
   };
 
-  const handleFileUpload = (event) => {
-    const uploadedFiles = Array.from(event.target.files);
+  // const handleFileUpload = (event) => {
+  //   const uploadedFiles = Array.from(event.target.files);
 
-    // Validate file count
-    if (files.length + uploadedFiles.length > 15) {
-      toast.error("Maximum 15 files allowed");
-      return;
-    }
+  //   // Validate file count
+  //   if (files.length + uploadedFiles.length > 15) {
+  //     toast.error("Maximum 15 files allowed");
+  //     return;
+  //   }
 
-    // Validate file size (32MB = 33554432 bytes)
-    const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
-    if (oversizedFiles.length > 0) {
-      toast.error("Some files exceed 32MB limit");
-      return;
-    }
+  //   // Validate file size (32MB = 33554432 bytes)
+  //   const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
+  //   if (oversizedFiles.length > 0) {
+  //     toast.error("Some files exceed 32MB limit");
+  //     return;
+  //   }
 
-    setFiles([...files, ...uploadedFiles]);
-  };
+  //   setFiles([...files, ...uploadedFiles]);
+  // };
 
-  const removeFile = (index) => {
-    setFiles(files.filter((_, i) => i !== index));
-  };
+  // const removeFile = (index) => {
+  //   setFiles(files.filter((_, i) => i !== index));
+  // };
 
   const validateForm = () => {
     if (selectedGrounds.length === 0) {
@@ -95,9 +134,9 @@ const AppealRequestForm = () => {
       formData.append("declarationAndSubmission", appealBasis);
 
       // Append files
-      files.forEach((file) => {
-        formData.append("supportingDocument", file);
-      });
+     files1.forEach((file) => formData.append("supportingDocumentGroup1", file));
+files2.forEach((file) => formData.append("supportingDocumentGroup2", file));
+
 
       // Submit form
       const response = await createAppealForm(formData).unwrap();
@@ -107,7 +146,8 @@ const AppealRequestForm = () => {
       // Reset form
       setSelectedGrounds([]);
       setReviewOption("");
-      setFiles([]);
+      setFiles1([]);
+      setFiles2([]);
       setJustification("");
       setAppealBasis("");
       setDigitalSignature("");
@@ -297,27 +337,26 @@ const AppealRequestForm = () => {
                   </Label>
                   <div className="flex items-center gap-4">
                     <Input
-                      id="file-upload"
                       type="file"
-                      onChange={handleFileUpload}
-                      className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
+                      onChange={handleFileUpload1}
                       multiple
+                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     />
-                    {files.length === 0 && (
-                      <span className="text-sm text-gray-500">
-                        No file chosen
-                      </span>
-                    )}
+                    {files1.map((file, index) => (
+                      <div key={index}>
+                        {file.name}
+                        <button onClick={() => removeFile1(index)}>❌</button>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Display uploaded files */}
-                  {files.length > 0 && (
+                  {files1.length > 0 && (
                     <div className="mt-4 space-y-2">
                       <p className="text-sm font-medium text-gray-700">
-                        Uploaded Files ({files.length}/15):
+                        Uploaded Files ({files1.length}/15):
                       </p>
-                      {files.map((file, index) => (
+                      {files1.map((file, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-2 bg-gray-50 rounded border"
@@ -350,27 +389,26 @@ const AppealRequestForm = () => {
                   </Label>
                   <div className="flex items-center gap-4">
                     <Input
-                      id="file-upload"
                       type="file"
-                      onChange={handleFileUpload}
-                      className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
+                      onChange={handleFileUpload2}
                       multiple
+                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
                     />
-                    {files.length === 0 && (
-                      <span className="text-sm text-gray-500">
-                        No file chosen
-                      </span>
-                    )}
+                    {files2.map((file, index) => (
+                      <div key={index}>
+                        {file.name}
+                        <button onClick={() => removeFile2(index)}>❌</button>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Display uploaded files */}
-                  {files.length > 0 && (
+                  {files2.length > 0 && (
                     <div className="mt-4 space-y-2">
                       <p className="text-sm font-medium text-gray-700">
-                        Uploaded Files ({files.length}/15):
+                        Uploaded Files ({files2.length}/15):
                       </p>
-                      {files.map((file, index) => (
+                      {files2.map((file, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-2 bg-gray-50 rounded border"
@@ -411,12 +449,12 @@ const AppealRequestForm = () => {
         </div>
 
         {/* Section 3: Written Justification */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="pb-4">
-              <h3 className="">SECTION 3: Written Justification</h3>
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="">SECTION 3: Written Justification</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="w-full lg:w-4/5   lg:border-l-4 h-full lg:pl-10">
               <p className="text-sm text-gray-700 mb-4">
                 Provide a detailed written argument explaining why this appeal
                 should be granted. Be specific and cite dates, documents, or
