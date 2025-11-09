@@ -122,12 +122,12 @@ const AppealRequestForm = () => {
     <div className="">
       <div className="">
         {/* Header */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="">
+        <div className="bg-secondary-foreground custom-padding py-12 md:py-16 lg:py-24  ">
+          <div className="mb-6">
             <h2 className="text-2xl lg:text-4xl font-bold text-center">
               📄 Appeal Request Form
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-1 text-center mt-6">
               <div>
                 <span className="font-medium">Platform Case Reference ID:</span>{" "}
                 [Case-ID-Here]
@@ -141,22 +141,24 @@ const AppealRequestForm = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Section 1: Appeal Grounds */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="pb-4">
-              <h3 className="">
+
+            {/* Section 1: Appeal Grounds */}
+        <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white rounded-md">
+          <div className="container mx-auto flex flex-col lg:flex-row items-center">
+            <CardHeader className="pb-4 w-full lg:w-1/5">
+              <CardTitle className="">
                 🔍 SECTION 1: Appeal Grounds
-              </h3>
-            </CardHeader>
-            <CardContent>
-              <p className="text- mb-6">
+              </CardTitle>
+                 <p className="text- mb-6 text-justify">
                 Select <strong>at least one qualifying</strong> reason for
                 requesting an appeal. Each option must be supported by
                 explanation or documentation.
               </p>
+            </CardHeader>
+
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+           
 
               <div className="space-y-5">
                 <div className="flex items-start gap-3">
@@ -274,6 +276,9 @@ const AppealRequestForm = () => {
             </CardContent>
           </div>
         </div>
+        </div>
+
+      
 
         {/* Section 2: Supporting Materials */}
         <div className="bg-secondary py-12 md:py-16 lg:py-24">
