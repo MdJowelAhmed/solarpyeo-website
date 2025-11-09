@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -215,30 +215,30 @@ export default function TechnicalSupportForm() {
 
   return (
     <div className="">
-      <div className="">
+     
         {/* Title Section */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto flex">
-            <div className="w-1/2">
-              <div className="flex gap-2 mb-4">
-                <h1 className="">🛠️ Technical Support Request Form</h1>
+        <div className="bg-secondary-foreground custom-padding ">
+          
+            <div className="mb-6">
+              <div className="flex items-center justify-center gap-2">
+                <h2 className="text-2xl lg:text-4xl font-bold text-center">🛠️ Technical Support Request Form</h2>
               </div>
-              <p className="">
+              <p className="text-gray-600 text-sm leading-relaxed text-justify max-w-2xl mx-auto mt-3">
                 Please fill out this form to request technical assistance. Our
                 support team will review your request and respond within the
                 timeframe based on the priority level selected.
               </p>
             </div>
 
-            <div className="w-1/2">
-              <CardHeader className="">
-                <h3 className="">Section 1: User Identification</h3>
-                <h4 className="text-center mb-6">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+              <CardHeader className="w-full lg:w-1/5">
+                <CardTitle className="">User Identification</CardTitle>
+                <h4 className="text-justify mb-6">
                   Please provide your contact and identification information.
                 </h4>
               </CardHeader>
-              <CardContent className="p-6 space-y-4">
-                <div className="grid md:grid-cols-1 gap-4">
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="fullName">Full Name*</Label>
                     <Input
@@ -259,9 +259,7 @@ export default function TechnicalSupportForm() {
                       required
                     />
                   </div>
-                </div>
 
-                <div className="grid md:grid-cols-1 gap-4">
                   <div>
                     <Label htmlFor="email">Email Address*</Label>
                     <Input
@@ -283,9 +281,13 @@ export default function TechnicalSupportForm() {
                     />
                   </div>
                 </div>
+
+                <div className="grid md:grid-cols-1 gap-4">
+                  
+                </div>
               </CardContent>
             </div>
-          </div>
+        
         </div>
 
         <div className="">
@@ -778,7 +780,7 @@ export default function TechnicalSupportForm() {
             </div>
           </div>
         </div>
-      </div>
+    
     </div>
   );
 }

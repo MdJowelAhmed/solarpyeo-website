@@ -201,10 +201,10 @@ export default function MisuseReportForm() {
 
   return (
     <div className="min-h-screen">
-      <div className="">
+   
         {/* Title Section */}
         <div className="bg-secondary-foreground custom-padding ">
-          <div className="">
+        
             <div className="mb-6">
               <div className="flex items-center justify-center gap-2">
                 <AlertTriangle className="h-8 w-8 text-red-500" />
@@ -294,7 +294,7 @@ export default function MisuseReportForm() {
                 </CardContent>
               </div>
             </div>
-          </div>
+       
         </div>
 
         {/* Section 2: Nature of Misuse */}
@@ -603,7 +603,7 @@ export default function MisuseReportForm() {
               </div> */}
             </CardContent>
           </div>
-        </div>
+     
 
         {/* Submit Section */}
         <div className="container mx-auto">
@@ -611,7 +611,7 @@ export default function MisuseReportForm() {
             Upon submission, you will receive a confirmation receipt and
             tracking number. A member of the Platform`s{" "}
             <strong>Compliance & Integrity Division</strong> will review your
-            report within <strong>5–10 business days</strong>. You may be
+            report within <strong>5-10 business days</strong>. You may be
             contacted for clarification or further evidence if needed.
           </p>
 
@@ -629,7 +629,7 @@ export default function MisuseReportForm() {
             </Button>
           </div>
        
-      </div>
+    </div>
     </div>
   );
 }
