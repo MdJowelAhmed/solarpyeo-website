@@ -290,18 +290,18 @@ export default function TechnicalSupportForm() {
         
         </div>
 
-        <div className="">
+     
           {/* Section 2: Issue Classification */}
-          <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-            <div className="container mx-auto">
-              <div>
-                <CardHeader className="">
+          <div className="bg-secondary custom-padding">
+            <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          
+                <CardHeader className="w-full lg:w-1/5">
                   <h3 className="">Section 2: Issue Classification</h3>
                   <h4 className="text-center mb-6">
                     (Select the category that best describes your issue)
                   </h4>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
                   <div className="grid md:grid-cols-1 gap-4">
                     {[
                       "Login / Account Access Problems",
@@ -338,7 +338,7 @@ export default function TechnicalSupportForm() {
                     />
                   </div>
                 </CardContent>
-              </div>
+           
             </div>
           </div>
 
@@ -779,7 +779,7 @@ export default function TechnicalSupportForm() {
               </div>
             </div>
           </div>
-        </div>
+       
     
     </div>
   );
