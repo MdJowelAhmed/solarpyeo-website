@@ -18,7 +18,7 @@ const AppealRequestForm = () => {
   const [justification, setJustification] = useState("");
   const [appealBasis, setAppealBasis] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
-  
+
   const [createAppealForm, { isLoading }] = useCreateAppealFormMutation();
 
   const handleGroundChange = (ground, checked) => {
@@ -31,20 +31,20 @@ const AppealRequestForm = () => {
 
   const handleFileUpload = (event) => {
     const uploadedFiles = Array.from(event.target.files);
-    
+
     // Validate file count
     if (files.length + uploadedFiles.length > 15) {
       toast.error("Maximum 15 files allowed");
       return;
     }
-    
+
     // Validate file size (32MB = 33554432 bytes)
-    const oversizedFiles = uploadedFiles.filter(file => file.size > 33554432);
+    const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
     if (oversizedFiles.length > 0) {
       toast.error("Some files exceed 32MB limit");
       return;
     }
-    
+
     setFiles([...files, ...uploadedFiles]);
   };
 
@@ -57,53 +57,53 @@ const AppealRequestForm = () => {
       toast.error("Please select at least one appeal ground");
       return false;
     }
-    
+
     if (!appealBasis.trim()) {
       toast.error("Please describe the basis for your appeal");
       return false;
     }
-    
+
     if (!justification.trim()) {
       toast.error("Please provide written justification");
       return false;
     }
-    
+
     if (!reviewOption) {
       toast.error("Please select a review option");
       return false;
     }
-    
+
     if (!digitalSignature.trim()) {
       toast.error("Please provide your digital signature");
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
+
     try {
       // Create FormData object
       const formData = new FormData();
-      
+
       // Append text fields
       formData.append("appealGrounds", JSON.stringify(selectedGrounds));
       formData.append("justification", justification);
       formData.append("reviewOption", reviewOption);
       formData.append("declarationAndSubmission", appealBasis);
-      
+
       // Append files
       files.forEach((file) => {
         formData.append("supportingDocument", file);
       });
-      
+
       // Submit form
       const response = await createAppealForm(formData).unwrap();
-      
+
       toast.success("Appeal submitted successfully!");
-      
+
       // Reset form
       setSelectedGrounds([]);
       setReviewOption("");
@@ -111,10 +111,11 @@ const AppealRequestForm = () => {
       setJustification("");
       setAppealBasis("");
       setDigitalSignature("");
-      
     } catch (error) {
       console.error("Error submitting appeal:", error);
-      toast.error(error?.data?.message || "Failed to submit appeal. Please try again.");
+      toast.error(
+        error?.data?.message || "Failed to submit appeal. Please try again."
+      );
     }
   };
 
@@ -142,150 +143,257 @@ const AppealRequestForm = () => {
             </div>
           </div>
 
+          {/* Section 1: Appeal Grounds */}
+          <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <div className="container mx-auto flex flex-col lg:flex-row items-center">
+              <CardHeader className="pb-4 w-full lg:w-1/5">
+                <CardTitle className="">🔍 SECTION 1: Appeal Grounds</CardTitle>
+                <p className="text- mb-6 text-justify">
+                  Select <strong>at least one qualifying</strong> reason for
+                  requesting an appeal. Each option must be supported by
+                  explanation or documentation.
+                </p>
+              </CardHeader>
 
-            {/* Section 1: Appeal Grounds */}
-        <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white rounded-md">
-          <div className="container mx-auto flex flex-col lg:flex-row items-center">
-            <CardHeader className="pb-4 w-full lg:w-1/5">
-              <CardTitle className="">
-                🔍 SECTION 1: Appeal Grounds
-              </CardTitle>
-                 <p className="text- mb-6 text-justify">
-                Select <strong>at least one qualifying</strong> reason for
-                requesting an appeal. Each option must be supported by
-                explanation or documentation.
-              </p>
-            </CardHeader>
+              <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+                <div className="space-y-5">
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="new-evidence"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("new-evidence", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="new-evidence"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      New Evidence Not Previously Available: Attach any new
+                      documents, testimony, or digital records that post-dated
+                      original case.
+                    </Label>
+                  </div>
 
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-           
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="procedural-error"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("procedural-error", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="procedural-error"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      Procedural Error: Explain any violations of platform
+                      process, such as improper issue adherence or inequitable
+                      actions.
+                    </Label>
+                  </div>
 
-              <div className="space-y-5">
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="new-evidence"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("new-evidence", checked)
-                    }
-                  />
-                  <Label
-                    htmlFor="new-evidence"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    New Evidence Not Previously Available: Attach any new
-                    documents, testimony, or digital records that post-dated
-                    original case.
-                  </Label>
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="bias-misconduct"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("bias-misconduct", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="bias-misconduct"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      Bias/ Misconduct or Skil Detect the administrators with
+                      fairness; conflict of interests; or rules violated by
+                      peers.
+                    </Label>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="incorrect-identification"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("incorrect-identification", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="incorrect-identification"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      Incorrect Identification / Mistaken Target: Detect the
+                      flaws your identity or record was falsely linked.
+                    </Label>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="legal-regulation"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("legal-regulation", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="legal-regulation"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      Legal Regulation Overlooking Platform Verdict: Attach
+                      proof of formal court resolution conflicting with platform
+                      records.
+                    </Label>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="other"
+                      onCheckedChange={(checked) =>
+                        handleGroundChange("other", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="other"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      Other: (Explain Below)
+                    </Label>
+                  </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="procedural-error"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("procedural-error", checked)
-                    }
-                  />
-                  <Label
-                    htmlFor="procedural-error"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    Procedural Error: Explain any violations of platform
-                    process, such as improper issue adherence or inequitable
-                    actions.
+                <div className="mt-4">
+                  <Label className="text-sm font-medium text-gray-700">
+                    Clearly describe the basis for this appeal. *
                   </Label>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="bias-misconduct"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("bias-misconduct", checked)
-                    }
+                  <Textarea
+                    id="appeal-basis"
+                    value={appealBasis}
+                    onChange={(e) => setAppealBasis(e.target.value)}
+                    className="mt-2 h-40 p-2 border border-gray-300 rounded-md w-full"
+                    rows={8}
+                    placeholder="Describe the basis for this appeal..."
                   />
-                  <Label
-                    htmlFor="bias-misconduct"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    Bias/ Misconduct or Skil Detect the administrators with
-                    fairness; conflict of interests; or rules violated by peers.
-                  </Label>
                 </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="incorrect-identification"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("incorrect-identification", checked)
-                    }
-                  />
-                  <Label
-                    htmlFor="incorrect-identification"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    Incorrect Identification / Mistaken Target: Detect the flaws
-                    your identity or record was falsely linked.
-                  </Label>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="legal-regulation"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("legal-regulation", checked)
-                    }
-                  />
-                  <Label
-                    htmlFor="legal-regulation"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    Legal Regulation Overlooking Platform Verdict: Attach proof
-                    of formal court resolution conflicting with platform
-                    records.
-                  </Label>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="other"
-                    onCheckedChange={(checked) =>
-                      handleGroundChange("other", checked)
-                    }
-                  />
-                  <Label
-                    htmlFor="other"
-                    className="text-sm text-gray-700 leading-relaxed"
-                  >
-                    Other: (Explain Below)
-                  </Label>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <Label className="text-sm font-medium text-gray-700">
-                  Clearly describe the basis for this appeal. *
-                </Label>
-                <Textarea
-                  id="appeal-basis"
-                  value={appealBasis}
-                  onChange={(e) => setAppealBasis(e.target.value)}
-                  className="mt-2 h-40 p-2 border border-gray-300 rounded-md w-full"
-                  rows={8}
-                  placeholder="Describe the basis for this appeal..."
-                />
-              </div>
-            </CardContent>
+              </CardContent>
+            </div>
           </div>
         </div>
-        </div>
-
-      
 
         {/* Section 2: Supporting Materials */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardContent className="">
+        <div className="bg-secondary custom-padding ">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardContent className="w-full lg:w-1/5">
               <div className="">
-                <h3 className="mb-6">📎 SECTION 2: Supporting Materials</h3>
+                <CardTitle className="mb-6">
+                  📎 SECTION 2: Supporting Materials
+                </CardTitle>
+              </div>
+            </CardContent>
+
+            <div className="space-y-4 w-full lg:w-4/5  lg:border-l-4 h-full lg:pl-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4  md:gap-x-8 lg:gap-x-12">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="file-upload"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Upload File
+                  </Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      id="file-upload"
+                      type="file"
+                      onChange={handleFileUpload}
+                      className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
+                      multiple
+                    />
+                    {files.length === 0 && (
+                      <span className="text-sm text-gray-500">
+                        No file chosen
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Display uploaded files */}
+                  {files.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium text-gray-700">
+                        Uploaded Files ({files.length}/15):
+                      </p>
+                      {files.map((file, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                        >
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-gray-600" />
+                            <span className="text-sm text-gray-700">
+                              {file.name} (
+                              {(file.size / 1024 / 1024).toFixed(2)} MB)
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile(index)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="file-upload"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Upload File
+                  </Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      id="file-upload"
+                      type="file"
+                      onChange={handleFileUpload}
+                      className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                      accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
+                      multiple
+                    />
+                    {files.length === 0 && (
+                      <span className="text-sm text-gray-500">
+                        No file chosen
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Display uploaded files */}
+                  {files.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium text-gray-700">
+                        Uploaded Files ({files.length}/15):
+                      </p>
+                      {files.map((file, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                        >
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-gray-600" />
+                            <span className="text-sm text-gray-700">
+                              {file.name} (
+                              {(file.size / 1024 / 1024).toFixed(2)} MB)
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile(index)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <p className="text-sm text-gray-700 mb-2">
@@ -298,60 +406,7 @@ const AppealRequestForm = () => {
               <p className="text-sm text-gray-600 mb-4">
                 Maximum file size limit: 32MB
               </p>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="file-upload"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Upload File
-                </Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    id="file-upload"
-                    type="file"
-                    onChange={handleFileUpload}
-                    className="w-1/5 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                    accept=".pdf,.jpeg,.jpg,.heic,.png,.docx,.mp4"
-                    multiple
-                  />
-                  {files.length === 0 && (
-                    <span className="text-sm text-gray-500">
-                      No file chosen
-                    </span>
-                  )}
-                </div>
-                
-                {/* Display uploaded files */}
-                {files.length > 0 && (
-                  <div className="mt-4 space-y-2">
-                    <p className="text-sm font-medium text-gray-700">
-                      Uploaded Files ({files.length}/15):
-                    </p>
-                    {files.map((file, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-2 bg-gray-50 rounded border"
-                      >
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-gray-600" />
-                          <span className="text-sm text-gray-700">
-                            {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeFile(index)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </CardContent>
+            </div>
           </div>
         </div>
 
@@ -359,9 +414,7 @@ const AppealRequestForm = () => {
         <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
           <div className="container mx-auto">
             <CardHeader className="pb-4">
-              <h3 className="">
-                SECTION 3: Written Justification
-              </h3>
+              <h3 className="">SECTION 3: Written Justification</h3>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-700 mb-4">
@@ -384,9 +437,7 @@ const AppealRequestForm = () => {
         <div className="bg-secondary py-12 md:py-16 lg:py-24">
           <div className="container mx-auto">
             <CardHeader className="">
-              <h3 className="mb-6">
-                🧠 SECTION 4: Review Option
-              </h3>
+              <h3 className="mb-6">🧠 SECTION 4: Review Option</h3>
             </CardHeader>
             <CardContent>
               <Label className="mb-5">
@@ -448,9 +499,7 @@ const AppealRequestForm = () => {
         <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
           <div className="container mx-auto">
             <CardHeader className="">
-              <h3 className="mb-6">
-                SECTION 5: Declaration & Submission
-              </h3>
+              <h3 className="mb-6">SECTION 5: Declaration & Submission</h3>
             </CardHeader>
             <CardContent>
               <div className="mb-4">
@@ -488,7 +537,9 @@ const AppealRequestForm = () => {
                 <Label className="text-sm font-medium text-gray-700">
                   Appeal Fee: $30.00
                 </Label>
-                <p className="text-xs text-gray-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Date: {new Date().toLocaleDateString()}
+                </p>
               </div>
 
               {/* Important Notice */}
