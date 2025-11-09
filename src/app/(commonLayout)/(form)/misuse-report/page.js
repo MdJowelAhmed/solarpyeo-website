@@ -205,7 +205,7 @@ export default function MisuseReportForm() {
         {/* Title Section */}
         <div className="bg-secondary-foreground custom-padding ">
           <div className="">
-            <div className="mb-6">
+            <div className="">
               <div className="flex items-center justify-center gap-2">
                 <AlertTriangle className="h-8 w-8 text-red-500" />
                 <h2 className="text-2xl lg:text-4xl font-bold text-center">
@@ -298,15 +298,15 @@ export default function MisuseReportForm() {
         </div>
 
         {/* Section 2: Nature of Misuse */}
-        <div className="py-12 md:my-16 lg:py-24 bg-secondary-foreground">
-          <div className="container mx-auto">
-            <CardHeader>
+        <div className="custom-padding bg-secondary">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
               <h3 className="text-red-700">
                 Section 2: Nature Of The Reported Misuse
               </h3>
               <h4 className="text-center mb-6">(Select all that apply)</h4>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="grid md:grid-cols-1 gap-4">
                 {[
                   "Exceeding normal budgetary expenditures",
