@@ -197,7 +197,7 @@ const SealExpungeForm = () => {
               ))}
             </div>
 
-            <div  className="mt-4 flex items-center justify-center gap-10">
+            <div className="mt-4 flex items-center justify-center gap-10">
               <div className="w-1/2">
                 <Label htmlFor="other-explanation">
                   Enter Your Reference ID:
@@ -205,7 +205,6 @@ const SealExpungeForm = () => {
                 <Input
                   id="reference-id"
                   placeholder="Enter Your Reference ID"
-                 
                 />
               </div>
 
@@ -256,9 +255,7 @@ const SealExpungeForm = () => {
                   setRequestType(checked ? "seal" : "")
                 }
               />
-              <p htmlFor="seal">
-                Seal the Record. (Type the justification)
-              </p>
+              <p htmlFor="seal">Seal the Record. (Type the justification)</p>
             </div>
 
             <div className="flex items-center space-x-2 mt-4">
@@ -269,9 +266,7 @@ const SealExpungeForm = () => {
                   setRequestType(checked ? "expunge" : "")
                 }
               />
-              <p htmlFor="expunge">
-                Expunge the Record (permanent deletion)
-              </p>
+              <p htmlFor="expunge">Expunge the Record (permanent deletion)</p>
             </div>
           </CardContent>
         </div>
@@ -281,14 +276,15 @@ const SealExpungeForm = () => {
       <div className="bg-secondary-foreground custom-padding">
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
-            <CardTitle className="mb-6">Legal or Procedural Basis for Request</CardTitle>
-             <p className="mb-6 text-justify">
+            <CardTitle className="mb-6">
+              Legal or Procedural Basis for Request
+            </CardTitle>
+            <p className="mb-6 text-justify">
               Please describe the event(s), behavior(s), and any associated
               case(s). Include dates, communication, or submissions if known.
             </p>
           </CardHeader>
 
-         
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             {/* Checkbox List */}
             {[
@@ -402,18 +398,18 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
         </div>
       </div>
 
-      <div className="bg-secondary py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader>
-            <h3 className="">📝 SECTION 5: Statement of Request</h3>
-            <h4 className="mb-6 max-w-4xl mx-auto">
+      <div className="bg-secondary custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="">Statement of Request</CardTitle>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+            <p className="text-justify">
               Please describe in your own words why you believe the record
               should be sealed or expunged. Be specific. If this relates to
               juror conduct, describe the case interaction, what occurred, and
               what remedy you are seeking.
-            </h4>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
             <div>
               {/* <Label htmlFor="print-signature">Public Signature</Label> */}
               <Textarea
