@@ -215,23 +215,24 @@ const JurorRecusalForm = () => {
       </div>
 
       {/* Section 2: Request Recusal */}
-      <div className="bg-secondary py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader className="">
-            <h3 className="">
+      <div className="bg-secondary custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="">
               {/* <Shield className="w-5 h-5" /> */}
-              <span className="text-lg">🛑 SECTION 2: Request Recusal</span>
-            </h3>
-          </CardHeader>
-          <CardContent className="">
-            <p className="mb-5">
+              Request Recusal
+            </CardTitle>
+             <p className="text-justify">
               You must check at least one box above to request recusal from this
               case.
             </p>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+           
 
             <div className="space-y-5">
               <div>
-                <label className="">⚡ Reason For Recusal Request:</label>
+                <label className="">Reason For Recusal Request:</label>
                 <Textarea
                   placeholder="Please elaborate..."
                   value={recusalReason}
@@ -240,7 +241,7 @@ const JurorRecusalForm = () => {
                 />
               </div>
 
-              <div className="flex items-start space-x-3 pt-4">
+              <div className="flex items-start space-x-3 ">
                 <Checkbox
                   id="requestingRecusal"
                   checked={requestingRecusal}
@@ -261,17 +262,16 @@ const JurorRecusalForm = () => {
       </div>
 
       {/* Section 3: Platform Use Of Conflict Data */}
-      <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto">
-          <CardHeader className="">
-            <h3 className="">
+      <div className="bg-secondary-foreground custom-padding">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="">
               {/* <FileText className="w-5 h-5" /> */}
-              <span className="">
-                📌 SECTION 3: Platform Use of Conflict Data (Optional)
-              </span>
-            </h3>
+             Platform Use of Conflict Data (Optional)
+             
+            </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             <div className="flex items-start space-x-3">
               <Checkbox
                 id="consentPlatformUse"
