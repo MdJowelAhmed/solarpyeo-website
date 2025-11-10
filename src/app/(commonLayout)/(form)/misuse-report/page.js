@@ -219,6 +219,8 @@ export default function MisuseReportForm() {
                 will be treated confidentially to the extent permitted by law.
               </p>
             </div>
+
+            
             <div className="">
               <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
                 <CardHeader className="pb-4 w-full lg:w-1/5">
