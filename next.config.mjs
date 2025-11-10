@@ -12,6 +12,7 @@ const nextConfig = {
       "69.62.67.86",
       "api.yogawithjen.life",
       "web.yogawithjen.life",
+      "10.10.7.46"
  
     ],
   },

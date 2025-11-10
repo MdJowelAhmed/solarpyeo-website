@@ -190,7 +190,7 @@ export default function ProfileDashboardComponents() {
         phone: userData.phone || "",
         address: userData.address || "",
       });
-      setImagePreview(getImageUrl(userData.image));
+      setImagePreview(getImageUrl(userData?.profile));
     }
   }, [userData]);
 
@@ -231,7 +231,7 @@ export default function ProfileDashboardComponents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if phone is valid before submitting
+    // Validate phone before submitting
     if (formData.phone && !isValidPhoneNumber(formData.phone)) {
       setPhoneError(
         "Please enter a valid phone number for the selected country"
@@ -240,31 +240,31 @@ export default function ProfileDashboardComponents() {
     }
 
     try {
-      const userData = {
-        name: formData.name,
-        email: formData.email,
-        address: formData.address,
-        phone: formData.phone,
-      };
-
+      // Create FormData and append all fields separately
       const formDataToSend = new FormData();
-      formDataToSend.append("data", JSON.stringify(userData));
+      formDataToSend.append("name", formData.name || "");
+      formDataToSend.append("email", formData.email || "");
+      formDataToSend.append("address", formData.address || "");
+      formDataToSend.append("phone", formData.phone || "");
 
+      // Append image file if available
       if (imageFile) {
         formDataToSend.append("image", imageFile);
       }
+
+      // Send data to API
       const response = await updateProfile({ data: formDataToSend }).unwrap();
 
       if (response.success) {
         toast.success("Profile updated successfully!");
+
         if (response.token) {
           localStorage.setItem("accessToken", response.token);
         }
-        // Refetch profile data to update UI immediately
-        refetch();
+
+        refetch(); // Refresh data
         setOpen(false);
-        // Reset image file state
-        setImageFile(null);
+        setImageFile(null); // Reset image
       } else {
         toast.error(response.toast || "Failed to update profile!");
       }
@@ -283,7 +283,7 @@ export default function ProfileDashboardComponents() {
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative group">
             <ProfileIcon
-              image={userData?.image}
+              image={userData?.profile}
               size={112} /* 28*4 */
               showBorder={true}
               borderColor="border-white"
@@ -295,17 +295,11 @@ export default function ProfileDashboardComponents() {
               </div>
             )} */}
           </div>
-         
         </div>
-
-         
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="bg-red-600 hover:bg-red-700 shadow-sm"
-            >
+            <Button variant="destructive" className="py-6">
               Edit Profile
             </Button>
           </DialogTrigger>
@@ -393,7 +387,7 @@ export default function ProfileDashboardComponents() {
                     defaultCountry="US"
                     value={formData.phone}
                     onChange={handlePhoneChange}
-                    className={`w-full border rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                    className={`w-full border py-3 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
                       phoneError ? "border-red-500" : "border-gray-300"
                     }`}
                   />
@@ -429,38 +423,6 @@ export default function ProfileDashboardComponents() {
         </Dialog>
       </div>
 
-{/* <div className="text-center md:text-left flex flex-col md:flex-row gap-4">
-          
-
-            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="text-red-500">
-                    <Flame size={24} />
-                  </div>
-                  <h3 className="font-medium text-gray-700">Streak</h3>
-                </div>
-                <p className="text-4xl font-bold mt-4 text-gray-800">
-                  {userData?.name || 0} Days
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="text-red-500">
-                    <Flame size={24} />
-                  </div>
-                  <h3 className="font-medium text-gray-700">Streak</h3>
-                </div>
-                <p className="text-4xl font-bold mt-4 text-gray-800">
-                  {userData?.email || 0} Days
-                </p>
-              </CardContent>
-            </Card>
-            <p className="text-gray-500 mt-1">{userData?.phone}</p>
-          </div> */}
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
           <CardContent className="pt-6">
@@ -471,7 +433,7 @@ export default function ProfileDashboardComponents() {
               <h3 className="font-medium text-gray-700">Name</h3>
             </div>
             <p className="text-xl font-bold mt-4 text-gray-800">
-              {userData?.Name || "N/A"}
+              {userData?.name || "N/A"}
             </p>
           </CardContent>
         </Card>
@@ -490,7 +452,7 @@ export default function ProfileDashboardComponents() {
             </p>
           </CardContent>
         </Card>
-      </div> 
+      </div>
 
       {/* <SubscriptionCard packageData={packageData} userData={userData} /> */}
     </div>
