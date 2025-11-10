@@ -524,7 +524,7 @@ for (let pair of formData.entries()) {
                 </div>
 
                 {/* Declaration Section */}
-                <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-6 mb-8">
+                <div className="bg-primary-foreground border-l-4 border-red-700 rounded-sm p-6 mb-8">
                   <h2 className="font-bold  mb-3 text-lg">
                     DECLARATION UNDER PENALTY OF PERJURY
                   </h2>

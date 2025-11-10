@@ -93,8 +93,8 @@ const GlassFileForm = () => {
   };
 
   return (
-    <div className="w-full pt-8  pb-0">
-      <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-48 mx-auto w-full flex flex-col md:flex-row justify-between gap-4 ">
+    <div className="w-full py-8   pb-10">
+      <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-48 mx-auto w-full flex flex-col md:flex-row justify-between gap-4 pb-10">
         <div className="text-left w-full lg:w-3/5">
           <h1>Choose Your Submission Type</h1>
           <p>

@@ -359,7 +359,7 @@ export default function RespondentSubmissionForm() {
           <div className="flex justify-end">
             <Button
               type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 font-medium"
+              className="py-6"
               size="lg"
               disabled={isLoading || isSubmitting}
             >
