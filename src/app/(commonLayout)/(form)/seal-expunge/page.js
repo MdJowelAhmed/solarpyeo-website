@@ -430,7 +430,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
            
           </CardHeader>
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-           <h4 className="mb-6 max-w-4xl mx-auto">
+           <h4 className="">
               Please describe in your own words why you believe the record
               should be sealed or expunged. Be specific. If this relates to
               juror conduct, describe the case interaction, what occurred, and
@@ -445,7 +445,7 @@ the records on the parties within the Platform instead of Seal or Expungement.`,
               />
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 mt-4">
               <div className="flex items-center space-x-2">
                 <Label htmlFor="today">📅 Date: [Auto-filled]</Label>
               </div>

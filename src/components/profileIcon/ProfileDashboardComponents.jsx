@@ -21,145 +21,149 @@ import {
   User,
 } from "lucide-react";
 import Image from "next/image";
-import { useMyProfileQuery, useUpdateProfileMutation } from "@/redux/featured/auth/authApi";
+import {
+  useMyProfileQuery,
+  useUpdateProfileMutation,
+} from "@/redux/featured/auth/authApi";
 import ProfileIcon from "./ProfileIcon";
 import { getImageUrl } from "../share/imageUrl";
 import { toast } from "sonner";
 import { useRunningPackageQuery } from "@/redux/featured/Package/packageApi";
 import Spinner from "../../app/(commonLayout)/Spinner";
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { MdEmail, MdPeople } from "react-icons/md";
 
 // Subscription Card Component
-const SubscriptionCard = ({ packageData, userData }) => {
-  const calculateDaysRemaining = () => {
-    if (!packageData?.currentPeriodEnd) return 0;
+// const SubscriptionCard = ({ packageData, userData }) => {
+//   const calculateDaysRemaining = () => {
+//     if (!packageData?.currentPeriodEnd) return 0;
 
-    const expireDate = new Date(packageData.currentPeriodEnd);
-    const today = new Date();
-    const diffTime = expireDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-  };
+//     const expireDate = new Date(packageData.currentPeriodEnd);
+//     const today = new Date();
+//     const diffTime = expireDate - today;
+//     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+//     return diffDays > 0 ? diffDays : 0;
+//   };
 
-  const formatExpirationDate = () => {
-    if (!packageData?.currentPeriodEnd) return "N/A";
+//   const formatExpirationDate = () => {
+//     if (!packageData?.currentPeriodEnd) return "N/A";
 
-    const expireDate = new Date(packageData.currentPeriodEnd);
-    return expireDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+//     const expireDate = new Date(packageData.currentPeriodEnd);
+//     return expireDate.toLocaleDateString("en-US", {
+//       year: "numeric",
+//       month: "short",
+//       day: "numeric",
+//     });
+//   };
 
-  const formatStartDate = () => {
-    if (!packageData?.currentPeriodStart) return "N/A";
+//   const formatStartDate = () => {
+//     if (!packageData?.currentPeriodStart) return "N/A";
 
-    const startDate = new Date(packageData.currentPeriodStart);
-    return startDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+//     const startDate = new Date(packageData.currentPeriodStart);
+//     return startDate.toLocaleDateString("en-US", {
+//       year: "numeric",
+//       month: "short",
+//       day: "numeric",
+//     });
+//   };
 
-  const isActive = packageData?.status === "active";
-  const packageTitle = packageData?.package?.title || "No Package";
-  const packageDuration = packageData?.package?.duration || "";
-  const packagePrice = packageData?.price || 0;
+//   const isActive = packageData?.status === "active";
+//   const packageTitle = packageData?.package?.title || "No Package";
+//   const packageDuration = packageData?.package?.duration || "";
+//   const packagePrice = packageData?.price || 0;
 
-  return (
-    <Card className="mb-6 overflow-hidden border border-gray-200 shadow-sm">
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div
-              className={`${isActive ? "text-yellow-500" : "text-gray-400"}`}
-            >
-              {packageTitle === "Gold" ? (
-                <Crown size={28} />
-              ) : (
-                <DollarSign size={28} />
-              )}
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">
-                {userData?.isFreeTrial ? "Free Trial Period" : packageTitle}
-              </h3>
-              {packageDuration && (
-                <p className="text-sm text-gray-600">{packageDuration} plan</p>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle
-              size={20}
-              className={`${isActive ? "text-green-500" : "text-gray-400"}`}
-            />
-            <span
-              className={`text-sm font-medium ${
-                isActive ? "text-green-600" : "text-gray-500"
-              }`}
-            >
-              {isActive ? "Active" : "Inactive"}
-            </span>
-          </div>
-        </div>
+//   return (
+//     <Card className="mb-6 overflow-hidden border border-gray-200 shadow-sm">
+//       <CardContent className="pt-6">
+//         <div className="flex items-center justify-between mb-6">
+//           <div className="flex items-center gap-3">
+//             <div
+//               className={`${isActive ? "text-yellow-500" : "text-gray-400"}`}
+//             >
+//               {packageTitle === "Gold" ? (
+//                 <Crown size={28} />
+//               ) : (
+//                 <DollarSign size={28} />
+//               )}
+//             </div>
+//             <div>
+//               <h3 className="font-semibold text-lg">
+//                 {userData?.isFreeTrial ? "Free Trial Period" : packageTitle}
+//               </h3>
+//               {packageDuration && (
+//                 <p className="text-sm text-gray-600">{packageDuration} plan</p>
+//               )}
+//             </div>
+//           </div>
+//           <div className="flex items-center gap-2">
+//             <CheckCircle
+//               size={20}
+//               className={`${isActive ? "text-green-500" : "text-gray-400"}`}
+//             />
+//             <span
+//               className={`text-sm font-medium ${
+//                 isActive ? "text-green-600" : "text-gray-500"
+//               }`}
+//             >
+//               {isActive ? "Active" : "Inactive"}
+//             </span>
+//           </div>
+//         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200">
-            <p className="text-5xl font-bold text-red-500 mb-2">
-              {calculateDaysRemaining()}
-            </p>
-            <p className="text-lg font-medium text-gray-700 mb-4">
-              Days Remaining
-            </p>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Calendar size={18} />
-              <p className="text-sm">Expires: {formatExpirationDate()}</p>
-            </div>
-          </div>
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <div className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200">
+//             <p className="text-5xl font-bold text-red-500 mb-2">
+//               {calculateDaysRemaining()}
+//             </p>
+//             <p className="text-lg font-medium text-gray-700 mb-4">
+//               Days Remaining
+//             </p>
+//             <div className="flex items-center gap-2 text-gray-600">
+//               <Calendar size={18} />
+//               <p className="text-sm">Expires: {formatExpirationDate()}</p>
+//             </div>
+//           </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-sm font-medium text-gray-600">
-                Package Price
-              </span>
-              <span className="text-lg font-bold text-gray-800">
-                ${packagePrice}
-              </span>
-            </div>
+//           <div className="space-y-4">
+//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+//               <span className="text-sm font-medium text-gray-600">
+//                 Package Price
+//               </span>
+//               <span className="text-lg font-bold text-gray-800">
+//                 ${packagePrice}
+//               </span>
+//             </div>
 
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-sm font-medium text-gray-600">
-                Started On
-              </span>
-              <span className="text-sm text-gray-700">{formatStartDate()}</span>
-            </div>
+//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+//               <span className="text-sm font-medium text-gray-600">
+//                 Started On
+//               </span>
+//               <span className="text-sm text-gray-700">{formatStartDate()}</span>
+//             </div>
 
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-sm font-medium text-gray-600">
-                Customer ID
-              </span>
-              <span className="text-sm text-gray-700 font-mono">
-                {packageData?.customerId?.slice(-8) || "N/A"}
-              </span>
-            </div>
+//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+//               <span className="text-sm font-medium text-gray-600">
+//                 Customer ID
+//               </span>
+//               <span className="text-sm text-gray-700 font-mono">
+//                 {packageData?.customerId?.slice(-8) || "N/A"}
+//               </span>
+//             </div>
 
-            <Button
-              className="w-full mt-4 py-5 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200"
-              onClick={() => (window.location.href = "/subscription-package")}
-            >
-              Extend Subscription
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+//             <Button
+//               className="w-full mt-4 py-5 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200"
+//               onClick={() => (window.location.href = "/subscription-package")}
+//             >
+//               Extend Subscription
+//             </Button>
+//           </div>
+//         </div>
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 export default function ProfileDashboardComponents() {
   const [imageFile, setImageFile] = useState(null);
@@ -205,7 +209,7 @@ export default function ProfileDashboardComponents() {
 
   const handlePhoneChange = (value) => {
     setFormData({ ...formData, phone: value || "" });
-    
+
     // Validate phone number
     if (value) {
       if (!isValidPhoneNumber(value)) {
@@ -226,13 +230,15 @@ export default function ProfileDashboardComponents() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check if phone is valid before submitting
     if (formData.phone && !isValidPhoneNumber(formData.phone)) {
-      setPhoneError("Please enter a valid phone number for the selected country");
+      setPhoneError(
+        "Please enter a valid phone number for the selected country"
+      );
       return;
     }
-    
+
     try {
       const userData = {
         name: formData.name,
@@ -272,11 +278,11 @@ export default function ProfileDashboardComponents() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-xl border border-gray-200 shadow-sm mt-6">
+    <div className="max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-xl border border-gray-200 shadow-sm  my-10">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 relative">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative group">
-            <ProfileIcon 
+            <ProfileIcon
               image={userData?.image}
               size={112} /* 28*4 */
               showBorder={true}
@@ -289,14 +295,10 @@ export default function ProfileDashboardComponents() {
               </div>
             )} */}
           </div>
-          <div className="text-center md:text-left">
-            <h2 className="text-2xl font-bold text-gray-800">
-              {userData?.name}
-            </h2>
-            <p className="text-gray-600">{userData?.email}</p>
-            <p className="text-gray-500 mt-1">{userData?.phone}</p>
-          </div>
+         
         </div>
+
+         
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -427,17 +429,49 @@ export default function ProfileDashboardComponents() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+{/* <div className="text-center md:text-left flex flex-col md:flex-row gap-4">
+          
+
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="text-red-500">
+                    <Flame size={24} />
+                  </div>
+                  <h3 className="font-medium text-gray-700">Streak</h3>
+                </div>
+                <p className="text-4xl font-bold mt-4 text-gray-800">
+                  {userData?.name || 0} Days
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="text-red-500">
+                    <Flame size={24} />
+                  </div>
+                  <h3 className="font-medium text-gray-700">Streak</h3>
+                </div>
+                <p className="text-4xl font-bold mt-4 text-gray-800">
+                  {userData?.email || 0} Days
+                </p>
+              </CardContent>
+            </Card>
+            <p className="text-gray-500 mt-1">{userData?.phone}</p>
+          </div> */}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
-                <Flame size={24} />
+                <MdPeople size={24} />
               </div>
-              <h3 className="font-medium text-gray-700">Streak</h3>
+              <h3 className="font-medium text-gray-700">Name</h3>
             </div>
-            <p className="text-4xl font-bold mt-4 text-gray-800">
-              {userData?.loginCount || 0} Days
+            <p className="text-xl font-bold mt-4 text-gray-800">
+              {userData?.Name || "N/A"}
             </p>
           </CardContent>
         </Card>
@@ -446,33 +480,19 @@ export default function ProfileDashboardComponents() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
-                <Clock size={24} />
+                <MdEmail size={24} />
               </div>
-              <h3 className="font-medium text-gray-700">Yoga Sessions</h3>
+              <h3 className="font-medium text-gray-700">Email</h3>
             </div>
-            <p className="text-4xl font-bold mt-4 text-gray-800">
-              {userData?.completedSessions?.length || 0} Session
-              {userData?.completedSessions?.length !== 1 ? "s" : ""}
+            <p className="text-xl font-bold mt-4 text-gray-800">
+              {userData?.email || "N/A"}
+              {/* {userData?.completedSessions?.length !== 1 ? "s" : ""} */}
             </p>
           </CardContent>
         </Card>
+      </div> 
 
-        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="text-red-500">
-                <Clock size={24} />
-              </div>
-              <h3 className="font-medium text-gray-700">Total Mat Time</h3>
-            </div>
-            <p className="text-4xl font-bold mt-4 text-gray-800">
-              {userData?.matTime || 0} Min
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <SubscriptionCard packageData={packageData} userData={userData} />
+      {/* <SubscriptionCard packageData={packageData} userData={userData} /> */}
     </div>
   );
 }
