@@ -114,7 +114,7 @@ export default function IdentityDisputeForm() {
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <div className="">
-              <h3 className="">SECTION 2: DECLARATION</h3>
+              <CardTitle className="">DECLARATION</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">

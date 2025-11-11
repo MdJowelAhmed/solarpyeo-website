@@ -20,6 +20,7 @@ import RespondentSubmissionForm from "../respondent-submission/page";
 import IdentityDisputeForm from "../identity-dispute/page";
 import AppealRequestForm from "../appeal-request/page";
 import JurorRecusalForm from "../juror-recusal/page";
+import JurorApplicationForm from "../juror-enrollment/page";
 
 const GlassFileForm = () => {
   const router = useRouter();
@@ -65,7 +66,7 @@ const GlassFileForm = () => {
       case "technical-support":
         return <TechnicalSupportForm />;
       case "juror-enrollment":
-        return <JurorEthics />;
+        return <JurorApplicationForm />;
       case "respondent-submission":
         return <RespondentSubmissionForm />;
       case "identity-dispute":
