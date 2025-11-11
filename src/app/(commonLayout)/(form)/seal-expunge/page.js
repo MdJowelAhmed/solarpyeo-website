@@ -22,13 +22,14 @@ import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
 const SealExpungeForm = () => {
   const [createSealOrExpunge, { isLoading }] = useCreateSealOrExpungeMutation();
   const {data:userData}=useMyProfileQuery()
+  console.log("user data form seal page", userData)
 
   // Form State
   const [requestingParty, setRequestingParty] = useState("");
   const [platformEmail, setPlatformEmail] = useState("");
   const [fullLegalName, setFullLegalName] = useState("");
   const [recordedDetails, setRecordedDetails] = useState([]);
-  const [referenceId, setReferenceId] = useState("");
+  const [referenceName, setReferenceName] = useState("");
   const [dateOfRecord, setDateOfRecord] = useState();
   const [requestType, setRequestType] = useState("");
   const [legalBasis, setLegalBasis] = useState([]);
@@ -97,16 +98,16 @@ const SealExpungeForm = () => {
       toast.error("Please select a requesting party");
       return;
     }
-    if (!platformEmail || !fullLegalName) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+    // if (!platformEmail || !fullLegalName) {
+    //   toast.error("Please fill in all required fields");
+    //   return;
+    // }
     if (recordedDetails.length === 0) {
       toast.error("Please select at least one record detail");
       return;
     }
-    if (!referenceId) {
-      toast.error("Please enter a reference ID");
+    if (!referenceName) {
+      toast.error("Please enter a reference name");
       return;
     }
     if (!dateOfRecord) {
@@ -125,10 +126,10 @@ const SealExpungeForm = () => {
       toast.error("Please provide a statement");
       return;
     }
-    if (!digitalSignature) {
-      toast.error("Please provide your digital signature");
-      return;
-    }
+    // if (!digitalSignature) {
+    //   toast.error("Please provide your digital signature");
+    //   return;
+    // }
 
     try {
       // Create FormData
@@ -140,7 +141,7 @@ const SealExpungeForm = () => {
       formData.append("submittionId", submissionId);
       formData.append("requestingParty", requestingParty);
       formData.append("recordedDetails[]", recordedDetails.join(", "));
-      formData.append("caseId", referenceId);
+      formData.append("referanceName", referenceName);
       formData.append("Date", dateOfRecord.toISOString());
       formData.append("request[]", requestType);
       formData.append("besisForRequest[]", legalBasis.join(", "));
@@ -169,10 +170,10 @@ const SealExpungeForm = () => {
 
   const resetForm = () => {
     setRequestingParty("");
-    setPlatformEmail("");
+    setPlatformEmail(userData?.email || "");
     setFullLegalName("");
     setRecordedDetails([]);
-    setReferenceId("");
+    setReferenceName("");
     setDateOfRecord(undefined);
     setRequestType("");
     setLegalBasis([]);
@@ -199,8 +200,8 @@ const SealExpungeForm = () => {
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardHeader className="mb-5">
-              <p className="">Submission ID: [Auto-populated]</p>
-              <p className="">Submission Date: [Auto-populated]</p>
+              <p className="">Submission ID: Auto-generated</p>
+              <p className="">Submission Date: {new Date().toLocaleDateString()}</p>
             </CardHeader>
           </CardHeader>
 
@@ -233,8 +234,8 @@ const SealExpungeForm = () => {
                   id="platform-account-email"
                   type="email"
                   placeholder="Write email address"
-                  value={platformEmail}
-                  onChange={(e) => setPlatformEmail(e.target.value)}
+                  value={userData?.email || platformEmail}
+                  onChange={(e) => setPlatformEmail(userData?.email || e.target.value)}
                 />
               </div>
 
@@ -243,7 +244,7 @@ const SealExpungeForm = () => {
                 <Input
                   id="full-legal-name"
                   placeholder="Full Legal Name"
-                  value={fullLegalName}
+                  value={userData?.name || fullLegalName}
                   onChange={(e) => setFullLegalName(e.target.value)}
                 />
               </div>
@@ -282,12 +283,12 @@ const SealExpungeForm = () => {
 
             <div className="mt-4 flex flex-col lg:flex-row items-center gap-10">
               <div className="w-full lg:w-1/2">
-                <Label htmlFor="reference-id">Enter Your Reference ID: *</Label>
+                <Label htmlFor="reference-id">Enter Your Reference Name: *</Label>
                 <Input
                   id="reference-id"
                   placeholder="Enter Your Reference ID"
-                  value={referenceId}
-                  onChange={(e) => setReferenceId(e.target.value)}
+                  value={referenceName}
+                  onChange={(e) => setReferenceName(e.target.value)}
                 />
               </div>
 
@@ -444,7 +445,7 @@ const SealExpungeForm = () => {
       </div>
 
       {/* Section 6: Declaration & Signature */}
-      <div className="bg-secondary-foreground custom-padding">
+      {/* <div className="bg-secondary-foreground custom-padding">
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardTitle className="">Declaration & Signature *</CardTitle>
@@ -477,10 +478,10 @@ const SealExpungeForm = () => {
             </div>
           </CardContent>
         </div>
-      </div>
+      </div> */}
 
       {/* Final Warning & Submit */}
-      <div className="bg-secondary custom-padding">
+      <div className="bg-secondary-foreground custom-padding">
         <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-4">
           <h4 className="font-medium mb-2">Final Warning</h4>
           <p className="text-sm">
