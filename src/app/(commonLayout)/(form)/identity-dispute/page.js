@@ -7,19 +7,73 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar, FileText, Shield } from "lucide-react";
 import { Label } from "@/components/ui/label";
+// import { useCreateIdentityDisputeMutation } from "@/redux/api/identityDisputeApi";
+import { toast } from "sonner"; // or your toast library
+import { useCreateIdentityDisputeMutation } from "@/redux/featured/identityDispute/indentityDisputeApi";
 
 export default function IdentityDisputeForm() {
-  const [selectedReason, setSelectedReason] = useState("");
+  const [selectedReasons, setSelectedReasons] = useState([]);
   const [otherReason, setOtherReason] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
+  
+  const [createIdentityDispute, { isLoading }] = useCreateIdentityDisputeMutation();
 
   const disputeReasons = [
     "I am not the individual referenced in this case/allegation.",
     "Someone used my name or likeness without authorization.",
     "My account has been confused with another user.",
     "I was incorrectly linked due to a technical error or similarity in name/data.",
-    "Other (please describe):",
   ];
+
+  const handleReasonChange = (reason, checked) => {
+    if (checked) {
+      setSelectedReasons([...selectedReasons, reason]);
+    } else {
+      setSelectedReasons(selectedReasons.filter((r) => r !== reason));
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Validation
+    if (selectedReasons.length === 0 && !otherReason.trim()) {
+      toast.error("Please select at least one reason or describe your dispute");
+      return;
+    }
+
+    if (!digitalSignature.trim()) {
+      toast.error("Please provide your digital signature");
+      return;
+    }
+
+    // Prepare data in the required format
+    const identityDisputeArray = [...selectedReasons];
+    
+    // Add other reason if provided
+    if (otherReason.trim()) {
+      identityDisputeArray.push(otherReason.trim());
+    }
+
+    const formData = {
+      identityDispute: identityDisputeArray,
+      digitalSignature: digitalSignature.trim(),
+      submittedAt: new Date().toISOString(),
+    };
+
+    try {
+      const response = await createIdentityDispute(formData).unwrap();
+      
+      toast.success("Identity dispute submitted successfully!");
+      
+      // Reset form
+      setSelectedReasons([]);
+      setOtherReason("");
+      setDigitalSignature("");
+      
+    } catch (error) {
+      console.error("Failed to submit dispute:", error);
+      toast.error(error?.data?.message || "Failed to submit dispute. Please try again.");
+    }
+  };
 
   return (
     <div className="">
@@ -60,51 +114,40 @@ export default function IdentityDisputeForm() {
           <CardHeader className="w-full lg:w-1/5">
             <CardTitle className="">TYPE OF IDENTITY DISPUTE</CardTitle>
             <p className="text-justify">
-              Please select the reason for your dispute:
+              Please select the reason(s) for your dispute:
             </p>
           </CardHeader>
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-            <div className="space-y-4">
+            <div className="space-y-4 mb-4">
               {disputeReasons.map((reason, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <Checkbox
                     id={`reason-${index}`}
-                    checked={selectedReason === reason}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedReason(reason);
-                      } else {
-                        setSelectedReason("");
-                      }
-                    }}
+                    checked={selectedReasons.includes(reason)}
+                    onCheckedChange={(checked) => handleReasonChange(reason, checked)}
                     className="mt-1"
                   />
                   <label
                     htmlFor={`reason-${index}`}
-                    className=" cursor-pointer flex-1"
+                    className="cursor-pointer flex-1"
                   >
                     {reason}
                   </label>
                 </div>
               ))}
             </div>
-            <Textarea
-              placeholder="Describe other reason here..."
-              value={otherReason}
-              onChange={(e) => setOtherReason(e.target.value)}
-              className="min-h-[150px] text-sm"
-            />
 
-            {selectedReason === "Other (please describe):" && (
-              <div className="mt-4">
-                <Textarea
-                  placeholder="Describe other reason here..."
-                  value={otherReason}
-                  onChange={(e) => setOtherReason(e.target.value)}
-                  className="min-h-[100px] text-sm"
-                />
-              </div>
-            )}
+            <div className="mt-6">
+              <label className="block text-sm font-medium mb-2">
+                Other reason (optional):
+              </label>
+              <Textarea
+                placeholder="Describe other reason here..."
+                value={otherReason}
+                onChange={(e) => setOtherReason(e.target.value)}
+                className="min-h-[150px] text-sm"
+              />
+            </div>
           </CardContent>
         </div>
       </div>
@@ -128,7 +171,7 @@ export default function IdentityDisputeForm() {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Digital Signature (type full legal name)
+                Digital Signature (type full legal name) <span className="text-red-600">*</span>
               </label>
               <Input
                 placeholder="Enter your legal full name"
@@ -141,7 +184,7 @@ export default function IdentityDisputeForm() {
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>Date: [Auto-filled]</span>
+                <span>Date: {new Date().toLocaleDateString()}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4" />
@@ -184,18 +227,17 @@ export default function IdentityDisputeForm() {
           </ul>
         </CardContent>
 
-           {/* Submit Button */}
-      <div className="text-center flex justify-end mt-6">
-        <Button
-          className="py-6"
-          // disabled={!selectedReason || !digitalSignature}
-        >
-          Submit Claim For Review
-        </Button>
+        {/* Submit Button */}
+        <div className="text-center flex justify-end mt-6">
+          <Button
+            className="py-6"
+            onClick={handleSubmit}
+            disabled={isLoading || (!selectedReasons.length && !otherReason.trim()) || !digitalSignature.trim()}
+          >
+            {isLoading ? "Submitting..." : "Submit Claim For Review"}
+          </Button>
+        </div>
       </div>
-      </div>
-
-   
     </div>
   );
 }
