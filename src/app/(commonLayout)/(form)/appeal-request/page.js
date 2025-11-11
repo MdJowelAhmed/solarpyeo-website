@@ -19,12 +19,12 @@ const AppealRequestForm = () => {
 
   const [createAppealForm, { isLoading }] = useCreateAppealFormMutation();
 
-  const [files1, setFiles1] = useState([]);
-  const [files2, setFiles2] = useState([]);
+  const [files, setFiles] = useState([]);
+  // const [files2, setFiles2] = useState([]);
 
   const handleFileUpload1 = (event) => {
     const uploadedFiles = Array.from(event.target.files);
-    if (files1.length + uploadedFiles.length > 15) {
+    if (files.length + uploadedFiles.length > 15) {
       toast.error("Maximum 15 files allowed for first upload");
       return;
     }
@@ -33,27 +33,27 @@ const AppealRequestForm = () => {
       toast.error("Some files exceed 32MB limit");
       return;
     }
-    setFiles1([...files1, ...uploadedFiles]);
+    setFiles([...files, ...uploadedFiles]);
   };
 
-  const handleFileUpload2 = (event) => {
-    const uploadedFiles = Array.from(event.target.files);
-    if (files2.length + uploadedFiles.length > 15) {
-      toast.error("Maximum 15 files allowed for second upload");
-      return;
-    }
-    const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
-    if (oversizedFiles.length > 0) {
-      toast.error("Some files exceed 32MB limit");
-      return;
-    }
-    setFiles2([...files2, ...uploadedFiles]);
-  };
+  // const handleFileUpload2 = (event) => {
+  //   const uploadedFiles = Array.from(event.target.files);
+  //   if (files2.length + uploadedFiles.length > 15) {
+  //     toast.error("Maximum 15 files allowed for second upload");
+  //     return;
+  //   }
+  //   const oversizedFiles = uploadedFiles.filter((file) => file.size > 33554432);
+  //   if (oversizedFiles.length > 0) {
+  //     toast.error("Some files exceed 32MB limit");
+  //     return;
+  //   }
+  //   setFiles2([...files2, ...uploadedFiles]);
+  // };
 
   const removeFile1 = (index) =>
-    setFiles1(files1.filter((_, i) => i !== index));
-  const removeFile2 = (index) =>
-    setFiles2(files2.filter((_, i) => i !== index));
+    setFiles(files.filter((_, i) => i !== index));
+  // const removeFile2 = (index) =>
+  //   setFiles2(files2.filter((_, i) => i !== index));
 
   const handleGroundChange = (ground, checked) => {
     if (checked) {
@@ -105,8 +105,8 @@ const AppealRequestForm = () => {
       console.log("Appeal Basis:", appealBasis);
       console.log("Justification:", justification);
       console.log("Digital Signature:", digitalSignature);
-      console.log("Files Group 1 count:", files1.length);
-      console.log("Files Group 2 count:", files2.length);
+      console.log("Files Group 1 count:", files.length);
+      console.log("Files Group 2 count:", files.length);
 
       formData.append("appealGrounds", JSON.stringify(selectedGrounds));
       formData.append("justification", justification);
@@ -116,15 +116,15 @@ const AppealRequestForm = () => {
 
       // Log file field names
       console.log("Appending all files to field: supportingDocuments");
-      files1.forEach((file, index) => {
+      files.forEach((file, index) => {
         console.log(`  Group 1 File ${index + 1}:`, file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
-        formData.append("supportingDocuments", file);
+        formData.append("supportingDocument", file);
       });
 
-      files2.forEach((file, index) => {
-        console.log(`  Group 2 File ${index + 1}:`, file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
-        formData.append("supportingDocuments", file);
-      });
+      // files.forEach((file, index) => {
+      //   console.log(`  Group 2 File ${index + 1}:`, file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+      //   formData.append("supportingDocuments", file);
+      // });
 
       // Log all FormData entries
       console.log("\n=== FormData Contents ===");
@@ -145,8 +145,8 @@ const AppealRequestForm = () => {
 
       setSelectedGrounds([]);
       setReviewOption("");
-      setFiles1([]);
-      setFiles2([]);
+      setFiles([]);
+      // setFiles2([]);
       setJustification("");
       setAppealBasis("");
       setDigitalSignature("");
@@ -351,12 +351,12 @@ const AppealRequestForm = () => {
                     />
                   </div>
 
-                  {files1.length > 0 && (
+                  {files.length > 0 && (
                     <div className="mt-4 space-y-2">
                       <p className="text-sm font-medium text-gray-700">
-                        Uploaded Files ({files1.length}/15):
+                        Uploaded Files ({files.length}/15):
                       </p>
-                      {files1.map((file, index) => (
+                      {files.map((file, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-2 bg-gray-50 rounded border"
@@ -380,7 +380,7 @@ const AppealRequestForm = () => {
                     </div>
                   )}
                 </div>
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label
                     htmlFor="file-upload-2"
                     className="text-sm font-medium text-gray-700"
@@ -425,7 +425,7 @@ const AppealRequestForm = () => {
                       ))}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
 
               <p className="text-sm text-gray-700 mb-2">
