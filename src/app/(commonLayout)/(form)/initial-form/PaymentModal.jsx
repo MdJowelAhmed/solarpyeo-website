@@ -31,14 +31,10 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
       const result = await createPayment(paymentData).unwrap();
       
       console.log("Payment result:", result);
-      
-      // Check if checkout_url exists in the response
       if (result?.data?.checkout_url) {
         toast.success("Redirecting to payment gateway...");
         
-        // Small delay to show the success message
         setTimeout(() => {
-          // Redirect to Stripe checkout
           window.location.href = result.data.checkout_url;
         }, 1000);
       } else {
@@ -58,7 +54,7 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black  bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-2xl w-full relative shadow-xl">
         {/* Close Button */}
         <button
@@ -108,8 +104,8 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
                 }}
                 className={`w-full ${
                   selectedPlan === "STANDARD"
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-red-600 hover:bg-red-700"
+                    ? "bg-primary text-white hover:bg-primary/80"
+                    : "bg-primary text-white hover:bg-primary/80"
                 }`}
               >
                 Choose Plan
@@ -139,8 +135,8 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
                 }}
                 className={`w-full ${
                   selectedPlan === "EXPEDITED"
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-red-600 hover:bg-red-700"
+                    ? "bg-primary text-white hover:bg-primary/80"
+                    : "bg-primary text-white hover:bg-primary/80"
                 }`}
               >
                 Choose Plan
@@ -156,7 +152,7 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
             disabled={!selectedPlan || isLoading}
             className={`w-full py-6 text-lg font-semibold ${
               selectedPlan && !isLoading
-                ? "bg-red-600 hover:bg-red-700"
+                ? "bg-primary text-white hover:bg-primary/80"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
