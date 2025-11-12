@@ -30,15 +30,24 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
 
       const result = await createPayment(paymentData).unwrap();
       
-      toast.success("Payment initiated successfully!");
       console.log("Payment result:", result);
       
-      // Close modal and reset
-      onClose();
-      setSelectedPlan(null);
-      
-      // You can redirect to payment gateway or next step here
-      // window.location.href = result.paymentUrl; // if backend returns payment URL
+      // Check if checkout_url exists in the response
+      if (result?.data?.checkout_url) {
+        toast.success("Redirecting to payment gateway...");
+        
+        // Small delay to show the success message
+        setTimeout(() => {
+          // Redirect to Stripe checkout
+          window.location.href = result.data.checkout_url;
+        }, 1000);
+      } else {
+        toast.success("Payment initiated successfully!");
+        
+        // Close modal and reset
+        onClose();
+        setSelectedPlan(null);
+      }
       
     } catch (error) {
       console.error("Payment error:", error);
@@ -54,7 +63,8 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          disabled={isLoading}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <X className="h-6 w-6" />
         </button>
@@ -81,8 +91,8 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
                 selectedPlan === "STANDARD"
                   ? "border-red-600 bg-red-50"
                   : "border-gray-300 hover:border-gray-400"
-              }`}
-              onClick={() => handleSelectPlan("STANDARD")}
+              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={() => !isLoading && handleSelectPlan("STANDARD")}
             >
               <h4 className="text-xl font-bold mb-2">Standard</h4>
               <p className="text-4xl font-bold text-gray-900 mb-2">$45</p>
@@ -91,9 +101,10 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
               </p>
               <Button
                 type="button"
+                disabled={isLoading}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSelectPlan("STANDARD");
+                  !isLoading && handleSelectPlan("STANDARD");
                 }}
                 className={`w-full ${
                   selectedPlan === "STANDARD"
@@ -111,8 +122,8 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
                 selectedPlan === "EXPEDITED"
                   ? "border-red-600 bg-red-50"
                   : "border-gray-300 hover:border-gray-400"
-              }`}
-              onClick={() => handleSelectPlan("EXPEDITED")}
+              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={() => !isLoading && handleSelectPlan("EXPEDITED")}
             >
               <h4 className="text-xl font-bold mb-2">Expedited</h4>
               <p className="text-4xl font-bold text-gray-900 mb-2">$70</p>
@@ -121,9 +132,10 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
               </p>
               <Button
                 type="button"
+                disabled={isLoading}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSelectPlan("EXPEDITED");
+                  !isLoading && handleSelectPlan("EXPEDITED");
                 }}
                 className={`w-full ${
                   selectedPlan === "EXPEDITED"
@@ -148,7 +160,33 @@ const PaymentModal = ({ isOpen, onClose, submissionId }) => {
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            {isLoading ? "Processing..." : "Submit Claim"}
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Processing...
+              </span>
+            ) : (
+              "Submit Claim"
+            )}
           </Button>
         </div>
       </div>
