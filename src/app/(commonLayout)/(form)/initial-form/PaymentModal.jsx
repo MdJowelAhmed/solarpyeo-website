@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCreatePaymentMutation } from "@/redux/featured/payment/paymentApi";
+// import { useCreatePaymentMutation } from "@/redux/featured/payment/paymentApi";
 import { toast } from "sonner";
+import { useCreatePaymentMutation } from "@/redux/featured/initialSubmission/paymentApi";
 
 const PaymentModal = ({ isOpen, onClose, submissionId }) => {
   const [selectedPlan, setSelectedPlan] = useState(null);

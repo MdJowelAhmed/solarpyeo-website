@@ -19,11 +19,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, Upload, FileText } from "lucide-react";
-import FormDropdown from "@/components/FormDropdown";
-// import { useCreateInitialSubmissionMutation } from "@/redux/api/initialSubmissionApi";
-import { toast } from "sonner"; // or your toast library
+import { Calendar as CalendarIcon } from "lucide-react";
+import { toast } from "sonner";
 import { useCreateInitialSubmissionMutation } from "@/redux/featured/initialSubmission/initialSubmissionApi";
+import PaymentModal from "./PaymentModal";
+// import PaymentModal from "@/components/PaymentModal"; // Import the payment modal
 
 const InitialForm = () => {
   // Initiator fields
@@ -49,6 +49,10 @@ const InitialForm = () => {
   const [selectedFiles2, setSelectedFiles2] = useState(null);
   const [supportingLink, setSupportingLink] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
+
+  // Payment modal state
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [submittedSubmissionId, setSubmittedSubmissionId] = useState(null);
 
   // RTK Query mutation
   const [createInitialSubmission, { isLoading }] = useCreateInitialSubmissionMutation();
@@ -107,7 +111,7 @@ const InitialForm = () => {
       // Create FormData for file uploads
       const formData = new FormData();
 
-      // Add all text fields matching Postman structure
+      // Add all text fields
       formData.append("fastName", firstName);
       formData.append("middleName", middleName);
       formData.append("lastName", lastName);
@@ -132,7 +136,6 @@ const InitialForm = () => {
       if (selectedFiles1) {
         formData.append("evidence", selectedFiles1);
       }
-      // Evidence 
       if (selectedFiles2) {
         formData.append("evidence", selectedFiles2);
       }
@@ -141,19 +144,16 @@ const InitialForm = () => {
       if (supportingLink) {
         formData.append("supportingLink", supportingLink);
       }
-console.log("formData", formData)
 
-
-
-// Debug FormData contents
-for (let pair of formData.entries()) {
-  console.log(pair[0] + ': ', pair[1]);
-}
       // Submit the form
       const result = await createInitialSubmission(formData).unwrap();
-      console.log(result)
+      console.log("Submission result:", result);
 
       toast.success("Form submitted successfully!");
+      
+      // Store the submission ID and open payment modal
+      setSubmittedSubmissionId(result.data._id);
+      setIsPaymentModalOpen(true);
       
       // Reset form
       setFirstName("");
@@ -179,32 +179,35 @@ for (let pair of formData.entries()) {
     }
   };
 
+  const handleClosePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+    setSubmittedSubmissionId(null);
+  };
+
   return (
-    <div className="min-h-screen ">
-      <div className="  w-full py-8">
+    <div className="min-h-screen">
+      <div className="w-full py-8">
         <div className="w-full">
           <form onSubmit={handleSubmit}>
             {/* Main Form */}
             <div className="w-full">
-            
-
               {/* Information About The Initiator */}
-              <div className=" custom-padding bg-secondary-foreground  ">
-                  <div className="w-full mb-10 flex flex-col justify-center">
-                    <h2 className="text-xl md:text-2xl lg:text-4xl font-bold text-center mb-4">Initial Submission Form</h2>
-                    <h4 className="text-center max-w-md mx-auto">
-                      For respondents, legal guardians, advocates & verifiied
-                      persons to make an appeal to the competent court.
-                    </h4>
-                  </div>
-                <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between bg-white  rounded-md">
-                  <CardHeader className="w-full lg:w-1/5 ">
-                    <CardTitle className="">
-                      Information About The Initiator
-                    </CardTitle>
+              <div className="custom-padding bg-secondary-foreground">
+                <div className="w-full mb-10 flex flex-col justify-center">
+                  <h2 className="text-xl md:text-2xl lg:text-4xl font-bold text-center mb-4">
+                    Initial Submission Form
+                  </h2>
+                  <h4 className="text-center max-w-md mx-auto">
+                    For respondents, legal guardians, advocates & verified
+                    persons to make an appeal to the competent court.
+                  </h4>
+                </div>
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between bg-white rounded-md">
+                  <CardHeader className="w-full lg:w-1/5">
+                    <CardTitle>Information About The Initiator</CardTitle>
                   </CardHeader>
 
-                  <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4  h-full lg:pl-10">
+                  <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div>
                       <Label htmlFor="initiator-first-name">First Name *</Label>
                       <Input
@@ -252,7 +255,7 @@ for (let pair of formData.entries()) {
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-6 ">
+                        <PopoverContent className="w-auto p-6">
                           <Calendar
                             mode="single"
                             selected={initiatorDob}
@@ -267,11 +270,7 @@ for (let pair of formData.entries()) {
                       <Label htmlFor="state-select" className="mb-2">
                         What State do you reside in? *
                       </Label>
-                      <Select
-                        value={state}
-                        onValueChange={setState}
-                        required
-                      >
+                      <Select value={state} onValueChange={setState} required>
                         <SelectTrigger className="w-4/5">
                           <SelectValue placeholder="California" />
                         </SelectTrigger>
@@ -290,11 +289,9 @@ for (let pair of formData.entries()) {
 
               {/* Information About The Respondent */}
               <div className="custom-padding bg-secondary">
-                <div className="p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
-                    <CardTitle className="">
-                      Information About The Respondent
-                    </CardTitle>
+                    <CardTitle>Information About The Respondent</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div>
@@ -372,38 +369,21 @@ for (let pair of formData.entries()) {
 
               {/* Type Of Filing */}
               <div className="custom-padding bg-secondary-foreground">
-                <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
-                    <CardTitle className="">
-                      Type Of Filing *
-                    </CardTitle>
+                    <CardTitle>Type Of Filing *</CardTitle>
                     <div>
-                      <RadioGroup
-                        value={filingType}
-                        onValueChange={setFilingType}
-                        required
-                      >
+                      <RadioGroup value={filingType} onValueChange={setFilingType} required>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="Jurisdiction"
-                            id="jurisdiction"
-                          />
+                          <RadioGroupItem value="Jurisdiction" id="jurisdiction" />
                           <Label htmlFor="jurisdiction">Jurisdiction</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="Procedural Issue"
-                            id="procedural-issue"
-                          />
-                          <Label htmlFor="procedural-issue">
-                            Procedural Issue
-                          </Label>
+                          <RadioGroupItem value="Procedural Issue" id="procedural-issue" />
+                          <Label htmlFor="procedural-issue">Procedural Issue</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="Subject Matter"
-                            id="subject-matter"
-                          />
+                          <RadioGroupItem value="Subject Matter" id="subject-matter" />
                           <Label htmlFor="subject-matter">Subject Matter</Label>
                         </div>
                       </RadioGroup>
@@ -411,7 +391,7 @@ for (let pair of formData.entries()) {
                   </CardHeader>
 
                   <div className="w-full lg:w-4/5">
-                    <CardContent className="w-full  grid grid-cols-1  gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
+                    <CardContent className="w-full grid grid-cols-1 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                       <div className="mt-6 space-y-4">
                         {allegations.map((allegation, index) => (
                           <div key={index}>
@@ -433,10 +413,10 @@ for (let pair of formData.entries()) {
                     </CardContent>
 
                     <div className="w-full flex items-center justify-end">
-                      <Button 
+                      <Button
                         type="button"
                         onClick={addAnotherAllegation}
-                        className="mt-4 py-6  text-accent "
+                        className="mt-4 py-6 text-accent"
                       >
                         Add Another Allegation
                       </Button>
@@ -447,16 +427,16 @@ for (let pair of formData.entries()) {
 
               {/* Upload Evidence */}
               <div className="custom-padding bg-secondary">
-                <div className=" p-4 md:p-6 lg:p-8 xl:p-12  mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
-                    <CardTitle className="">Upload Evidence</CardTitle>
+                    <CardTitle>Upload Evidence</CardTitle>
                     <h4 className="mb-4 text-justify text-sm">
                       Upload any documentation you believe supports your claim,
                       including screenshots, messages, case submission links, etc.
                     </h4>
                   </CardHeader>
-                  <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2  gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
-                    <div className="mb-6 ">
+                  <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
+                    <div className="mb-6">
                       <label className="block text-gray-700 font-medium mb-3">
                         Upload File 1:
                       </label>
@@ -469,7 +449,7 @@ for (let pair of formData.entries()) {
                         />
                         <label
                           htmlFor="file1"
-                          className="flex items-center justify-between  px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                          className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                         >
                           <span className="text-gray-700">
                             {selectedFiles1 ? selectedFiles1.name : "Choose File"}
@@ -481,7 +461,6 @@ for (let pair of formData.entries()) {
                       </div>
                     </div>
 
-                    {/* Upload File 2 */}
                     <div className="mb-6">
                       <label className="block text-gray-700 font-medium mb-3">
                         Upload File 2:
@@ -507,7 +486,6 @@ for (let pair of formData.entries()) {
                       </div>
                     </div>
 
-                    {/* Optional Link */}
                     <div className="mb-8">
                       <label className="block text-gray-700 font-medium mb-3">
                         Optional Link (e.g., Case ID or Submission URL):
@@ -525,10 +503,10 @@ for (let pair of formData.entries()) {
 
                 {/* Declaration Section */}
                 <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-6 mb-8">
-                  <h2 className="font-bold  mb-3 text-lg">
+                  <h2 className="font-bold mb-3 text-lg">
                     DECLARATION UNDER PENALTY OF PERJURY
                   </h2>
-                  <p className=" text-sm mb-4 leading-relaxed">
+                  <p className="text-sm mb-4 leading-relaxed">
                     I hereby declare and affirm in accordance with the laws of the
                     jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
                     foregoing is true and accurate to the best of my knowledge.
@@ -570,6 +548,13 @@ for (let pair of formData.entries()) {
           </form>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={handleClosePaymentModal}
+        submissionId={submittedSubmissionId}
+      />
     </div>
   );
 };

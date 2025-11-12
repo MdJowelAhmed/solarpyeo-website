@@ -4,7 +4,7 @@ const paymentApi = api.injectEndpoints({
   endpoints: (builder) => ({
     createPayment: builder.mutation({
       query: (paymentData) => ({
-        url: `/payment`,
+        url: `/initial-submission/pay`,
         method: "POST",
         body: paymentData,
       }),
