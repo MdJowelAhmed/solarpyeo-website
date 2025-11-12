@@ -9,6 +9,13 @@ const initialSubmissionApi = api.injectEndpoints({
       }),
       providesTags: ["InitialSubmission"],
     }),
+    getSingleInitialSubmission: builder.query({
+      query: (id) => ({
+        url: `/initial/submission/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["InitialSubmission"],
+    }),
     
     createInitialSubmission: builder.mutation({
       query: (formData) => ({
@@ -34,5 +41,6 @@ const initialSubmissionApi = api.injectEndpoints({
 export const { 
   useGetInitialSubmissionQuery, 
   useCreateInitialSubmissionMutation, 
-  useUpdateInitialSubmissionMutation 
+  useUpdateInitialSubmissionMutation,
+  useGetSingleInitialSubmissionQuery
 } = initialSubmissionApi;

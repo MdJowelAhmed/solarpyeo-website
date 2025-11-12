@@ -14,7 +14,7 @@ import { useCreateIdentityDisputeMutation } from "@/redux/featured/identityDispu
 export default function IdentityDisputeForm() {
   const [selectedReasons, setSelectedReasons] = useState([]);
   const [otherReason, setOtherReason] = useState("");
-  const [digitalSignature, setDigitalSignature] = useState("");
+  // const [digitalSignature, setDigitalSignature] = useState("");
   
   const [createIdentityDispute, { isLoading }] = useCreateIdentityDisputeMutation();
 
@@ -40,10 +40,10 @@ export default function IdentityDisputeForm() {
       return;
     }
 
-    if (!digitalSignature.trim()) {
-      toast.error("Please provide your digital signature");
-      return;
-    }
+    // if (!digitalSignature.trim()) {
+    //   toast.error("Please provide your digital signature");
+    //   return;
+    // }
 
     // Prepare data in the required format
     const identityDisputeArray = [...selectedReasons];
@@ -55,7 +55,7 @@ export default function IdentityDisputeForm() {
 
     const formData = {
       identityDispute: identityDisputeArray,
-      digitalSignature: digitalSignature.trim(),
+      // digitalSignature: digitalSignature.trim(),
       submittedAt: new Date().toISOString(),
     };
 
@@ -67,7 +67,7 @@ export default function IdentityDisputeForm() {
       // Reset form
       setSelectedReasons([]);
       setOtherReason("");
-      setDigitalSignature("");
+      // setDigitalSignature("");
       
     } catch (error) {
       console.error("Failed to submit dispute:", error);
@@ -153,7 +153,7 @@ export default function IdentityDisputeForm() {
       </div>
 
       {/* Section 2: Declaration */}
-      <div className="bg-secondary custom-padding">
+      {/* <div className="bg-secondary custom-padding">
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <div className="">
@@ -195,10 +195,10 @@ export default function IdentityDisputeForm() {
             </div>
           </CardContent>
         </div>
-      </div>
+      </div> */}
 
       {/* What Happens Next */}
-      <div className="bg-secondary-foreground custom-padding">
+      <div className="bg-secondary custom-padding">
         <CardContent className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-5">
           <h2 className="text-2xl font-bold text-primary-900">
             What Happens Next?
@@ -232,7 +232,7 @@ export default function IdentityDisputeForm() {
           <Button
             className="py-6"
             onClick={handleSubmit}
-            disabled={isLoading || (!selectedReasons.length && !otherReason.trim()) || !digitalSignature.trim()}
+            disabled={isLoading || (!selectedReasons.length && !otherReason.trim()) }
           >
             {isLoading ? "Submitting..." : "Submit Claim For Review"}
           </Button>
