@@ -36,7 +36,7 @@ const JurorApplicationForm = () => {
       {/* Main Content */}
       <div className="">
         {/* Title Section */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
           <div className="container mx-auto">
             <div className="">
               <h2 className="text-2xl text-center lg:text-4xl font-bold mb-7">
@@ -66,12 +66,12 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 1: Applicant Information */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="">SECTION 1: APPLICANT INFORMATION</h3>
+        <div className="bg-secondary custom-padding">
+          <div className=" p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className=""> APPLICANT INFORMATION</CardTitle>
             </CardHeader>
-            <CardContent className=" space-y-4">
+            <CardContent className=" w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                   <Label
