@@ -163,12 +163,12 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 2: Eligibility Attestation */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="">SECTION 2: ELIGIBILITY ATTESTATION</h3>
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="">ELIGIBILITY ATTESTATION</CardTitle>
             </CardHeader>
-            <CardContent className="">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <p className="text-sm text-gray-700 mb-4">
                 Please confirm each of the following:
               </p>
@@ -245,14 +245,14 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 3: Affidavit */}
-        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="">
-                SECTION 3: AFFIDAVIT OF GOOD FAITH & OATH OF IMPARTIALITY
-              </h3>
+        <div className="bg-secondary custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="">
+                AFFIDAVIT OF GOOD FAITH & OATH OF IMPARTIALITY
+              </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="mb-6">
                 <h2 className="font-bold text-gray-800 mb-3">
                   I, The Undersigned, Affirm Under Penalty Of Perjury:
@@ -325,12 +325,12 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 4: Platform Use and Consent */}
-        <div className="bg-secondary py-12 md:py-16 lg:py-24">
-          <div className="container mx-auto">
-            <CardHeader className="">
-              <h3 className="">SECTION 4: PLATFORM USE AND CONSENT</h3>
+        <div className="bg-secondary-foreground custom-padding">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="w-full lg:w-1/5">
+              <CardTitle className="">PLATFORM USE AND CONSENT</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <p className="text-sm text-gray-700 mb-4">
                 By submitting this form: (you must check all boxes)
               </p>
