@@ -31,6 +31,8 @@ const InitialForm = () => {
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [initiatorDob, setInitiatorDob] = useState();
+  // control popover open state so we can close it after picking a date
+  const [isInitiatorPopoverOpen, setIsInitiatorPopoverOpen] = useState(false);
   const [state, setState] = useState("");
 
   // Respondent fields
@@ -38,6 +40,8 @@ const InitialForm = () => {
   const [respondentMiddleName, setRespondentMiddleName] = useState("");
   const [respondentLastName, setRespondentLastName] = useState("");
   const [respondentDob, setRespondentDob] = useState();
+  // control popover open state for respondent DOB
+  const [isRespondentPopoverOpen, setIsRespondentPopoverOpen] = useState(false);
   const [respondentEmail, setRespondentEmail] = useState("");
 
   // Filing type and allegations
@@ -242,7 +246,7 @@ const InitialForm = () => {
 
                     <div>
                       <Label>Date of Birth *</Label>
-                      <Popover>
+                      <Popover open={isInitiatorPopoverOpen} onOpenChange={setIsInitiatorPopoverOpen}>
                         <PopoverTrigger asChild>
                           <Button
                             type="button"
@@ -259,7 +263,10 @@ const InitialForm = () => {
                           <Calendar
                             mode="single"
                             selected={initiatorDob}
-                            onSelect={setInitiatorDob}
+                            onSelect={(date) => {
+                              setInitiatorDob(date);
+                              setIsInitiatorPopoverOpen(false);
+                            }}
                             initialFocus
                           />
                         </PopoverContent>
@@ -328,7 +335,7 @@ const InitialForm = () => {
 
                     <div>
                       <Label>Date of Birth *</Label>
-                      <Popover>
+                      <Popover open={isRespondentPopoverOpen} onOpenChange={setIsRespondentPopoverOpen}>
                         <PopoverTrigger asChild>
                           <Button
                             type="button"
@@ -345,7 +352,10 @@ const InitialForm = () => {
                           <Calendar
                             mode="single"
                             selected={respondentDob}
-                            onSelect={setRespondentDob}
+                            onSelect={(date) => {
+                              setRespondentDob(date);
+                              setIsRespondentPopoverOpen(false);
+                            }}
                             initialFocus
                           />
                         </PopoverContent>
