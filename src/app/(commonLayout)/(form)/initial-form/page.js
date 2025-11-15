@@ -267,6 +267,8 @@ const InitialForm = () => {
                               setInitiatorDob(date);
                               setIsInitiatorPopoverOpen(false);
                             }}
+                            // disable future dates
+                            disabled={{ after: new Date() }}
                             initialFocus
                           />
                         </PopoverContent>
@@ -356,6 +358,8 @@ const InitialForm = () => {
                               setRespondentDob(date);
                               setIsRespondentPopoverOpen(false);
                             }}
+                            // disable future dates
+                            disabled={{ after: new Date() }}
                             initialFocus
                           />
                         </PopoverContent>

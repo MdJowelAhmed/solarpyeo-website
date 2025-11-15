@@ -78,10 +78,11 @@ export default function Navbar() {
   // Constants
   const NOTIFICATIONS_PER_PAGE = 30;
   const MAX_RECONNECTION_ATTEMPTS = 5;
-  const RECONNECTION_DELAY = 3000; // 3 seconds
+  const RECONNECTION_DELAY = 3000; 
 
   // Redux queries and mutations
   const { data: userData } = useMyProfileQuery();
+   console.log(userData);
   const {
     data: notificationData,
     isLoading,

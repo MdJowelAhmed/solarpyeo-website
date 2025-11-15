@@ -31,7 +31,6 @@ export default function LoginUser() {
 
 const handleSubmit = async (e) => {
     e.preventDefault();
-    router.push("/");
     try {
       const res = await login({ email, password }).unwrap();
       console.log(res);
@@ -49,7 +48,7 @@ const handleSubmit = async (e) => {
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
-      const errorMessage = error?.data?.message || error?.message || "Login failed";
+      const errorMessage = error || error?.message || "Login failed";
       toast.error(errorMessage);
     }
   };
