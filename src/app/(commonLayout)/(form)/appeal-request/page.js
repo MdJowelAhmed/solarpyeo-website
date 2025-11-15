@@ -536,7 +536,7 @@ const AppealRequestForm = () => {
                 </p>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 h-full lg:pl-10">
-              <div className="mb-4">
+              {/* <div className="mb-4">
         
                 <p className="mb-6 text-sm">
                   I declare and affirm in accordance with the laws of the
@@ -563,7 +563,7 @@ const AppealRequestForm = () => {
                   placeholder="Enter your full legal name"
                   className="mt-1"
                 />
-              </div>
+              </div> */}
 
               {/* <div className="mb-4">
                 <Label className="text-sm font-medium text-gray-700">
@@ -610,11 +610,11 @@ const AppealRequestForm = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="text-center">
+              <div className="text-center flex justify-end items-center">
                 <Button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className=""
+                  className="py-6 rounded-md"
                   size="lg"
                 >
                   {isLoading ? (

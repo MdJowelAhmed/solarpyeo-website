@@ -7,18 +7,17 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AlertTriangle, FileText, Users, Shield, Settings } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useCreateJurorProgramMutation } from "@/redux/featured/jurorProgram/jurorProgramApi";
 
 const JurorApplicationForm = () => {
+  const [createJurorProgram, { isLoading }] = useCreateJurorProgramMutation();
+  
   const [formData, setFormData] = useState({
-    fullName: "Auto-filled",
-    username: "Auto-filled",
-    dateOfBirth: "Auto-filled",
-    email: "Auto-filled",
     showCurrentAddress: "no",
     eligibilityChecks: [],
     digitalSignature: "",
-    date: "Auto-filled",
     platformConsent: [],
   });
 
@@ -29,6 +28,59 @@ const JurorApplicationForm = () => {
         ? [...prev[section], value]
         : prev[section].filter((item) => item !== value),
     }));
+  };
+
+  const handleSubmit = async () => {
+    // Validation
+    // if (formData.eligibilityChecks.length !== 9) {
+    //   toast.error("Please check all eligibility attestation items");
+    //   return;
+    // }
+
+    if (!formData.digitalSignature.trim()) {
+      toast.error("Please provide your digital signature");
+      return;
+    }
+
+    if (formData.platformConsent.length !== 6) {
+      toast.error("Please check all platform consent items");
+      return;
+    }
+
+    try {
+      // Prepare form data for backend
+      const submitData = new FormData();
+
+      // Add eligibilityAttestation as array
+      formData.eligibilityChecks.forEach((_, index) => {
+        submitData.append('eligibilityAttestation[]', `checked-${index}`);
+      });
+
+      // Add affidavit data
+      submitData.append('affidavit[]', formData.digitalSignature);
+      submitData.append('affidavit[]', formData.showCurrentAddress);
+
+      // Add platform consent as array
+      formData.platformConsent.forEach((_, index) => {
+        submitData.append('platform[]', `consent-${index}`);
+      });
+
+      const response = await createJurorProgram(submitData).unwrap();
+      
+      toast.success("Application submitted successfully!");
+      
+      // Reset form
+      setFormData({
+        showCurrentAddress: "no",
+        eligibilityChecks: [],
+        digitalSignature: "",
+        platformConsent: [],
+      });
+      
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error(error?.data?.message || "Failed to submit application. Please try again.");
+    }
   };
 
   return (
@@ -80,12 +132,6 @@ const JurorApplicationForm = () => {
                   >
                     Full Legal Name: (Auto-filled)
                   </Label>
-                  {/* <Input
-                    id="fullName"
-                    value={formData.fullName}
-                    className="mt-1"
-                    disabled
-                  /> */}
                 </div>
                 <div>
                   <Label
@@ -94,12 +140,6 @@ const JurorApplicationForm = () => {
                   >
                     Username: (Auto-filled)
                   </Label>
-                  {/* <Input
-                    id="username"
-                    value={formData.username}
-                    className="mt-1"
-                    disabled
-                  /> */}
                 </div>
                 <div>
                   <Label
@@ -108,12 +148,6 @@ const JurorApplicationForm = () => {
                   >
                     Date of Birth: (Auto-filled)
                   </Label>
-                  {/* <Input
-                    id="dateOfBirth"
-                    value={formData.dateOfBirth}
-                    className="mt-1"
-                    disabled
-                  /> */}
                 </div>
                 <div>
                   <Label
@@ -122,12 +156,6 @@ const JurorApplicationForm = () => {
                   >
                     Email Address: (Auto-filled)
                   </Label>
-                  {/* <Input
-                    id="email"
-                    value={formData.email}
-                    className="mt-1"
-                    disabled
-                  /> */}
                 </div>
               </div>
 
@@ -245,7 +273,7 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 3: Affidavit */}
-        <div className="bg-secondary custom-padding">
+        {/* <div className="bg-secondary custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="">
@@ -309,12 +337,6 @@ const JurorApplicationForm = () => {
                   >
                     Date: (Auto-filled)
                   </Label>
-                  {/* <Input
-                    id="date"
-                    value={formData.date}
-                    className="mt-1"
-                    disabled
-                  /> */}
                 </div>
                 <div className="text-xs text-gray-500">
                   📍 IP Address and Timestamp: (auto-captured by platform)
@@ -322,10 +344,10 @@ const JurorApplicationForm = () => {
               </div>
             </CardContent>
           </div>
-        </div>
+        </div> */}
 
         {/* Section 4: Platform Use and Consent */}
-        <div className="bg-secondary-foreground custom-padding">
+        <div className="bg-secondary custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="">PLATFORM USE AND CONSENT</CardTitle>
@@ -362,13 +384,24 @@ const JurorApplicationForm = () => {
                 ))}
               </div>
             </CardContent>
+          </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end py-6">
-              <Button className="">
-                Submit Application
-              </Button>
-            </div>
+          {/* Submit Button */}
+          <div className="flex justify-center py-6">
+            <Button 
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="px-8"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Application"
+              )}
+            </Button>
           </div>
         </div>
       </div>
