@@ -32,16 +32,17 @@ export default function UserCreate() {
 const onSubmit = async (data) => {
   try {
     // registration data prepare
-    const fullName = [data.firstName, data.middleName, data.lastName]
-      .filter(Boolean)
-      .join(" ")
-      .trim()
-      .toLowerCase();
-
     const registrationData = {
-      userName: fullName,
+      firstName: (data.firstName || "").trim(),
+      middleName: (data.middleName || "").trim(),
+      lastName: (data.lastName || "").trim(),
+      gender: data.gender || "",
+      address: (data.address || "").trim(),
+      birthDate: data.birthDate || "",
+      phone: (data.phone || "").trim(),
       email: data.email.trim().toLowerCase(),
       password: data.password,
+      confirmPassword: data.confirmPassword,
     };
 
     // API call
