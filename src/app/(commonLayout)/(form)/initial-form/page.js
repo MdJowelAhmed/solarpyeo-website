@@ -23,7 +23,6 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateInitialSubmissionMutation } from "@/redux/featured/initialSubmission/initialSubmissionApi";
 import PaymentModal from "./PaymentModal";
-// import PaymentModal from "@/components/PaymentModal"; // Import the payment modal
 
 const InitialForm = () => {
   // Initiator fields
@@ -270,7 +269,7 @@ const InitialForm = () => {
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-6">
+                        <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
                             selected={initiatorDob}
@@ -278,8 +277,10 @@ const InitialForm = () => {
                               setInitiatorDob(date);
                               setIsInitiatorPopoverOpen(false);
                             }}
-                            // disable future dates
                             disabled={{ after: new Date() }}
+                            captionLayout="dropdown"
+                            fromYear={1920}
+                            toYear={new Date().getFullYear()}
                             initialFocus
                           />
                         </PopoverContent>
@@ -378,8 +379,10 @@ const InitialForm = () => {
                               setRespondentDob(date);
                               setIsRespondentPopoverOpen(false);
                             }}
-                            // disable future dates
                             disabled={{ after: new Date() }}
+                            captionLayout="dropdown"
+                            fromYear={1920}
+                            toYear={new Date().getFullYear()}
                             initialFocus
                           />
                         </PopoverContent>
@@ -518,33 +521,6 @@ const InitialForm = () => {
                         </label>
                       </div>
                     </div>
-
-                    {/* <div className="mb-6">
-                      <label className="block text-gray-700 font-medium mb-3">
-                        Upload File 2:
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="file"
-                          id="file2"
-                          onChange={(e) => handleFileChange(e, 2)}
-                          className="hidden"
-                        />
-                        <label
-                          htmlFor="file2"
-                          className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                        >
-                          <span className="text-gray-700">
-                            {selectedFiles2
-                              ? selectedFiles2.name
-                              : "Choose File"}
-                          </span>
-                          <span className="text-gray-500 text-sm">
-                            {selectedFiles2 ? "" : "No file chosen"}
-                          </span>
-                        </label>
-                      </div>
-                    </div> */}
 
                     <div className="mb-8">
                       <label className="block text-gray-700 font-medium mb-3">

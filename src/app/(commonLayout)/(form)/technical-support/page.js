@@ -627,7 +627,7 @@ export default function TechnicalSupportForm() {
                   handleRadioChange("receiveSupport", value)
                 }
               >
-                {["email", "phone"].map((method, index) => (
+                {["Email", "Phone"].map((method, index) => (
                   <div key={index} className="flex items-center space-x-3">
                     <RadioGroupItem value={method} id={`contact-${index}`} />
                     <Label htmlFor={`contact-${index}`} className="text-sm">
