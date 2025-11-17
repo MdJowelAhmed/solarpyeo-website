@@ -33,137 +33,8 @@ import Spinner from "../../app/(commonLayout)/Spinner";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import { MdEmail, MdPeople } from "react-icons/md";
-
-// Subscription Card Component
-// const SubscriptionCard = ({ packageData, userData }) => {
-//   const calculateDaysRemaining = () => {
-//     if (!packageData?.currentPeriodEnd) return 0;
-
-//     const expireDate = new Date(packageData.currentPeriodEnd);
-//     const today = new Date();
-//     const diffTime = expireDate - today;
-//     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-//     return diffDays > 0 ? diffDays : 0;
-//   };
-
-//   const formatExpirationDate = () => {
-//     if (!packageData?.currentPeriodEnd) return "N/A";
-
-//     const expireDate = new Date(packageData.currentPeriodEnd);
-//     return expireDate.toLocaleDateString("en-US", {
-//       year: "numeric",
-//       month: "short",
-//       day: "numeric",
-//     });
-//   };
-
-//   const formatStartDate = () => {
-//     if (!packageData?.currentPeriodStart) return "N/A";
-
-//     const startDate = new Date(packageData.currentPeriodStart);
-//     return startDate.toLocaleDateString("en-US", {
-//       year: "numeric",
-//       month: "short",
-//       day: "numeric",
-//     });
-//   };
-
-//   const isActive = packageData?.status === "active";
-//   const packageTitle = packageData?.package?.title || "No Package";
-//   const packageDuration = packageData?.package?.duration || "";
-//   const packagePrice = packageData?.price || 0;
-
-//   return (
-//     <Card className="mb-6 overflow-hidden border border-gray-200 shadow-sm">
-//       <CardContent className="pt-6">
-//         <div className="flex items-center justify-between mb-6">
-//           <div className="flex items-center gap-3">
-//             <div
-//               className={`${isActive ? "text-yellow-500" : "text-gray-400"}`}
-//             >
-//               {packageTitle === "Gold" ? (
-//                 <Crown size={28} />
-//               ) : (
-//                 <DollarSign size={28} />
-//               )}
-//             </div>
-//             <div>
-//               <h3 className="font-semibold text-lg">
-//                 {userData?.isFreeTrial ? "Free Trial Period" : packageTitle}
-//               </h3>
-//               {packageDuration && (
-//                 <p className="text-sm text-gray-600">{packageDuration} plan</p>
-//               )}
-//             </div>
-//           </div>
-//           <div className="flex items-center gap-2">
-//             <CheckCircle
-//               size={20}
-//               className={`${isActive ? "text-green-500" : "text-gray-400"}`}
-//             />
-//             <span
-//               className={`text-sm font-medium ${
-//                 isActive ? "text-green-600" : "text-gray-500"
-//               }`}
-//             >
-//               {isActive ? "Active" : "Inactive"}
-//             </span>
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//           <div className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200">
-//             <p className="text-5xl font-bold text-red-500 mb-2">
-//               {calculateDaysRemaining()}
-//             </p>
-//             <p className="text-lg font-medium text-gray-700 mb-4">
-//               Days Remaining
-//             </p>
-//             <div className="flex items-center gap-2 text-gray-600">
-//               <Calendar size={18} />
-//               <p className="text-sm">Expires: {formatExpirationDate()}</p>
-//             </div>
-//           </div>
-
-//           <div className="space-y-4">
-//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-//               <span className="text-sm font-medium text-gray-600">
-//                 Package Price
-//               </span>
-//               <span className="text-lg font-bold text-gray-800">
-//                 ${packagePrice}
-//               </span>
-//             </div>
-
-//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-//               <span className="text-sm font-medium text-gray-600">
-//                 Started On
-//               </span>
-//               <span className="text-sm text-gray-700">{formatStartDate()}</span>
-//             </div>
-
-//             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-//               <span className="text-sm font-medium text-gray-600">
-//                 Customer ID
-//               </span>
-//               <span className="text-sm text-gray-700 font-mono">
-//                 {packageData?.customerId?.slice(-8) || "N/A"}
-//               </span>
-//             </div>
-
-//             <Button
-//               className="w-full mt-4 py-5 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200"
-//               onClick={() => (window.location.href = "/subscription-package")}
-//             >
-//               Extend Subscription
-//             </Button>
-//           </div>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
-// };
+import { MdEmail, MdPeople, MdPhone, MdHome, MdCake } from "react-icons/md";
+import { FaTransgender } from "react-icons/fa";
 
 export default function ProfileDashboardComponents() {
   const [imageFile, setImageFile] = useState(null);
@@ -172,10 +43,14 @@ export default function ProfileDashboardComponents() {
   const [updateProfile, { isLoading: updating }] = useUpdateProfileMutation();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
     email: "",
     phone: "",
     address: "",
+    gender: "",
+    birthDate: "",
   });
   const [phoneError, setPhoneError] = useState("");
   console.log(userData);
@@ -185,10 +60,14 @@ export default function ProfileDashboardComponents() {
   useEffect(() => {
     if (userData) {
       setFormData({
-        name: userData.name || "",
+        firstName: userData.firstName || "",
+        middleName: userData.middleName || "",
+        lastName: userData.lastName || "",
         email: userData.email || "",
         phone: userData.phone || "",
         address: userData.address || "",
+        gender: userData.gender || "",
+        birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
       });
       setImagePreview(getImageUrl(userData?.profile));
     }
@@ -242,10 +121,14 @@ export default function ProfileDashboardComponents() {
     try {
       // Create FormData and append all fields separately
       const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name || "");
+      formDataToSend.append("firstName", formData.firstName || "");
+      formDataToSend.append("middleName", formData.middleName || "");
+      formDataToSend.append("lastName", formData.lastName || "");
       formDataToSend.append("email", formData.email || "");
       formDataToSend.append("address", formData.address || "");
       formDataToSend.append("phone", formData.phone || "");
+      formDataToSend.append("gender", formData.gender || "");
+      formDataToSend.append("birthDate", formData.birthDate || "");
 
       // Append image file if available
       if (imageFile) {
@@ -277,6 +160,24 @@ export default function ProfileDashboardComponents() {
 
   if (isLoading) return <Spinner />;
 
+  // Concatenate full name
+  const fullName = [
+    userData?.firstName,
+    userData?.middleName,
+    userData?.lastName,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  // Format birth date
+  const formattedBirthDate = userData?.birthDate
+    ? new Date(userData.birthDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "N/A";
+
   return (
     <div className="max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-xl border border-gray-200 shadow-sm  my-10">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 relative">
@@ -289,11 +190,6 @@ export default function ProfileDashboardComponents() {
               borderColor="border-white"
               className="shadow-md"
             />
-            {/* {!imagePreview && (
-              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <User className="text-white" size={24} />
-              </div>
-            )} */}
           </div>
         </div>
 
@@ -303,14 +199,14 @@ export default function ProfileDashboardComponents() {
               Edit Profile
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-lg rounded-lg">
+          <DialogContent className="sm:max-w-lg rounded-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold text-gray-800">
                 Edit Profile
               </DialogTitle>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
               <div className="flex flex-col items-center">
                 <label
                   htmlFor="image-upload"
@@ -332,9 +228,6 @@ export default function ProfileDashboardComponents() {
                       </div>
                     )}
                   </div>
-                  {/* <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Upload className="text-white" size={20} />
-                  </div> */}
                 </label>
                 <input
                   id="image-upload"
@@ -352,12 +245,39 @@ export default function ProfileDashboardComponents() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
+                    First Name
                   </label>
                   <Input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Middle Name
+                  </label>
+                  <Input
+                    type="text"
+                    name="middleName"
+                    value={formData.middleName}
+                    onChange={handleChange}
+                    className="py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <Input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
                     onChange={handleChange}
                     required
                     className="py-3"
@@ -378,6 +298,7 @@ export default function ProfileDashboardComponents() {
                     disabled
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone
@@ -409,16 +330,48 @@ export default function ProfileDashboardComponents() {
                     className="py-3"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Gender
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    required
+                    className="w-full border border-gray-300 rounded-md py-3 px-3 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Birth Date
+                  </label>
+                  <Input
+                    type="date"
+                    name="birthDate"
+                    value={formData.birthDate}
+                    onChange={handleChange}
+                    required
+                    className="py-3"
+                  />
+                </div>
               </div>
 
               <Button
-                type="submit"
+                onClick={handleSubmit}
                 className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200"
                 disabled={updating || (formData.phone && phoneError)}
               >
                 {updating ? "Updating..." : "Update Profile"}
               </Button>
-            </form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
@@ -433,7 +386,7 @@ export default function ProfileDashboardComponents() {
               <h3 className="font-medium text-gray-700">Name</h3>
             </div>
             <p className="text-xl font-bold mt-4 text-gray-800">
-              {userData?.name || "N/A"}
+              {fullName || "N/A"}
             </p>
           </CardContent>
         </Card>
@@ -446,15 +399,68 @@ export default function ProfileDashboardComponents() {
               </div>
               <h3 className="font-medium text-gray-700">Email</h3>
             </div>
-            <p className="text-xl font-bold mt-4 text-gray-800">
+            <p className="text-xl font-bold mt-4 text-gray-800 break-all">
               {userData?.email || "N/A"}
-              {/* {userData?.completedSessions?.length !== 1 ? "s" : ""} */}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-red-500">
+                <MdPhone size={24} />
+              </div>
+              <h3 className="font-medium text-gray-700">Phone</h3>
+            </div>
+            <p className="text-xl font-bold mt-4 text-gray-800">
+              {userData?.phone || "N/A"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-red-500">
+                <MdHome size={24} />
+              </div>
+              <h3 className="font-medium text-gray-700">Address</h3>
+            </div>
+            <p className="text-xl font-bold mt-4 text-gray-800">
+              {userData?.address || "N/A"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-red-500">
+                <FaTransgender size={24} />
+              </div>
+              <h3 className="font-medium text-gray-700">Gender</h3>
+            </div>
+            <p className="text-xl font-bold mt-4 text-gray-800 capitalize">
+              {userData?.gender || "N/A"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-red-500">
+                <MdCake size={24} />
+              </div>
+              <h3 className="font-medium text-gray-700">Birth Date</h3>
+            </div>
+            <p className="text-xl font-bold mt-4 text-gray-800">
+              {formattedBirthDate}
             </p>
           </CardContent>
         </Card>
       </div>
-
-      {/* <SubscriptionCard packageData={packageData} userData={userData} /> */}
     </div>
   );
 }

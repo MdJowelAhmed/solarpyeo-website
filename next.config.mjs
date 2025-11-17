@@ -12,7 +12,9 @@ const nextConfig = {
       "69.62.67.86",
       "api.yogawithjen.life",
       "web.yogawithjen.life",
-      "10.10.7.46"
+      "10.10.7.46",
+      "206.162.244.188",
+      "res.cloudinary.com"
  
     ],
   },
