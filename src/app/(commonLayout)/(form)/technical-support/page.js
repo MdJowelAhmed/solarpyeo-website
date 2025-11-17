@@ -108,6 +108,10 @@ export default function TechnicalSupportForm() {
         alert("Please select browser/app");
         return;
       }
+      if(formData.impact === ""){
+        alert("Please enter impact");
+        return;
+      }
       if (!formData.receiveSupport) {
         alert("Please select preferred support method");
         return;

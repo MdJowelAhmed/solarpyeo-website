@@ -21,6 +21,27 @@ const JurorApplicationForm = () => {
     platformConsent: [],
   });
 
+  const eligibilityTexts = [
+    "I am at least 21 years of age.",
+    "I agree not to serve as a Juror on any case involving myself, a spouse or former spouse, partner or steppartner with whom I have a personal, familial, or professional relationship.",
+    "I have no criminal record involving perjury, fraud of any kind, or violation of a court order within the past 5 years.",
+    "I am able to objectively review sensitive and emotional materials.",
+    "I agree to maintain strict confidentiality in all case reviews.",
+    "I will serve impartially, based solely on the evidence provided.",
+    "I will not share my platform credentials or allow anyone other than myself to operate using my unique platform-based Juror ID.",
+    "I understand completion of the Juror Orientation and Ethics Test is required.",
+    "I must submit a government-issued photo ID that is not expired."
+  ];
+
+  const platformItems = [
+    "I agree to the Terms of Service, Juror Protocol, and Privacy Policy.",
+    "I agree to complete the Orientation and Ethics Test before being eligible to participate in any case review, and I understand that failing this test may delay or cancel my enrollment.",
+    "I consent to receiving notifications for Juror assignments.",
+    "I understand my performance may be reviewed and audited for fairness and consistency.",
+    "I understand I may be removed from the juror pool at the Platform's discretion.",
+    "I understand I will be contacted regarding this application to complete this process."
+  ];
+
   const handleCheckboxChange = (section, value, checked) => {
     setFormData((prev) => ({
       ...prev,
@@ -37,33 +58,22 @@ const JurorApplicationForm = () => {
     //   return;
     // }
 
-    if (!formData.digitalSignature.trim()) {
-      toast.error("Please provide your digital signature");
-      return;
-    }
+    // if (!formData.digitalSignature.trim()) {
+    //   toast.error("Please provide your digital signature");
+    //   return;
+    // }
 
-    if (formData.platformConsent.length !== 6) {
-      toast.error("Please check all platform consent items");
+    if (formData.platformConsent.length < 1) {
+      toast.error("Please check at least one platform consent item");
       return;
     }
 
     try {
-      // Prepare form data for backend
-      const submitData = new FormData();
-
-      // Add eligibilityAttestation as array
-      formData.eligibilityChecks.forEach((_, index) => {
-        submitData.append('eligibilityAttestation[]', `checked-${index}`);
-      });
-
-      // Add affidavit data
-      submitData.append('affidavit[]', formData.digitalSignature);
-      submitData.append('affidavit[]', formData.showCurrentAddress);
-
-      // Add platform consent as array
-      formData.platformConsent.forEach((_, index) => {
-        submitData.append('platform[]', `consent-${index}`);
-      });
+      const submitData = {
+        eligibilityAttestation: formData.eligibilityChecks.map((idx) => eligibilityTexts[idx]),
+        affidavit: [formData.digitalSignature, formData.showCurrentAddress],
+        platform: formData.platformConsent.map((idx) => platformItems[idx]),
+      };
 
       const response = await createJurorProgram(submitData).unwrap();
       
@@ -354,7 +364,7 @@ const JurorApplicationForm = () => {
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <p className="text-sm text-gray-700 mb-4">
-                By submitting this form: (you must check all boxes)
+                By submitting this form:
               </p>
               <div className="space-y-3">
                 {[
