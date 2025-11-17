@@ -423,19 +423,19 @@ const InitialForm = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem
-                            value="Procedural Issue"
+                            value="ProceduralIssue"
                             id="procedural-issue"
                           />
-                          <Label htmlFor="procedural-issue">
+                          <Label htmlFor="ProceduralIssue">
                             Procedural Issue
                           </Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem
-                            value="Subject Matter"
+                            value="SubjectMatter"
                             id="subject-matter"
                           />
-                          <Label htmlFor="subject-matter">Subject Matter</Label>
+                          <Label htmlFor="SubjectMatter">Subject Matter</Label>
                         </div>
                       </RadioGroup>
                     </div>
