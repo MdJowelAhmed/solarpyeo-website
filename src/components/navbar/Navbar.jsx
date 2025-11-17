@@ -418,12 +418,12 @@ export default function Navbar() {
       href: "/profile-dashboard",
       color: "text-blue-600",
     },
-    {
-      icon: FaRss,
-      label: "My Feed",
-      href: "/my-feed",
-      color: "text-green-600",
-    },
+    // {
+    //   icon: FaRss,
+    //   label: "My Feed",
+    //   href: "/my-feed",
+    //   color: "text-green-600",
+    // },
   ];
 
   const settingsItems = [
@@ -672,7 +672,7 @@ export default function Navbar() {
                             ))}
                             
                             {/* Delete Account in Settings */}
-                            <button
+                            {/* <button
                               onClick={() => {
                                 setOpen(true);
                                 setIsProfileOpen(false);
@@ -683,7 +683,7 @@ export default function Navbar() {
                               <span className="text-sm text-red-700 group-hover:text-red-800">
                                 Delete Account
                               </span>
-                            </button>
+                            </button> */}
                           </div>
                         )}
                       </div>
@@ -821,7 +821,7 @@ export default function Navbar() {
       </Dialog>
       
       {/* Enhanced Delete Account Modal */}
-      <AlertDialog open={open} onOpenChange={(isOpen) => {
+      {/* <AlertDialog open={open} onOpenChange={(isOpen) => {
         setOpen(isOpen);
         if (!isOpen) {
           setDeletePassword("");
@@ -855,7 +855,7 @@ export default function Navbar() {
                 }
               }}
             />
-            {/* Password validation feedback */}
+   
             {deletePassword && deletePassword.length < 3 && (
               <p className="text-sm text-amber-600 mt-1">
                 Please enter your complete password
@@ -885,7 +885,7 @@ export default function Navbar() {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
     </>
   );
 }
