@@ -596,14 +596,14 @@ export default function Navbar() {
                           className="shadow-sm"
                         />
                         <div>
-                          <h3 className="text-white">
-                            {userData?.name || "User"}
-                          </h3>
+                          <h2 className="text-white">
+                            {userData?.lastName || "User"}
+                          </h2>
                           <p className="text-sm text-white">
                             {userData?.email || "user@example.com"}
                           </p>
                           {/* Connection status */}
-                          <p
+                          {/* <p
                             className={`text-xs ${
                               isSocketConnected
                                 ? "text-green-200"
@@ -611,7 +611,7 @@ export default function Navbar() {
                             }`}
                           >
                             {isSocketConnected ? "Online" : "Offline"}
-                          </p>
+                          </p> */}
                         </div>
                       </div>
                     </div>
