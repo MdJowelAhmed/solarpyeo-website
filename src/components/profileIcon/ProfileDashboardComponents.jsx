@@ -195,7 +195,7 @@ export default function ProfileDashboardComponents() {
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="destructive" className="py-6">
+            <Button className="py-6">
               Edit Profile
             </Button>
           </DialogTrigger>
@@ -378,8 +378,8 @@ export default function ProfileDashboardComponents() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-2">
+          <CardContent className="">
+            <div className="flex items-center gap-3 ">
               <div className="text-red-500">
                 <MdPeople size={24} />
               </div>
@@ -392,8 +392,8 @@ export default function ProfileDashboardComponents() {
         </Card>
 
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-2">
+          <CardContent className="">
+            <div className="flex items-center gap-3 ">
               <div className="text-red-500">
                 <MdEmail size={24} />
               </div>
@@ -406,7 +406,7 @@ export default function ProfileDashboardComponents() {
         </Card>
 
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
+          <CardContent className="">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
                 <MdPhone size={24} />
@@ -420,7 +420,7 @@ export default function ProfileDashboardComponents() {
         </Card>
 
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
+          <CardContent className="">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
                 <MdHome size={24} />
@@ -434,7 +434,7 @@ export default function ProfileDashboardComponents() {
         </Card>
 
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
+          <CardContent className="">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
                 <FaTransgender size={24} />
@@ -448,7 +448,7 @@ export default function ProfileDashboardComponents() {
         </Card>
 
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
+          <CardContent className="">
             <div className="flex items-center gap-3 mb-2">
               <div className="text-red-500">
                 <MdCake size={24} />
