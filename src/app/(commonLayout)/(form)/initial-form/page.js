@@ -23,6 +23,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateInitialSubmissionMutation } from "@/redux/featured/initialSubmission/initialSubmissionApi";
 import PaymentModal from "./PaymentModal";
+import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
 
 const InitialForm = () => {
   // Initiator fields
@@ -33,6 +34,8 @@ const InitialForm = () => {
   // control popover open state so we can close it after picking a date
   const [isInitiatorPopoverOpen, setIsInitiatorPopoverOpen] = useState(false);
   const [state, setState] = useState("");
+  const { data: userData } = useMyProfileQuery();
+  console.log("from submission page", userData);
 
   // Respondent fields
   const [respondentFirstName, setRespondentFirstName] = useState("");
@@ -42,7 +45,8 @@ const InitialForm = () => {
   // control popover open state for respondent DOB
   const [isRespondentPopoverOpen, setIsRespondentPopoverOpen] = useState(false);
   const [respondentEmail, setRespondentEmail] = useState("");
-
+  const [gender, setGender] = useState("");
+  const [respondentGender, setRespondentGender] = useState("");
   // Filing type and allegations
   const [filingType, setFilingType] = useState("");
   const [allegations, setAllegations] = useState(["", ""]);
@@ -224,7 +228,7 @@ const InitialForm = () => {
                       <Input
                         id="initiator-first-name"
                         placeholder="John Doe Jr Max"
-                        value={firstName}
+                        value={userData?.firstName || firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                       />
@@ -235,7 +239,7 @@ const InitialForm = () => {
                       <Input
                         id="initiator-middle-name"
                         placeholder="Doe John Junior"
-                        value={middleName}
+                        value={userData?.middleName || middleName}
                         onChange={(e) => setMiddleName(e.target.value)}
                       />
                     </div>
@@ -245,7 +249,7 @@ const InitialForm = () => {
                       <Input
                         id="initiator-last-name"
                         placeholder="Doe John Junior"
-                        value={lastName}
+                        value={userData?.lastName || lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
                       />
@@ -266,13 +270,22 @@ const InitialForm = () => {
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {initiatorDob
                               ? initiatorDob.toLocaleDateString()
+                              : userData?.birthDate
+                              ? new Date(
+                                  userData.birthDate
+                                ).toLocaleDateString()
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
-                            selected={initiatorDob}
+                            selected={
+                              initiatorDob ||
+                              (userData?.birthDate
+                                ? new Date(userData.birthDate)
+                                : undefined)
+                            }
                             onSelect={(date) => {
                               setInitiatorDob(date);
                               setIsInitiatorPopoverOpen(false);
@@ -286,13 +299,36 @@ const InitialForm = () => {
                         </PopoverContent>
                       </Popover>
                     </div>
+                    <div>
+                      <Label htmlFor="gender-select" className="mb-2">
+                        Gender *
+                      </Label>
+                      <Select
+                        value={userData?.gender || gender}
+                        onValueChange={setGender}
+                        required
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent className="w-full">
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
                     <div>
                       <Label htmlFor="state-select" className="mb-2">
                         What State do you reside in? *
                       </Label>
-                      <Select value={state} onValueChange={setState} required>
-                        <SelectTrigger className="w-4/5">
+                      <Select
+                        value={userData?.address || state}
+                        onValueChange={setState}
+                        required
+                      >
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="California" />
                         </SelectTrigger>
                         <SelectContent className="w-full">
@@ -387,6 +423,23 @@ const InitialForm = () => {
                           />
                         </PopoverContent>
                       </Popover>
+                    </div>
+                    <div>
+                      <Label htmlFor="respondent-gender">Gender *</Label>
+                      <Select
+                        value={respondentGender}
+                        onValueChange={setRespondentGender}
+                        required
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent className="w-full">
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>

@@ -71,7 +71,7 @@ export default function Navbar() {
   const reconnectTimeoutRef = useRef(null);
   const { data: accessData } = useGetMyAccessQuery();
   const access = accessData?.data;
-  console.log(access);
+  // console.log(access);
 
 
 
@@ -82,7 +82,7 @@ export default function Navbar() {
 
   // Redux queries and mutations
   const { data: userData } = useMyProfileQuery();
-   console.log(userData);
+  //  console.log(userData);
   const {
     data: notificationData,
     isLoading,
@@ -96,7 +96,7 @@ export default function Navbar() {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
-  console.log(notificationData);
+  // console.log(notificationData);
 
 
   const [readOneNotification] = useReadOneNotificationMutation();
@@ -106,7 +106,7 @@ export default function Navbar() {
 
   // Calculate unread count from API response
   const unreadCount = notificationData?.data?.unreadCount || 0;
-  console.log(unreadCount);
+  // console.log(unreadCount);
 
 
   // Improved Socket.IO setup with better error handling and reconnection

@@ -221,7 +221,7 @@ const onSubmit = async (data) => {
                   Gender
                 </label>
                 <Select onValueChange={(val) => setValue("gender", val)}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-black">
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>

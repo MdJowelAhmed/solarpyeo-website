@@ -17,7 +17,8 @@ const LayoutWrapper = ({ children }) => {
     "/user-create",
     "/subscription",
     "/contact",
-    "/dashboard"
+    "/dashboard",
+    "/register"
   ];
 
   // If the current page is a public route, don't wrap it with PrivateRoute
