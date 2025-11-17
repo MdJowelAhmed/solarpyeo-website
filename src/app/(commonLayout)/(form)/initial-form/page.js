@@ -59,7 +59,8 @@ const InitialForm = () => {
   const [submittedSubmissionId, setSubmittedSubmissionId] = useState(null);
 
   // RTK Query mutation
-  const [createInitialSubmission, { isLoading }] = useCreateInitialSubmissionMutation();
+  const [createInitialSubmission, { isLoading }] =
+    useCreateInitialSubmissionMutation();
 
   const handleFileChange = (event, fileNumber) => {
     const files = event.target.files;
@@ -86,7 +87,12 @@ const InitialForm = () => {
     e.preventDefault();
 
     // Validation
-    if (!firstName || !lastName || !respondentFirstName || !respondentLastName) {
+    if (
+      !firstName ||
+      !lastName ||
+      !respondentFirstName ||
+      !respondentLastName
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -127,11 +133,12 @@ const InitialForm = () => {
       formData.append("respondentLastName", respondentLastName);
       formData.append("respondentDOB", respondentDob.toISOString());
       formData.append("respondentEmail", respondentEmail);
+      formData.append("link", supportingLink);
 
       formData.append("typeOfFiling", filingType);
 
       // Add allegations (filter out empty ones)
-      const validAllegations = allegations.filter(a => a.trim() !== "");
+      const validAllegations = allegations.filter((a) => a.trim() !== "");
       validAllegations.forEach((allegation, index) => {
         formData.append(`allegation[${index}]`, allegation);
       });
@@ -154,11 +161,11 @@ const InitialForm = () => {
       console.log("Submission result:", result);
 
       toast.success("Form submitted successfully!");
-      
+
       // Store the submission ID and open payment modal
       setSubmittedSubmissionId(result.data._id);
       setIsPaymentModalOpen(true);
-      
+
       // Reset form
       setFirstName("");
       setMiddleName("");
@@ -176,10 +183,11 @@ const InitialForm = () => {
       setSelectedFiles2(null);
       setSupportingLink("");
       setIsAgreed(false);
-
     } catch (error) {
       console.error("Submission error:", error);
-      toast.error(error?.data?.message || "Failed to submit form. Please try again.");
+      toast.error(
+        error?.data?.message || "Failed to submit form. Please try again."
+      );
     }
   };
 
@@ -206,7 +214,7 @@ const InitialForm = () => {
                     persons to make an appeal to the competent court.
                   </h4>
                 </div>
-                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between bg-white rounded-md">
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between bg-white rounded-md">
                   <CardHeader className="w-full lg:w-1/5">
                     <CardTitle>Information About The Initiator</CardTitle>
                   </CardHeader>
@@ -246,7 +254,10 @@ const InitialForm = () => {
 
                     <div>
                       <Label>Date of Birth *</Label>
-                      <Popover open={isInitiatorPopoverOpen} onOpenChange={setIsInitiatorPopoverOpen}>
+                      <Popover
+                        open={isInitiatorPopoverOpen}
+                        onOpenChange={setIsInitiatorPopoverOpen}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             type="button"
@@ -298,13 +309,15 @@ const InitialForm = () => {
 
               {/* Information About The Respondent */}
               <div className="custom-padding bg-secondary">
-                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 rounded-md mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
                     <CardTitle>Information About The Respondent</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div>
-                      <Label htmlFor="respondent-first-name">First Name *</Label>
+                      <Label htmlFor="respondent-first-name">
+                        First Name *
+                      </Label>
                       <Input
                         id="respondent-first-name"
                         placeholder="John Doe Jr Max"
@@ -315,12 +328,16 @@ const InitialForm = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="respondent-middle-name">Middle Name</Label>
+                      <Label htmlFor="respondent-middle-name">
+                        Middle Name
+                      </Label>
                       <Input
                         id="respondent-middle-name"
                         placeholder="Doe John Junior"
                         value={respondentMiddleName}
-                        onChange={(e) => setRespondentMiddleName(e.target.value)}
+                        onChange={(e) =>
+                          setRespondentMiddleName(e.target.value)
+                        }
                       />
                     </div>
 
@@ -337,7 +354,10 @@ const InitialForm = () => {
 
                     <div>
                       <Label>Date of Birth *</Label>
-                      <Popover open={isRespondentPopoverOpen} onOpenChange={setIsRespondentPopoverOpen}>
+                      <Popover
+                        open={isRespondentPopoverOpen}
+                        onOpenChange={setIsRespondentPopoverOpen}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             type="button"
@@ -367,7 +387,9 @@ const InitialForm = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="respondent-email">Respondents Email *</Label>
+                      <Label htmlFor="respondent-email">
+                        Respondents Email *
+                      </Label>
                       <Input
                         id="respondent-email"
                         type="email"
@@ -383,21 +405,36 @@ const InitialForm = () => {
 
               {/* Type Of Filing */}
               <div className="custom-padding bg-secondary-foreground">
-                <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
                     <CardTitle>Type Of Filing *</CardTitle>
                     <div>
-                      <RadioGroup value={filingType} onValueChange={setFilingType} required>
+                      <RadioGroup
+                        value={filingType}
+                        onValueChange={setFilingType}
+                        required
+                      >
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Jurisdiction" id="jurisdiction" />
+                          <RadioGroupItem
+                            value="Jurisdiction"
+                            id="jurisdiction"
+                          />
                           <Label htmlFor="jurisdiction">Jurisdiction</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Procedural Issue" id="procedural-issue" />
-                          <Label htmlFor="procedural-issue">Procedural Issue</Label>
+                          <RadioGroupItem
+                            value="Procedural Issue"
+                            id="procedural-issue"
+                          />
+                          <Label htmlFor="procedural-issue">
+                            Procedural Issue
+                          </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Subject Matter" id="subject-matter" />
+                          <RadioGroupItem
+                            value="Subject Matter"
+                            id="subject-matter"
+                          />
                           <Label htmlFor="subject-matter">Subject Matter</Label>
                         </div>
                       </RadioGroup>
@@ -410,7 +447,9 @@ const InitialForm = () => {
                         {allegations.map((allegation, index) => (
                           <div key={index}>
                             <Label htmlFor={`allegation-${index}`}>
-                              {index === 0 ? "What happened?" : `Allegation ${index + 1}`}
+                              {index === 0
+                                ? "What happened?"
+                                : `Allegation ${index + 1}`}
                               {index < 2 && " *"}
                             </Label>
                             <Textarea
@@ -418,7 +457,9 @@ const InitialForm = () => {
                               placeholder={`Allegation ${index + 1}`}
                               className="min-h-32"
                               value={allegation}
-                              onChange={(e) => handleAllegationChange(index, e.target.value)}
+                              onChange={(e) =>
+                                handleAllegationChange(index, e.target.value)
+                              }
                               required={index < 2}
                             />
                           </div>
@@ -441,12 +482,13 @@ const InitialForm = () => {
 
               {/* Upload Evidence */}
               <div className="custom-padding bg-secondary">
-                <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center justify-between">
+                <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 rounded-md mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
                     <CardTitle>Upload Evidence</CardTitle>
                     <h4 className="mb-4 text-justify text-sm">
                       Upload any documentation you believe supports your claim,
-                      including screenshots, messages, case submission links, etc.
+                      including screenshots, messages, case submission links,
+                      etc.
                     </h4>
                   </CardHeader>
                   <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
@@ -466,7 +508,9 @@ const InitialForm = () => {
                           className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                         >
                           <span className="text-gray-700">
-                            {selectedFiles1 ? selectedFiles1.name : "Choose File"}
+                            {selectedFiles1
+                              ? selectedFiles1.name
+                              : "Choose File"}
                           </span>
                           <span className="text-gray-500 text-sm">
                             {selectedFiles1 ? "" : "No file chosen"}
@@ -475,7 +519,7 @@ const InitialForm = () => {
                       </div>
                     </div>
 
-                    <div className="mb-6">
+                    {/* <div className="mb-6">
                       <label className="block text-gray-700 font-medium mb-3">
                         Upload File 2:
                       </label>
@@ -491,14 +535,16 @@ const InitialForm = () => {
                           className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                         >
                           <span className="text-gray-700">
-                            {selectedFiles2 ? selectedFiles2.name : "Choose File"}
+                            {selectedFiles2
+                              ? selectedFiles2.name
+                              : "Choose File"}
                           </span>
                           <span className="text-gray-500 text-sm">
                             {selectedFiles2 ? "" : "No file chosen"}
                           </span>
                         </label>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="mb-8">
                       <label className="block text-gray-700 font-medium mb-3">
@@ -514,16 +560,19 @@ const InitialForm = () => {
                     </div>
                   </div>
                 </div>
+              </div>
 
+              <div className="custom-padding bg-secondary-foreground">
                 {/* Declaration Section */}
-                <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-6 mb-8">
+                <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-6 my-8">
                   <h2 className="font-bold mb-3 text-lg">
                     DECLARATION UNDER PENALTY OF PERJURY
                   </h2>
                   <p className="text-sm mb-4 leading-relaxed">
-                    I hereby declare and affirm in accordance with the laws of the
-                    jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that the
-                    foregoing is true and accurate to the best of my knowledge.
+                    I hereby declare and affirm in accordance with the laws of
+                    the jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that
+                    the foregoing is true and accurate to the best of my
+                    knowledge.
                   </p>
                   <div className="flex items-start space-x-3">
                     <input

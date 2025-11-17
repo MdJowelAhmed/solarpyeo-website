@@ -5,7 +5,7 @@ const authApi = api.injectEndpoints({
     contactUs: builder.mutation({
       query: (data) => ({
         method: "POST",
-        url: "/contact/create-contact",
+        url: "/contact/us",
         body: data,
       }),
     }),

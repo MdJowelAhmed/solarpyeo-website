@@ -25,7 +25,8 @@ export default function ContactForm() {
     e.preventDefault();
 
     const payload = {
-      name: `${formData.firstName} ${formData.lastName}`.trim(),
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email,
       phone: formData.phone,
       message: formData.message,
@@ -42,7 +43,8 @@ export default function ContactForm() {
         message: "",
       });
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to send message.");
+      console.error("Contact Us Error:", error);
+      toast.error(error?.data?.errorMessages[0].message || "Failed to send message.");
     }
   };
 
@@ -98,7 +100,7 @@ export default function ContactForm() {
 
             <Textarea
               name="message"
-              placeholder="Message"
+              placeholder="Message must be at least 10 characters long"
               value={formData.message}
               onChange={handleChange}
               required
