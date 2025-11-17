@@ -519,7 +519,7 @@ export default function Navbar() {
             )} */}
 
             {/* Notification Button - Only show if user is logged in */}
-            {userData?._id && (
+            {/* {userData?._id && (
               <div className="relative">
                 <button
                   onClick={() => setIsNotificationModalOpen(true)}
@@ -534,7 +534,7 @@ export default function Navbar() {
                   )}
                 </button>
               </div>
-            )}
+            )} */}
 
             {/* Login Button - Show when no user is logged in */}
             {!userData?._id ? (
