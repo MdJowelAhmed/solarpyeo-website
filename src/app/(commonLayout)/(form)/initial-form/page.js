@@ -227,6 +227,7 @@ const InitialForm = () => {
                       <Label htmlFor="initiator-first-name">First Name *</Label>
                       <Input
                         id="initiator-first-name"
+                        disabled
                         placeholder="John Doe Jr Max"
                         value={userData?.firstName || firstName}
                         onChange={(e) => setFirstName(e.target.value)}
@@ -238,6 +239,7 @@ const InitialForm = () => {
                       <Label htmlFor="initiator-middle-name">Middle Name</Label>
                       <Input
                         id="initiator-middle-name"
+                        disabled
                         placeholder="Doe John Junior"
                         value={userData?.middleName || middleName}
                         onChange={(e) => setMiddleName(e.target.value)}
@@ -248,10 +250,12 @@ const InitialForm = () => {
                       <Label htmlFor="initiator-last-name">Last Name *</Label>
                       <Input
                         id="initiator-last-name"
+                        disabled
                         placeholder="Doe John Junior"
                         value={userData?.lastName || lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
+                        className="disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -265,7 +269,8 @@ const InitialForm = () => {
                           <Button
                             type="button"
                             variant="outline"
-                            className="w-full justify-start text-left font-normal py-[23px]"
+                            aria-disabled="true"
+                            className="w-full justify-start text-left font-normal py-[23px] cursor-not-allowed opacity-50"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {initiatorDob
@@ -307,6 +312,7 @@ const InitialForm = () => {
                         value={userData?.gender || gender}
                         onValueChange={setGender}
                         required
+                        disabled
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Gender" />
