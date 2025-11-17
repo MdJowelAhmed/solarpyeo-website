@@ -283,7 +283,7 @@ const JurorApplicationForm = () => {
         </div>
 
         {/* Section 3: Affidavit */}
-        {/* <div className="bg-secondary custom-padding">
+        <div className="bg-secondary custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="">
@@ -319,7 +319,7 @@ const JurorApplicationForm = () => {
                 </ul>
               </div>
 
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 <div>
                   <Label
                     htmlFor="signature"
@@ -351,13 +351,13 @@ const JurorApplicationForm = () => {
                 <div className="text-xs text-gray-500">
                   📍 IP Address and Timestamp: (auto-captured by platform)
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </div>
-        </div> */}
+        </div>
 
         {/* Section 4: Platform Use and Consent */}
-        <div className="bg-secondary custom-padding">
+        <div className="bg-secondary-foreground custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="">PLATFORM USE AND CONSENT</CardTitle>
@@ -401,7 +401,7 @@ const JurorApplicationForm = () => {
             <Button 
               onClick={handleSubmit}
               disabled={isLoading}
-              className="px-8"
+              className="px-8 py-6"
             >
               {isLoading ? (
                 <>
