@@ -10,8 +10,7 @@ import ViewRecordsModal from "./ViewRecordsModal";
 import AppealModal from "./AppealModal";
 import SealExpungeModal from "./SealExpungeModal";
 import ViewDetailsModal from "./ViewDetailsModal";
-import MessageModal from "./MessageModal";
-import { useGetDashboardPageQuery } from "@/redux/featured/dashboard/dashboardPageApi";
+import { useGetDashboardPageQuery, useGetJurorStatusMonitoringQuery } from "@/redux/featured/dashboard/dashboardPageApi";
 
 const DashboardContainer = () => {
   // State for modals
@@ -22,42 +21,77 @@ const DashboardContainer = () => {
   const [messageModal, setMessageModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
+  
   const {data: dashboardPage} = useGetDashboardPageQuery();
+  const {data: jurorStatusMonitoring} = useGetJurorStatusMonitoringQuery();
+  console.log("jurorStatusMonitoring", jurorStatusMonitoring)
   console.log("dashboardPage", dashboardPage)
   
-  const currentSubmissions = [
-    {
-      caseId: "#A2394B",
-      respondent: "M. Ray",
-      status: "Awaiting Juror Review 0 of 3 votes",
-      lastActivity: "June 16, 2025",
-      statusType: "pending",
-    },
-    {
-      caseId: "#B11803",
-      respondent: "J. Doe",
-      status: "Notice Sent... Awaiting Response",
-      lastActivity: "June 15, 2025",
-      statusType: "notice",
-    },
-  ];
+  // Transform API data for current submissions
+  const currentSubmissions = dashboardPage?.data?.map(item => ({
+    _id: item._id,
+    caseId: item.caseId,
+    respondent: `${item.respondentFastName} ${item.respondentLastName}`,
+    status: item.status,
+    lastActivity: new Date(item.updatedAt).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    statusType: item.status === "PENDING" ? "pending" : item.status === "APPROVED" ? "approved" : "notice",
+    fullData: item // Store full data for modal
+  })) || [];
 
-  const jurorStatus = [
-    {
-      caseId: "#A2394B",
-      myVote: "VP",
-      jury: "3",
-      progress: "2 of 3 votes",
-      outcome: "——",
-    },
-    {
-      caseId: "#B11803",
-      myVote: "(Review)",
-      jury: "3",
-      progress: "1 of 3 votes",
-      outcome: "——",
-    },
-  ];
+  // Transform API data for juror status monitoring
+  const jurorStatus = jurorStatusMonitoring?.data?.map(item => {
+    const submission = item.submissionId;
+    const totalJurors = 3;
+    const currentVotes = submission?.jurorDecisions?.length || 0;
+    
+    // Determine vote action display
+    let myVoteDisplay = "Pending Review";
+    if (submission?.jurorDecisions && submission.jurorDecisions.length > 0) {
+      const firstVote = submission.jurorDecisions[0];
+      if (firstVote.action === "ACCEPT") {
+        myVoteDisplay = "ACCEPT";
+      } else if (firstVote.action === "REJECT") {
+        myVoteDisplay = "REJECT";
+      } else if (firstVote.action === "UNABLETODECIDE") {
+        myVoteDisplay = "UNABLE TO DECIDE";
+      }
+    }
+    
+    // Calculate outcome based on juror decisions
+    let outcomeDisplay = "——";
+    if (submission?.status === "APPROVED") {
+      outcomeDisplay = "APPROVED";
+    } else if (submission?.status === "REJECTED") {
+      outcomeDisplay = "REJECTED";
+    } else if (currentVotes === totalJurors) {
+      // All votes are in, calculate majority
+      const acceptVotes = submission.jurorDecisions.filter(d => d.action === "ACCEPT").length;
+      const rejectVotes = submission.jurorDecisions.filter(d => d.action === "REJECT").length;
+      
+      if (acceptVotes > rejectVotes) {
+        outcomeDisplay = "LIKELY APPROVED";
+      } else if (rejectVotes > acceptVotes) {
+        outcomeDisplay = "LIKELY REJECTED";
+      } else {
+        outcomeDisplay = "PENDING DECISION";
+      }
+    }
+    
+    return {
+      _id: item._id,
+      caseId: submission?.caseId || "N/A",
+      myVote: myVoteDisplay,
+      jury: totalJurors.toString(),
+      progress: `${currentVotes} of ${totalJurors} votes`,
+      outcome: outcomeDisplay,
+      fullData: item,
+      submissionData: submission
+    };
+  }) || [];
 
   const submissionHistory = [
     {
@@ -107,12 +141,38 @@ const DashboardContainer = () => {
     return styles[outcome] || "bg-gray-100 text-gray-800 border-gray-200";
   };
 
-  const getStatusBadge = (statusType) => {
+  const getVoteBadge = (vote) => {
     const styles = {
+      "ACCEPT": "bg-green-100 text-green-800 border-green-200",
+      "REJECT": "bg-red-100 text-red-800 border-red-200",
+      "UNABLE TO DECIDE": "bg-yellow-100 text-yellow-800 border-yellow-200",
+      "Pending Review": "bg-gray-100 text-gray-800 border-gray-200",
+    };
+    return styles[vote] || "bg-gray-100 text-gray-800 border-gray-200";
+  };
+
+  const getOutcomeBadgeJuror = (outcome) => {
+    const styles = {
+      "APPROVED": "bg-green-100 text-green-800 border-green-200",
+      "REJECTED": "bg-red-100 text-red-800 border-red-200",
+      "LIKELY APPROVED": "bg-green-50 text-green-700 border-green-200",
+      "LIKELY REJECTED": "bg-red-50 text-red-700 border-red-200",
+      "PENDING DECISION": "bg-blue-100 text-blue-800 border-blue-200",
+      "——": "bg-gray-100 text-gray-800 border-gray-200",
+    };
+    return styles[outcome] || "bg-gray-100 text-gray-800 border-gray-200";
+  };
+
+  const getStatusBadge = (status) => {
+    const styles = {
+      PENDING: "bg-blue-100 text-blue-800 border-blue-200",
+      APPROVED: "bg-green-100 text-green-800 border-green-200",
+      REJECTED: "bg-red-100 text-red-800 border-red-200",
       pending: "bg-blue-100 text-blue-800 border-blue-200",
       notice: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      approved: "bg-green-100 text-green-800 border-green-200",
     };
-    return styles[statusType] || "bg-gray-100 text-gray-800 border-gray-200";
+    return styles[status] || "bg-gray-100 text-gray-800 border-gray-200";
   };
 
   return (
@@ -122,16 +182,13 @@ const DashboardContainer = () => {
         <div className="text-center">
           <h3 className="mb-3">User Dashboard</h3>
           <p className="mb-10">
-            Welcome to your personal User Dashboard. Here you can manage active
+            Welcome to your personal User Dashboard. Here you can manage active
             and past submissions, monitor juror voting, respond to platform
             notifications, and control your user obligations.
           </p>
         </div>
         <div className="text-center">
           <h3 className="mb-3">CURRENT SUBMISSIONS OVERVIEW</h3>
-          {/* <p className="mb-10">
-            Welcome to your personal User Dashboard. Here you can manage active and past submissions, monitor juror voting, respond to platform notifications, and control your user obligations.
-          </p> */}
         </div>
 
         {/* Current Submissions Overview */}
@@ -139,16 +196,10 @@ const DashboardContainer = () => {
           <CardHeader className="border-b">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                {" "}
                 <p className="mb-2">Active Case</p>
                 <p className="text-sm">Displays all pending, in-review, or under-juror-evaluation submissions.</p>
               </div>
-              {/* <FormDropdown
-                buttonText="Start A New Submission"
-                buttonClassName="bg-red-600 hover:bg-red-700 text-white w-full md:w-auto"
-              /> */}
-                <Button
-                // href="/initial-submission"
+              <Button
                 onClick={() => (window.location.href = "/form-submission")}
                 className="py-6 text-white w-full md:w-auto"
               >
@@ -180,103 +231,115 @@ const DashboardContainer = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentSubmissions.map((submission, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium text-blue-600">
-                        {submission.caseId}
-                      </td>
-                      <td className="p-4">{submission.respondent}</td>
-                      <td className="p-4">
-                        <Badge
-                          className={getStatusBadge(submission.statusType)}
-                        >
-                          {submission.status}
-                        </Badge>
-                      </td>
-                      <td className="p-4">{submission.lastActivity}</td>
-                      <td className="p-4">
-                        <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSubmission(submission);
-                              setViewDetailsModal(true);
-                            }}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSubmission(submission);
-                              setMessageModal(true);
-                            }}
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                          </Button>
-                        </div>
+                  {currentSubmissions.length > 0 ? (
+                    currentSubmissions.map((submission, index) => (
+                      <tr key={submission._id || index} className="border-b hover:bg-gray-50">
+                        <td className="p-4 font-medium text-blue-600">
+                          {submission.caseId}
+                        </td>
+                        <td className="p-4">{submission.respondent}</td>
+                        <td className="p-4">
+                          <Badge className={getStatusBadge(submission.status)}>
+                            {submission.status}
+                          </Badge>
+                        </td>
+                        <td className="p-4">{submission.lastActivity}</td>
+                        <td className="p-4">
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSubmission(submission);
+                                setViewDetailsModal(true);
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSubmission(submission);
+                                setMessageModal(true);
+                              }}
+                            >
+                              <MessageSquare className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-8 text-center text-gray-500">
+                        No active submissions found
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
 
             {/* Mobile Cards */}
             <div className="md:hidden space-y-4 p-4">
-              {currentSubmissions.map((submission, index) => (
-                <Card key={index} className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-start">
-                        <span className="font-medium text-blue-600">
-                          {submission.caseId}
-                        </span>
-                        <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSubmission(submission);
-                              setViewDetailsModal(true);
-                            }}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSubmission(submission);
-                              setMessageModal(true);
-                            }}
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                          </Button>
+              {currentSubmissions.length > 0 ? (
+                currentSubmissions.map((submission, index) => (
+                  <Card key={submission._id || index} className="border">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-start">
+                          <span className="font-medium text-blue-600">
+                            {submission.caseId}
+                          </span>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSubmission(submission);
+                                setViewDetailsModal(true);
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSubmission(submission);
+                                setMessageModal(true);
+                              }}
+                            >
+                              <MessageSquare className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-sm text-gray-500">
+                            Respondent:{" "}
+                          </span>
+                          <span>{submission.respondent}</span>
+                        </div>
+                        <div>
+                          <Badge className={getStatusBadge(submission.status)}>
+                            {submission.status}
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Last Activity: {submission.lastActivity}
                         </div>
                       </div>
-                      <div>
-                        <span className="text-sm text-gray-500">
-                          Respondent:{" "}
-                        </span>
-                        <span>{submission.respondent}</span>
-                      </div>
-                      <div>
-                        <Badge
-                          className={getStatusBadge(submission.statusType)}
-                        >
-                          {submission.status}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Last Activity: {submission.lastActivity}
-                      </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card className="border">
+                  <CardContent className="p-8 text-center text-gray-500">
+                    No active submissions found
                   </CardContent>
                 </Card>
-              ))}
+              )}
             </div>
           </CardContent>
         </div>
@@ -284,23 +347,14 @@ const DashboardContainer = () => {
         {/* Juror Status Monitoring */}
         <div>
           <h3 className="mb-3">JUROR STATUS MONITORING</h3>
-         <CardHeader className="">
+          <CardHeader className="">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            
-               
-               <div className="text-sm text-gray-600 mb-3 bg-gray-50">
-              Displays the status of juror evaluation for active submissions.
-           
+              <div className="text-sm text-gray-600 mb-3 bg-gray-50">
+                Displays the status of juror evaluation for active submissions.
               </div>
-              {/* <FormDropdown
-                buttonText="Start A New Submission"
-                buttonClassName="bg-red-600 hover:bg-red-700 text-white w-full md:w-auto"
-              /> */}
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            
-
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full border">
@@ -324,52 +378,102 @@ const DashboardContainer = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {jurorStatus.map((status, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium text-blue-600">
-                        {status.caseId}
+                  {jurorStatus.length > 0 ? (
+                    jurorStatus.map((status, index) => (
+                      <tr key={status._id || index} className="border-b hover:bg-gray-50">
+                        <td className="p-4 font-medium text-blue-600">
+                          {status.caseId}
+                        </td>
+                        <td className="p-4">
+                          <Badge className={getVoteBadge(status.myVote)}>
+                            {status.myVote}
+                          </Badge>
+                        </td>
+                        <td className="p-4">{status.jury}</td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <span>{status.progress}</span>
+                            <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-blue-500 transition-all"
+                                style={{ 
+                                  width: `${(parseInt(status.progress.split(' ')[0]) / parseInt(status.progress.split(' ')[2])) * 100}%` 
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <Badge className={getOutcomeBadgeJuror(status.outcome)}>
+                            {status.outcome}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-8 text-center text-gray-500">
+                        No juror status data available
                       </td>
-                      <td className="p-4">{status.myVote}</td>
-                      <td className="p-4">{status.jury}</td>
-                      <td className="p-4">{status.progress}</td>
-                      <td className="p-4">{status.outcome}</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
 
             {/* Mobile Cards */}
             <div className="md:hidden space-y-4 p-4">
-              {jurorStatus.map((status, index) => (
-                <Card key={index} className="border">
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <div className="font-medium text-blue-600">
-                        {status.caseId}
+              {jurorStatus.length > 0 ? (
+                jurorStatus.map((status, index) => (
+                  <Card key={status._id || index} className="border">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="font-medium text-blue-600 text-lg">
+                          {status.caseId}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-500 block mb-1">My Vote:</span>
+                            <Badge className={getVoteBadge(status.myVote)}>
+                              {status.myVote}
+                            </Badge>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 block mb-1">Jury:</span>
+                            <span className="font-medium">{status.jury}</span>
+                          </div>
+                          <div className="col-span-2">
+                            <span className="text-gray-500 block mb-2">Progress:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{status.progress}</span>
+                              <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-blue-500 transition-all"
+                                  style={{ 
+                                    width: `${(parseInt(status.progress.split(' ')[0]) / parseInt(status.progress.split(' ')[2])) * 100}%` 
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-span-2">
+                            <span className="text-gray-500 block mb-1">Outcome:</span>
+                            <Badge className={getOutcomeBadgeJuror(status.outcome)}>
+                              {status.outcome}
+                            </Badge>
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">My Vote: </span>
-                          <span>{status.myVote}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Jury: </span>
-                          <span>{status.jury}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Progress: </span>
-                          <span>{status.progress}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Outcome: </span>
-                          <span>{status.outcome}</span>
-                        </div>
-                      </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card className="border">
+                  <CardContent className="p-8 text-center text-gray-500">
+                    No juror status data available
                   </CardContent>
                 </Card>
-              ))}
+              )}
             </div>
           </CardContent>
         </div>
@@ -551,11 +655,6 @@ const DashboardContainer = () => {
         onClose={() => setViewDetailsModal(false)} 
         submission={selectedSubmission} 
       />
-      {/* <MessageModal 
-        isOpen={messageModal} 
-        onClose={() => setMessageModal(false)} 
-        submission={selectedSubmission} 
-      /> */}
     </div>
   );
 };

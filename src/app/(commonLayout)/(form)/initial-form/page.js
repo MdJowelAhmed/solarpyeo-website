@@ -90,18 +90,26 @@ const InitialForm = () => {
     e.preventDefault();
 
     // Validation
-    if (
-      !firstName ||
-      !lastName ||
-      !respondentFirstName ||
-      !respondentLastName
-    ) {
-      toast.error("Please fill in all required fields");
+    // if (
+    //   !firstName ||
+    //   !lastName ||
+    //   !respondentFirstName ||
+    //   !respondentLastName
+    // ) {
+    //   toast.error("Please fill in all required fields");
+    //   return;
+    // }
+
+    if (!respondentDob) {
+      toast.error("Please select dates of birth");
       return;
     }
 
-    if (!initiatorDob || !respondentDob) {
-      toast.error("Please select dates of birth");
+    const initiatorDobDate =
+      initiatorDob || (userData?.birthDate ? new Date(userData.birthDate) : undefined);
+
+    if (!initiatorDobDate) {
+      toast.error("Initiator date of birth is missing");
       return;
     }
 
@@ -128,13 +136,13 @@ const InitialForm = () => {
       formData.append("fastName", firstName);
       formData.append("middleName", middleName);
       formData.append("lastName", lastName);
-      formData.append("dob", initiatorDob.toISOString());
+      formData.append("dob", initiatorDobDate.toISOString());
       formData.append("state", state);
 
       formData.append("respondentFastName", respondentFirstName);
       formData.append("respondentMiddleName", respondentMiddleName);
       formData.append("respondentLastName", respondentLastName);
-      formData.append("respondentDOB", respondentDob.toISOString());
+      formData.append("respondentDOB", new Date(respondentDob).toISOString());
       formData.append("respondentEmail", respondentEmail);
       formData.append("link", supportingLink);
 
@@ -330,7 +338,7 @@ const InitialForm = () => {
                         What State do you reside in? *
                       </Label>
                       <Select
-                        value={userData?.address || state}
+                        value={ state}
                         onValueChange={setState}
                         required
                       >

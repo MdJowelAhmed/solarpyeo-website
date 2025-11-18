@@ -10,7 +10,7 @@ const dashboardPageApi = api.injectEndpoints({
       providesTags: ["DashboardPage"],
     }),
     
-    getJurorStatusMonitoring: builder.mutation({
+    getJurorStatusMonitoring: builder.query({
       query: () => ({
         url: `/dashboard/juror/status`,
         method: "GET",
@@ -32,6 +32,6 @@ const dashboardPageApi = api.injectEndpoints({
 
 export const { 
   useGetDashboardPageQuery, 
-  useGetJurorStatusMonitoringMutation,
+  useGetJurorStatusMonitoringQuery,
   useUpdateDashboardPageMutation 
 } = dashboardPageApi;
