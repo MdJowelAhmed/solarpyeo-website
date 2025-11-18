@@ -154,7 +154,7 @@ export default function JurorProtocolOverview() {
                 </div>
               </div>
 
-              <div className="bg-red-100 border border-red-200 p-4 rounded mt-4">
+              <div className="bg-primary-foreground  border-l-4 border-red-700  p-4 rounded mt-4">
                 <p className="text-red-800 text-sm">
                   "Silence" is the Respondent's verified appearance after notice
                   with the choice to take no action in the case.
@@ -398,7 +398,7 @@ export default function JurorProtocolOverview() {
 
           <div className="space-y-4 text-gray-700">
             <p>Jurors agree to the following:</p>
-            <div className="bg-red-100 border border-red-200 p-4 rounded">
+            <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded">
               <p className="text-red-800 text-sm">
                 "I understand that all information I receive while serving as a
                 juror is confidential and must not be copied, shared, discussed,
@@ -539,7 +539,7 @@ export default function JurorProtocolOverview() {
               Before beginning each case, jurors must agree before viewing case
               materials:
             </p>
-            <div className="bg-red-100 border border-red-200 p-4 rounded">
+            <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded">
               <p className="text-red-800 text-sm">
                 "I understand and accept the rules and obligations of jury
                 service on this platform. I will act impartially, respectfully,
