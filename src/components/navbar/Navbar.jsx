@@ -3,7 +3,17 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   FaBell,
   FaUser,
@@ -73,12 +83,10 @@ export default function Navbar() {
   const access = accessData?.data;
   // console.log(access);
 
-
-
   // Constants
   const NOTIFICATIONS_PER_PAGE = 30;
   const MAX_RECONNECTION_ATTEMPTS = 5;
-  const RECONNECTION_DELAY = 3000; 
+  const RECONNECTION_DELAY = 3000;
 
   // Redux queries and mutations
   const { data: userData } = useMyProfileQuery();
@@ -87,17 +95,19 @@ export default function Navbar() {
     data: notificationData,
     isLoading,
     refetch,
-  } = useGetNotificationQuery({
-    page: currentPage,
-    limit: NOTIFICATIONS_PER_PAGE,
-  }, {
-    pollingInterval: 30000, // Poll every 30 seconds
-    refetchOnMountOrArgChange: true,
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
-  });
+  } = useGetNotificationQuery(
+    {
+      page: currentPage,
+      limit: NOTIFICATIONS_PER_PAGE,
+    },
+    {
+      pollingInterval: 30000, // Poll every 30 seconds
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    }
+  );
   // console.log(notificationData);
-
 
   const [readOneNotification] = useReadOneNotificationMutation();
   const [readAllNotification] = useReadAllNotificationMutation();
@@ -107,7 +117,6 @@ export default function Navbar() {
   // Calculate unread count from API response
   const unreadCount = notificationData?.data?.unreadCount || 0;
   // console.log(unreadCount);
-
 
   // Improved Socket.IO setup with better error handling and reconnection
   useEffect(() => {
@@ -142,7 +151,7 @@ export default function Navbar() {
         console.log("New notification received:", data);
         // Force refetch to get latest notifications
         refetch();
-        
+
         // Show toast notification if data is provided
         if (data && data.message) {
           toast.success(`New notification: ${data.message}`);
@@ -151,7 +160,10 @@ export default function Navbar() {
 
       // Connection event handlers
       socketRef.current.on("connect", () => {
-        console.log("Socket connected successfully with ID:", socketRef.current.id);
+        console.log(
+          "Socket connected successfully with ID:",
+          socketRef.current.id
+        );
         setIsSocketConnected(true);
         setConnectionAttempts(0);
 
@@ -159,10 +171,10 @@ export default function Navbar() {
         socketRef.current.emit("join-user-room", userData._id, (response) => {
           console.log("Joined user room response:", response);
         });
-        
+
         // Also emit join-room event as fallback
         socketRef.current.emit("join-room", userData._id);
-        
+
         console.log(`User ${userData._id} joined notification room`);
       });
 
@@ -224,10 +236,13 @@ export default function Navbar() {
         `notification::${userData._id}`,
         handleNewNotification
       );
-      
+
       socketRef.current.on("new-notification", handleNewNotification);
       socketRef.current.on("notification", handleNewNotification);
-      socketRef.current.on(`user-${userData._id}-notification`, handleNewNotification);
+      socketRef.current.on(
+        `user-${userData._id}-notification`,
+        handleNewNotification
+      );
     };
 
     // Initial connection
@@ -261,41 +276,41 @@ export default function Navbar() {
 
     // Debug logs
 
-
     try {
       // Call the API
-      const result = await userDeleteAccount({ password: deletePassword }).unwrap();
-      
+      const result = await userDeleteAccount({
+        password: deletePassword,
+      }).unwrap();
+
       console.log("Account deletion API response:", result);
-      
+
       // Success - update Redux state
       dispatch(deleteAccountSuccess());
-      
+
       toast.success("Account deleted successfully");
       setDeletePassword("");
       setOpen(false);
-      
+
       // Disconnect socket
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
       }
-      
+
       // Clear all storage
       localStorage.clear();
       sessionStorage.clear();
-      
+
       // Force redirect after a brief delay
       setTimeout(() => {
         window.location.href = "/login";
       }, 1500);
-      
     } catch (error) {
       console.error("=== Account Deletion Error ===");
-      
+
       // Handle specific error cases
       let errorMessage = "Failed to delete account. Please try again.";
-      
+
       if (error?.status === 400) {
         errorMessage = "Invalid request. Please check your password.";
       } else if (error?.status === 401) {
@@ -311,7 +326,7 @@ export default function Navbar() {
       } else if (error?.message) {
         errorMessage = error.message;
       }
-      
+
       toast.error(errorMessage);
       setDeletePassword("");
     }
@@ -384,11 +399,11 @@ export default function Navbar() {
 
     // Dispatch logout action
     dispatch(logout());
-    
+
     // Clear storage
     localStorage.clear();
     sessionStorage.clear();
-    
+
     setIsProfileOpen(false);
     window.location.href = "/login";
   };
@@ -494,16 +509,16 @@ export default function Navbar() {
 
             {/* User Controls */}
             <div className="flex items-center space-x-4">
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-primary-text p-2 rounded-md hover:bg-gray-100 transition-colors"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle mobile menu"
-            >
-              {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
-            {/* Debug Connection Status (for development) */}
-            {/* {process.env.NODE_ENV === 'development' && userData?._id && (
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-primary-text p-2 rounded-md hover:bg-gray-100 transition-colors"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle mobile menu"
+              >
+                {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              </button>
+              {/* Debug Connection Status (for development) */}
+              {/* {process.env.NODE_ENV === 'development' && userData?._id && (
               <div className="flex items-center space-x-2">
                 <div className={`w-2 h-2 rounded-full ${isSocketConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
                 {!isSocketConnected && connectionAttempts >= MAX_RECONNECTION_ATTEMPTS && (
@@ -518,8 +533,8 @@ export default function Navbar() {
               </div>
             )} */}
 
-            {/* Notification Button - Only show if user is logged in */}
-            {/* {userData?._id && (
+              {/* Notification Button - Only show if user is logged in */}
+              {/* {userData?._id && (
               <div className="relative">
                 <button
                   onClick={() => setIsNotificationModalOpen(true)}
@@ -536,74 +551,83 @@ export default function Navbar() {
               </div>
             )} */}
 
-            {/* Login Button - Show when no user is logged in */}
-            {!userData?._id ? (
-              <Link href="/login">
-                <Button className="bg-primary text-accent px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
-                  <FaUser size={16} />
-                  Login
-                </Button>
-              </Link>
-            ) : (
-              /* Profile Dropdown - Only show if user is logged in */
-              <div className="relative" ref={profileRef}>
-                <button
-                  className="relative flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 group"
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  aria-expanded={isProfileOpen}
-                  aria-label="User profile menu"
-                >
-                  <div className="relative">
-                    <ProfileIcon
-                      image={userData?.image}
-                      size={40}
-                      showBorder={true}
-                      borderColor="border-gray-200"
-                      hoverEffect={true}
-                    />
-                    {/* Online indicator */}
-                    {/* <div
+              {/* Login Button - Show when no user is logged in */}
+              {!userData?._id ? (
+                <Link href="/login">
+                  <Button className="bg-primary text-accent px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
+                    <FaUser size={16} />
+                    Login
+                  </Button>
+                </Link>
+              ) : (
+                /* Profile Dropdown - Only show if user is logged in */
+                <div className="relative" ref={profileRef}>
+                  <button
+                    className="relative flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 group"
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    aria-expanded={isProfileOpen}
+                    aria-label="User profile menu"
+                  >
+                    <div className="relative">
+                      <ProfileIcon
+                        image={userData?.image}
+                        size={40}
+                        showBorder={true}
+                        borderColor="border-gray-200"
+                        hoverEffect={true}
+                      />
+                      {/* Online indicator */}
+                      {/* <div
                       className={`absolute -bottom-1 -right-1 w-3 h-3 border-2 border-white rounded-full ${
                         isSocketConnected ? "bg-green-500" : "bg-gray-400"
                       }`}
                     ></div> */}
-                  </div>
+                    </div>
 
-                  {/* User info - hidden on mobile */}
-                  <div className="hidden lg:block text-left">
-                    <p className="text-sm text-gray-900">{userData?.userName}</p>
-                    {/* <p className="text-xs text-gray-500">{userData?.email}</p> */}
-                  </div>
+                    {/* User info - hidden on mobile */}
+                    <div className="hidden lg:block text-left">
+                      <p className="text-sm text-gray-900">
+                        {userData?.userName}
+                      </p>
+                      {/* <p className="text-xs text-gray-500">{userData?.email}</p> */}
+                    </div>
 
-                  <FaChevronDown
-                    className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                      isProfileOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+                    <FaChevronDown
+                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                        isProfileOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
 
-                {/* Profile Modal */}
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-3 w-72 bg-white border border-gray-200 shadow-xl rounded-xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                    {/* Header */}
-                    <div className="p-4 bg-primary border-gray-100">
-                      <div className="flex items-center space-x-3">
-                        <ProfileIcon
-                          image={userData?.image}
-                          size={48}
-                          showBorder={true}
-                          borderColor="border-white"
-                          className="shadow-sm"
-                        />
-                        <div>
-                          <h2 className="text-white">
-                            {userData?.lastName || "User"}
-                          </h2>
-                          <p className="text-sm text-white">
-                            {userData?.email || "user@example.com"}
-                          </p>
-                          {/* Connection status */}
-                          {/* <p
+                  {/* Profile Modal */}
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-3 w-72 bg-white border border-gray-200 shadow-xl rounded-xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                      {/* Header */}
+                      <div className="p-4 bg-primary border-gray-100">
+                        <div className="flex items-center space-x-3">
+                          <ProfileIcon
+                            image={userData?.profile}
+                            size={48}
+                            showBorder={true}
+                            borderColor="border-white"
+                            className="shadow-sm"
+                          />
+                          <div>
+                            <h2 className="text-white">
+                              {[
+                                userData?.firstName,
+                                userData?.middleName,
+                                userData?.lastName,
+                              ]
+                                .filter(Boolean)
+                                .join(" ") || "User"}
+                            </h2>
+
+                            <p className="text-sm text-white">
+                              {userData?.email || "user@example.com"}
+                            </p>
+                            {/* Connection status */}
+                            {/* <p
                             className={`text-xs ${
                               isSocketConnected
                                 ? "text-green-200"
@@ -612,67 +636,67 @@ export default function Navbar() {
                           >
                             {isSocketConnected ? "Online" : "Offline"}
                           </p> */}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Menu Items */}
-                    <div className="py-2">
-                      {profileMenuItems.map((item, index) => (
-                        <Link
-                          key={index}
-                          href={item.href}
-                          className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 group"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <item.icon
-                            className={`w-5 h-5 ${item.color} group-hover:scale-110 transition-transform duration-150`}
-                          />
-                          <span className="text-gray-700 group-hover:text-gray-900">
-                            {item.label}
-                          </span>
-                        </Link>
-                      ))}
-
-                      {/* Settings Dropdown */}
-                      <div className="border-t border-gray-100 mt-2 pt-2">
-                        <button
-                          className="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-50 transition-colors duration-150 group"
-                          onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                          aria-expanded={isSettingsOpen}
-                        >
-                          <div className="flex items-center space-x-3">
-                            <FaCog className="w-5 h-5 text-gray-600 group-hover:text-blue-600 group-hover:rotate-90 transition-all duration-200" />
+                      {/* Menu Items */}
+                      <div className="py-2">
+                        {profileMenuItems.map((item, index) => (
+                          <Link
+                            key={index}
+                            href={item.href}
+                            className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 group"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <item.icon
+                              className={`w-5 h-5 ${item.color} group-hover:scale-110 transition-transform duration-150`}
+                            />
                             <span className="text-gray-700 group-hover:text-gray-900">
-                              Settings
+                              {item.label}
                             </span>
-                          </div>
-                          <FaChevronRight
-                            className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                              isSettingsOpen ? "rotate-90" : ""
-                            }`}
-                          />
-                        </button>
+                          </Link>
+                        ))}
 
-                        {/* Settings Submenu */}
-                        {isSettingsOpen && (
-                          <div className="bg-gray-50 border-l-2 border-primary ml-4">
-                            {settingsItems.map((item, index) => (
-                              <Link
-                                key={index}
-                                href={item.href}
-                                className="flex items-center space-x-3 px-4 py-2.5 hover:bg-white transition-colors duration-150 group"
-                                onClick={() => setIsProfileOpen(false)}
-                              >
-                                <item.icon className="w-4 h-4 text-gray-500 group-hover:text-blue-600 transition-colors duration-150" />
-                                <span className="text-sm text-gray-600 group-hover:text-gray-800">
-                                  {item.label}
-                                </span>
-                              </Link>
-                            ))}
-                            
-                            {/* Delete Account in Settings */}
-                            {/* <button
+                        {/* Settings Dropdown */}
+                        <div className="border-t border-gray-100 mt-2 pt-2">
+                          <button
+                            className="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-50 transition-colors duration-150 group"
+                            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                            aria-expanded={isSettingsOpen}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <FaCog className="w-5 h-5 text-gray-600 group-hover:text-blue-600 group-hover:rotate-90 transition-all duration-200" />
+                              <span className="text-gray-700 group-hover:text-gray-900">
+                                Settings
+                              </span>
+                            </div>
+                            <FaChevronRight
+                              className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                isSettingsOpen ? "rotate-90" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {/* Settings Submenu */}
+                          {isSettingsOpen && (
+                            <div className="bg-gray-50 border-l-2 border-primary ml-4">
+                              {settingsItems.map((item, index) => (
+                                <Link
+                                  key={index}
+                                  href={item.href}
+                                  className="flex items-center space-x-3 px-4 py-2.5 hover:bg-white transition-colors duration-150 group"
+                                  onClick={() => setIsProfileOpen(false)}
+                                >
+                                  <item.icon className="w-4 h-4 text-gray-500 group-hover:text-blue-600 transition-colors duration-150" />
+                                  <span className="text-sm text-gray-600 group-hover:text-gray-800">
+                                    {item.label}
+                                  </span>
+                                </Link>
+                              ))}
+
+                              {/* Delete Account in Settings */}
+                              {/* <button
                               onClick={() => {
                                 setOpen(true);
                                 setIsProfileOpen(false);
@@ -684,41 +708,43 @@ export default function Navbar() {
                                 Delete Account
                               </span>
                             </button> */}
-                          </div>
-                        )}
-                      </div>
+                            </div>
+                          )}
+                        </div>
 
-                      {/* Logout */}
-                      <div className="border-t border-gray-100 mt-2 pt-2">
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center space-x-3 px-4 py-3 w-full hover:bg-red-50 transition-colors duration-150 group"
-                        >
-                          <FaSignOutAlt className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform duration-150" />
-                          <span className="text-red-600 group-hover:text-red-700">
-                            Logout
-                          </span>
-                        </button>
+                        {/* Logout */}
+                        <div className="border-t border-gray-100 mt-2 pt-2">
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center space-x-3 px-4 py-3 w-full hover:bg-red-50 transition-colors duration-150 group"
+                          >
+                            <FaSignOutAlt className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform duration-150" />
+                            <span className="text-red-600 group-hover:text-red-700">
+                              Logout
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                      {/* Footer */}
+                      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 text-center">
+                          Last login: Today
+                        </p>
                       </div>
                     </div>
-                    {/* Footer */}
-                    <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
-                      <p className="text-xs text-gray-500 text-center">
-                        Last login: Today
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden bg-[#fff] text-black overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        <div
+          className={`md:hidden bg-[#fff] text-black overflow-hidden transition-all duration-300 ease-in-out ${
+            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
           <ul className="p-4 text-center space-y-3">
             {navItems.map((item) => (
               <li key={item.name}>
@@ -819,7 +845,7 @@ export default function Navbar() {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Enhanced Delete Account Modal */}
       {/* <AlertDialog open={open} onOpenChange={(isOpen) => {
         setOpen(isOpen);
