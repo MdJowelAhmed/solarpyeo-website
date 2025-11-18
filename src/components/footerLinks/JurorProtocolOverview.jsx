@@ -184,11 +184,12 @@ export default function JurorProtocolOverview() {
         </div>
 
         {/* Section 5: Voting & Outcomes */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span className="text-blue-600">🗳️ 5.</span>
-            <span className="text-red-600">Voting & Outcomes</span>
-          </h3>
+        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span className="text-blue-600">🗳️ 5.</span>
+              <span className="text-red-600">Voting & Outcomes</span>
+            </h3>
 
           <div className="overflow-x-auto mb-6">
             <table className="w-full border-collapse border border-gray-300">
@@ -236,8 +237,7 @@ export default function JurorProtocolOverview() {
               </tbody>
             </table>
           </div>
-
-          <div>
+           <div>
             <p className="font-semibold mb-3">Voting Requirements:</p>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300">
@@ -311,14 +311,18 @@ export default function JurorProtocolOverview() {
               </table>
             </div>
           </div>
+          </div>
+
+         
         </div>
 
         {/* Section 6: Rules of Conduct */}
-        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span className="text-red-600">🛡️ 6.</span>
-            <span className="text-red-600">Rules Of Conduct</span>
-          </h3>
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span className="text-red-600">🛡️ 6.</span>
+              <span className="text-red-600">Rules Of Conduct</span>
+            </h3>
 
           <div className="mb-4">
             <p className="text-gray-700 font-semibold mb-3">Jurors must:</p>
@@ -357,9 +361,8 @@ export default function JurorProtocolOverview() {
                 <span>Report unauthorized attempted contact from parties</span>
               </div>
             </div>
-          </div>
-
-          <div>
+            </div>
+            <div>
             <p className="text-gray-700 font-semibold mb-3">
               Violation May Result In:
             </p>
@@ -380,6 +383,9 @@ export default function JurorProtocolOverview() {
               </div>
             </div>
           </div>
+          </div>
+
+          
         </div>
 
         {/* Section 7: Confidentiality Agreement */}
