@@ -10,13 +10,13 @@ const dashboardPageApi = api.injectEndpoints({
       providesTags: ["DashboardPage"],
     }),
     
-    createDashboardPage: builder.mutation({
-      query: (data) => ({
-        url: `/mistaker/claim-form`,
-        method: "POST",
-        body: data, 
+    getJurorStatusMonitoring: builder.mutation({
+      query: () => ({
+        url: `/dashboard/juror/status`,
+        method: "GET",
+     
       }),
-      invalidatesTags: ["DashboardPage"],
+      providesTags: ["DashboardPage"],
     }),
     
     updateDashboardPage: builder.mutation({
@@ -32,6 +32,6 @@ const dashboardPageApi = api.injectEndpoints({
 
 export const { 
   useGetDashboardPageQuery, 
-  useCreateDashboardPageMutation, 
+  useGetJurorStatusMonitoringMutation,
   useUpdateDashboardPageMutation 
 } = dashboardPageApi;
