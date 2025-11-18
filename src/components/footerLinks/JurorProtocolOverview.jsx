@@ -389,7 +389,8 @@ export default function JurorProtocolOverview() {
         </div>
 
         {/* Section 7: Confidentiality Agreement */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="text-pink-600">🔒 7.</span>
             <span className="text-red-600">Confidentiality Agreement</span>
@@ -407,10 +408,12 @@ export default function JurorProtocolOverview() {
               </p>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Section 8: Compensation */}
-        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="text-orange-600">💰 8.</span>
             <span className="text-red-600">Compensation</span>
@@ -443,10 +446,12 @@ export default function JurorProtocolOverview() {
               cases of verified misconduct.
             </p>
           </div>
+          </div>
         </div>
 
         {/* Section 9: Juror Records & Quality Control */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="text-green-600">📊 9.</span>
             <span className="text-red-600">
@@ -492,10 +497,12 @@ export default function JurorProtocolOverview() {
               </span>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Section 10: Appeals & Overrides */}
-        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="text-purple-600">🔄 10.</span>
             <span className="text-red-600">Appeals & Overrides</span>
@@ -516,10 +523,12 @@ export default function JurorProtocolOverview() {
               </span>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Final Acknowledgment */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-secondary py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="text-orange-600">📝</span>
             <span className="text-red-600">Final Acknowledgment</span>
@@ -537,6 +546,7 @@ export default function JurorProtocolOverview() {
                 and confidentially."
               </p>
             </div>
+          </div>
           </div>
         </div>
       </div>
