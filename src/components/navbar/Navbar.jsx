@@ -563,14 +563,14 @@ export default function Navbar() {
                 /* Profile Dropdown - Only show if user is logged in */
                 <div className="relative" ref={profileRef}>
                   <button
-                    className="relative flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 group"
+                    className="relative flex items-center space-x-3 p-2 rounded-lg cursor-pointer transition-all duration-200 group"
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     aria-expanded={isProfileOpen}
                     aria-label="User profile menu"
                   >
                     <div className="relative">
                       <ProfileIcon
-                        image={userData?.image}
+                        image={userData?.profile}
                         size={40}
                         showBorder={true}
                         borderColor="border-gray-200"

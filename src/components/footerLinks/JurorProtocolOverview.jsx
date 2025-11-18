@@ -96,82 +96,87 @@ export default function JurorProtocolOverview() {
         </div>
 
         {/* Section 4: Case Review Workflow */}
-        <div className="bg-gray-100 rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span className="text-green-600">🔍 4.</span>
-            <span className="text-red-600">Case Review Workflow</span>
-          </h3>
-          <div className="space-y-4 text-gray-700">
-            <p>Each case proceeds through the following steps:</p>
+        <div className="bg-secondary-foreground py-12 md:py-16 lg:py-24">
+          <div className="container mx-auto">
+            {" "}
+            <h3 className="">
+              <span className="">🔍 4.</span>
+              <span className="">Case Review Workflow</span>
+            </h3>
+            <div className="space-y-4 text-gray-700">
+              <p>Each case proceeds through the following steps:</p>
 
-            <div>
-              <p className="font-semibold mb-2">Step 1: Assignment</p>
-              <div className="ml-4 space-y-1">
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>
-                    Jurors are randomly and anonymously assigned to a panel
-                    (e.g., 3 members)
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Jurors are shown only anonymized names and IDs</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>
-                    Each panel member has a 24-72 hour window, dependent on
-                    Standard or Expedited submission terms, to review and vote
-                  </span>
+              <div>
+                <p className="font-semibold mb-2">Step 1: Assignment</p>
+                <div className="ml-4 space-y-1">
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>
+                      Jurors are randomly and anonymously assigned to a panel
+                      (e.g., 3 members)
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Jurors are shown only anonymized names and IDs</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>
+                      Each panel member has a 24-72 hour window, dependent on
+                      Standard or Expedited submission terms, to review and vote
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <p className="font-semibold mb-2">Step 2: Evidence Review</p>
-              <div className="ml-4 space-y-1">
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>A factual summary of the allegation</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Uploaded documents (with redactions for privacy)</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Initiator's written statement</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Respondent's rebuttal, evidence, or "Silence"</span>
+              <div>
+                <p className="font-semibold mb-2">Step 2: Evidence Review</p>
+                <div className="ml-4 space-y-1">
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>A factual summary of the allegation</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>
+                      Uploaded documents (with redactions for privacy)
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Initiator's written statement</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Respondent's rebuttal, evidence, or "Silence"</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-red-100 border border-red-200 p-4 rounded mt-4">
-              <p className="text-red-800 text-sm">
-                "Silence" is the Respondent's verified appearance after notice
-                with the choice to take no action in the case.
-              </p>
-            </div>
+              <div className="bg-red-100 border border-red-200 p-4 rounded mt-4">
+                <p className="text-red-800 text-sm">
+                  "Silence" is the Respondent's verified appearance after notice
+                  with the choice to take no action in the case.
+                </p>
+              </div>
 
-            <div className="mt-4">
-              <p>Jurors must review:</p>
-              <div className="ml-4 space-y-1">
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>
-                    The credibility of documentation from both parties
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>
-                    Whether proof supports the claim (e.g., texts, timestamps,
-                    orders)
-                  </span>
+              <div className="mt-4">
+                <p>Jurors must review:</p>
+                <div className="ml-4 space-y-1">
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>
+                      The credibility of documentation from both parties
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>
+                      Whether proof supports the claim (e.g., texts, timestamps,
+                      orders)
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
