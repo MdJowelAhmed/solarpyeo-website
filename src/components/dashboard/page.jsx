@@ -11,6 +11,7 @@ import AppealModal from "./AppealModal";
 import SealExpungeModal from "./SealExpungeModal";
 import ViewDetailsModal from "./ViewDetailsModal";
 import MessageModal from "./MessageModal";
+import { useGetDashboardPageQuery } from "@/redux/featured/dashboard/dashboardPageApi";
 
 const DashboardContainer = () => {
   // State for modals
@@ -21,6 +22,8 @@ const DashboardContainer = () => {
   const [messageModal, setMessageModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const {data: dashboardPage} = useGetDashboardPageQuery();
+  console.log("dashboardPage", dashboardPage)
   
   const currentSubmissions = [
     {
