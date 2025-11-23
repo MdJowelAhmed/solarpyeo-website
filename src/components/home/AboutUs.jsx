@@ -75,6 +75,12 @@ const RelationshipArchive = () => {
     holderName: "",
   });
   const [showPayment, setShowPayment] = useState(false);
+  const [paymentErrors, setPaymentErrors] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    holderName: "",
+  });
 
   // View Records functionality
   const handleViewRecordsClick = () => {
@@ -88,6 +94,12 @@ const RelationshipArchive = () => {
     setSelectedPerson(null);
     setSelectedCase(null);
     setSearchForm({ firstName: "", lastName: "", dateOfBirth: "" });
+    setPaymentErrors({
+      cardNumber: "",
+      expiryDate: "",
+      cvv: "",
+      holderName: "",
+    });
   };
 
   const handleSearch = () => {
@@ -115,27 +127,138 @@ const RelationshipArchive = () => {
     setShowPayment(true);
   };
 
+  const formatCardNumber = (value) => {
+    const cleaned = value.replace(/\s/g, "");
+    const formatted = cleaned.match(/.{1,4}/g);
+    return formatted ? formatted.join(" ") : cleaned;
+  };
+
+  const handleCardNumberChange = (e) => {
+    const value = e.target.value.replace(/\s/g, "");
+    if (/^\d*$/.test(value) && value.length <= 16) {
+      setPaymentDetails({
+        ...paymentDetails,
+        cardNumber: formatCardNumber(value),
+      });
+      if (paymentErrors.cardNumber) {
+        setPaymentErrors({ ...paymentErrors, cardNumber: "" });
+      }
+    }
+  };
+
+  const handleExpiryChange = (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + "/" + value.slice(2, 4);
+    }
+    if (value.length <= 5) {
+      setPaymentDetails({ ...paymentDetails, expiryDate: value });
+      if (paymentErrors.expiryDate) {
+        setPaymentErrors({ ...paymentErrors, expiryDate: "" });
+      }
+    }
+  };
+
+  const handleCvvChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value) && value.length <= 4) {
+      setPaymentDetails({ ...paymentDetails, cvv: value });
+      if (paymentErrors.cvv) {
+        setPaymentErrors({ ...paymentErrors, cvv: "" });
+      }
+    }
+  };
+
+  const handleHolderNameChange = (e) => {
+    const value = e.target.value;
+    if (/^[a-zA-Z\s]*$/.test(value)) {
+      setPaymentDetails({ ...paymentDetails, holderName: value });
+      if (paymentErrors.holderName) {
+        setPaymentErrors({ ...paymentErrors, holderName: "" });
+      }
+    }
+  };
+
   const handlePayment = () => {
-    alert(
-      `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
-    );
-    setShowPayment(false);
-    setSelectedCase(null);
-    setRequestType("");
-    setPaymentDetails({
+    // Validate all fields
+    const errors = {
       cardNumber: "",
       expiryDate: "",
       cvv: "",
       holderName: "",
-    });
+    };
+
+    // Validate cardholder name
+    if (!paymentDetails.holderName.trim()) {
+      errors.holderName = "Cardholder name is required";
+    } else if (paymentDetails.holderName.trim().length < 3) {
+      errors.holderName = "Name must be at least 3 characters";
+    }
+
+    // Validate card number (should be 16 digits)
+    const cardNumberClean = paymentDetails.cardNumber.replace(/\s/g, "");
+    if (!cardNumberClean) {
+      errors.cardNumber = "Card number is required";
+    } else if (!/^\d+$/.test(cardNumberClean)) {
+      errors.cardNumber = "Card number must contain only digits";
+    } else if (cardNumberClean.length !== 16) {
+      errors.cardNumber = "Card number must be exactly 16 digits";
+    }
+
+    // Validate expiry date (MM/YY format)
+    if (!paymentDetails.expiryDate) {
+      errors.expiryDate = "Expiry date is required";
+    } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
+      errors.expiryDate = "Format must be MM/YY";
+    } else {
+      const [month, year] = paymentDetails.expiryDate.split("/");
+      const monthNum = parseInt(month);
+      if (monthNum < 1 || monthNum > 12) {
+        errors.expiryDate = "Month must be between 01 and 12";
+      }
+    }
+
+    // Validate CVV (should be 3 or 4 digits)
+    if (!paymentDetails.cvv) {
+      errors.cvv = "CVV is required";
+    } else if (!/^\d{3,4}$/.test(paymentDetails.cvv)) {
+      errors.cvv = "CVV must be 3 or 4 digits";
+    }
+
+    setPaymentErrors(errors);
+
+    // Check if there are any errors
+    if (Object.values(errors).some((error) => error !== "")) {
+      toast.error("Please fix all errors before submitting");
+      return;
+    }
+
+    // If all validations pass
+    toast.success(
+      `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
+    );
+    
+    setTimeout(() => {
+      setShowPayment(false);
+      setSelectedCase(null);
+      setRequestType("");
+      setPaymentDetails({
+        cardNumber: "",
+        expiryDate: "",
+        cvv: "",
+        holderName: "",
+      });
+      setPaymentErrors({
+        cardNumber: "",
+        expiryDate: "",
+        cvv: "",
+        holderName: "",
+      });
+    }, 2000);
   };
 
   const handleLearnProcessClick = () => {
-    // This would typically download or open a PDF
-    // For demo purposes, we'll just show an alert
     toast.success("Opening How It Works PDF...");
-    // In a real implementation, you might do:
-    // window.open('/path/to/how-it-works.pdf', '_blank');
   };
 
   return (
@@ -305,75 +428,86 @@ const RelationshipArchive = () => {
                 <div className="grid gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Cardholder Name
+                      Cardholder Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={paymentDetails.holderName}
-                      onChange={(e) =>
-                        setPaymentDetails({
-                          ...paymentDetails,
-                          holderName: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={handleHolderNameChange}
+                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        paymentErrors.holderName ? "border-red-500" : ""
+                      }`}
                       placeholder="Enter cardholder name"
                     />
+                    {paymentErrors.holderName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {paymentErrors.holderName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Card Number
+                      Card Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={paymentDetails.cardNumber}
-                      onChange={(e) =>
-                        setPaymentDetails({
-                          ...paymentDetails,
-                          cardNumber: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={handleCardNumberChange}
+                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        paymentErrors.cardNumber ? "border-red-500" : ""
+                      }`}
                       placeholder="1234 5678 9012 3456"
+                      maxLength="19"
                     />
+                    {paymentErrors.cardNumber && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {paymentErrors.cardNumber}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Expiry Date
+                        Expiry Date <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         value={paymentDetails.expiryDate}
-                        onChange={(e) =>
-                          setPaymentDetails({
-                            ...paymentDetails,
-                            expiryDate: e.target.value,
-                          })
-                        }
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onChange={handleExpiryChange}
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          paymentErrors.expiryDate ? "border-red-500" : ""
+                        }`}
                         placeholder="MM/YY"
+                        maxLength="5"
                       />
+                      {paymentErrors.expiryDate && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {paymentErrors.expiryDate}
+                        </p>
+                      )}
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        CVV
+                        CVV <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         value={paymentDetails.cvv}
-                        onChange={(e) =>
-                          setPaymentDetails({
-                            ...paymentDetails,
-                            cvv: e.target.value,
-                          })
-                        }
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onChange={handleCvvChange}
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          paymentErrors.cvv ? "border-red-500" : ""
+                        }`}
                         placeholder="123"
+                        maxLength="4"
                       />
+                      {paymentErrors.cvv && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {paymentErrors.cvv}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -456,7 +590,7 @@ const RelationshipArchive = () => {
                   <div className="md:col-span-3 flex items-center justify-center w-full mt-6">
                     <Button
                       onClick={handleSearch}
-                      className="px-6 py-3 transition-colors "
+                      className="px-6 lg:px-10 py-6 transition-colors "
                     >
                       <Search className="w-5 h-5" />
                       Search Records
@@ -530,36 +664,36 @@ const RelationshipArchive = () => {
                           </div>
 
                           <div className="grid sm:grid-cols-3 gap-3">
-                            <button
+                            <Button
                               onClick={() =>
                                 handleRecordsRequest(caseData, "Full Case File")
                               }
-                              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+                              className="px-4 py-6 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
                             >
                               Full Case File
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               onClick={() =>
                                 handleRecordsRequest(
                                   caseData,
                                   "Party Submissions"
                                 )
                               }
-                              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
+                              className="px-4 py-6 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
                             >
                               Party Submissions
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               onClick={() =>
                                 handleRecordsRequest(
                                   caseData,
                                   "Juror Voting Materials"
                                 )
                               }
-                              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm"
+                              className="px-4 py-6 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm"
                             >
                               Juror Voting Materials
-                            </button>
+                            </Button>
                           </div>
                         </div>
                       ))}
