@@ -127,6 +127,24 @@ const RelationshipArchive = () => {
     setShowPayment(true);
   };
 
+  const handleBackToRecords = () => {
+    setShowPayment(false);
+    setSelectedCase(null);
+    setRequestType("");
+    setPaymentDetails({
+      cardNumber: "",
+      expiryDate: "",
+      cvv: "",
+      holderName: "",
+    });
+    setPaymentErrors({
+      cardNumber: "",
+      expiryDate: "",
+      cvv: "",
+      holderName: "",
+    });
+  };
+
   const formatCardNumber = (value) => {
     const cleaned = value.replace(/\s/g, "");
     const formatted = cleaned.match(/.{1,4}/g);
@@ -402,7 +420,27 @@ const RelationshipArchive = () => {
             {/* Payment Modal Content */}
             {showPayment ? (
               <div className="p-6">
-                <h2 className="text-2xl font-bold mb-6">Payment Details</h2>
+                <div className="flex items-center mb-6">
+                  <button
+                    onClick={handleBackToRecords}
+                    className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <svg
+                      className="w-6 h-6 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                  <h2 className="text-2xl font-bold">Payment Details</h2>
+                </div>
 
                 <div className="bg-blue-50 p-4 rounded-lg mb-6">
                   <h3 className="font-medium mb-2">Request Summary</h3>
@@ -513,14 +551,14 @@ const RelationshipArchive = () => {
 
                   <div className="flex gap-4 mt-6">
                     <button
-                      onClick={() => setShowPayment(false)}
+                      onClick={handleBackToRecords}
                       className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handlePayment}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                      className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                     >
                       <CreditCard className="w-5 h-5" />
                       Place $50.00 Hold & Request Records
