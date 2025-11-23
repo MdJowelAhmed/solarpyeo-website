@@ -16,7 +16,7 @@ export default function Footer() {
             <div className="col-span-1 md:col-span-1">
               <div className="flex items-center justify-center space-x-4 mb-4">
                 <div className=" flex items-center justify-center ">
-                 <Image src="/assets/logo.png" alt="logo" width={50} height={50} className="m-2 mx-auto"/>
+                 <Image src="/assests/logo.png" alt="logo" width={50} height={50} className="m-2 mx-auto"/>
                 </div>
                 <span className="text-4xl ">Glass File</span>
               </div>

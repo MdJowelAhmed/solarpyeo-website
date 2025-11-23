@@ -1,16 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Search,
-  User,
-  Calendar,
-  Gavel,
-  X,
-  CreditCard,
-  Eye,
-  Download,
-} from "lucide-react";
+import { Eye, Download, X } from "lucide-react";
 import { Card } from "../ui/card";
 import {
   File,
@@ -21,8 +12,11 @@ import {
 } from "../share/svg/howItWorkSvg";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import SearchRecordsModal from "./SearchRecordsModal";
+import CaseDetailsView from "./CaseDetailsView";
+import PaymentModal from "./PaymentModal";
 
-// Mock data for View Records functionality
+// Mock data
 const mockRecords = [
   {
     id: 1,
@@ -33,6 +27,8 @@ const mockRecords = [
     caseIds: [
       { id: "CASE-001", verdictCode: "GUILTY", amount: 25.0 },
       { id: "CASE-002", verdictCode: "DISMISSED", amount: 15.0 },
+      { id: "CASE-003", verdictCode: "PENDING", amount: 25.0 },
+      { id: "CASE-004", verdictCode: "CONCLUDED", amount: 15.0 },
     ],
   },
   {
@@ -57,7 +53,6 @@ const mockRecords = [
 ];
 
 const RelationshipArchive = () => {
-  // States for View Records functionality
   const [showViewRecords, setShowViewRecords] = useState(false);
   const [searchForm, setSearchForm] = useState({
     firstName: "",
@@ -82,7 +77,6 @@ const RelationshipArchive = () => {
     holderName: "",
   });
 
-  // View Records functionality
   const handleViewRecordsClick = () => {
     setShowViewRecords(true);
   };
@@ -198,7 +192,6 @@ const RelationshipArchive = () => {
   };
 
   const handlePayment = () => {
-    // Validate all fields
     const errors = {
       cardNumber: "",
       expiryDate: "",
@@ -206,14 +199,12 @@ const RelationshipArchive = () => {
       holderName: "",
     };
 
-    // Validate cardholder name
     if (!paymentDetails.holderName.trim()) {
       errors.holderName = "Cardholder name is required";
     } else if (paymentDetails.holderName.trim().length < 3) {
       errors.holderName = "Name must be at least 3 characters";
     }
 
-    // Validate card number (should be 16 digits)
     const cardNumberClean = paymentDetails.cardNumber.replace(/\s/g, "");
     if (!cardNumberClean) {
       errors.cardNumber = "Card number is required";
@@ -223,20 +214,18 @@ const RelationshipArchive = () => {
       errors.cardNumber = "Card number must be exactly 16 digits";
     }
 
-    // Validate expiry date (MM/YY format)
     if (!paymentDetails.expiryDate) {
       errors.expiryDate = "Expiry date is required";
     } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
       errors.expiryDate = "Format must be MM/YY";
     } else {
-      const [month, year] = paymentDetails.expiryDate.split("/");
+      const [month] = paymentDetails.expiryDate.split("/");
       const monthNum = parseInt(month);
       if (monthNum < 1 || monthNum > 12) {
         errors.expiryDate = "Month must be between 01 and 12";
       }
     }
 
-    // Validate CVV (should be 3 or 4 digits)
     if (!paymentDetails.cvv) {
       errors.cvv = "CVV is required";
     } else if (!/^\d{3,4}$/.test(paymentDetails.cvv)) {
@@ -245,17 +234,15 @@ const RelationshipArchive = () => {
 
     setPaymentErrors(errors);
 
-    // Check if there are any errors
     if (Object.values(errors).some((error) => error !== "")) {
       toast.error("Please fix all errors before submitting");
       return;
     }
 
-    // If all validations pass
     toast.success(
       `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
     );
-    
+
     setTimeout(() => {
       setShowPayment(false);
       setSelectedCase(null);
@@ -298,7 +285,6 @@ const RelationshipArchive = () => {
           <div className="bg-white">
             <div className="mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
-                {/* File A Claim */}
                 <Card className="text-center px-10 py-12">
                   <div className="flex justify-center">
                     <div className="w-16 h-16 flex items-center justify-center">
@@ -312,7 +298,6 @@ const RelationshipArchive = () => {
                   </p>
                 </Card>
 
-                {/* Moderate & Redact */}
                 <Card className="text-center px-10 py-12">
                   <div className="flex justify-center">
                     <div className="w-16 h-16 flex items-center justify-center">
@@ -326,7 +311,6 @@ const RelationshipArchive = () => {
                   </p>
                 </Card>
 
-                {/* Jury Vote */}
                 <Card className="text-center px-10 py-12">
                   <div className="flex justify-center">
                     <div className="w-16 h-16 flex items-center justify-center">
@@ -349,7 +333,6 @@ const RelationshipArchive = () => {
       <div className="bg-primary-foreground py-12 md:py-16 lg:py-24">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Search The Records */}
             <div className="bg-white rounded-lg px-20 lg:px-32 py-10 shadow-sm p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-16 h-16 flex items-center justify-center">
@@ -374,7 +357,6 @@ const RelationshipArchive = () => {
               </div>
             </div>
 
-            {/* How It Works */}
             <div className="bg-white rounded-lg px-20 lg:px-32 py-10 shadow-sm p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-16 h-16 flex items-center justify-center">
@@ -401,7 +383,7 @@ const RelationshipArchive = () => {
         </div>
       </div>
 
-      {/* Modal Overlay for View Records */}
+      {/* Modal Overlay */}
       {(showViewRecords || showPayment) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -409,7 +391,6 @@ const RelationshipArchive = () => {
             onClick={handleBackToHome}
           ></div>
           <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Close button */}
             <button
               onClick={handleBackToHome}
               className="absolute top-4 right-4 z-10 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
@@ -417,343 +398,36 @@ const RelationshipArchive = () => {
               <X className="w-5 h-5 text-gray-600" />
             </button>
 
-            {/* Payment Modal Content */}
             {showPayment ? (
-              <div className="p-6">
-                <div className="flex items-center mb-6">
-                  <button
-                    onClick={handleBackToRecords}
-                    className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    <svg
-                      className="w-6 h-6 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <h2 className="text-2xl font-bold">Payment Details</h2>
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg mb-6">
-                  <h3 className="font-medium mb-2">Request Summary</h3>
-                  <p>
-                    <strong>Case ID:</strong> {selectedCase?.id}
-                  </p>
-                  <p>
-                    <strong>Request Type:</strong> {requestType}
-                  </p>
-                  <p>
-                    <strong>Estimated Cost:</strong> ${selectedCase?.amount}
-                  </p>
-                  <div className="mt-3 p-3 bg-yellow-100 rounded border-l-4 border-yellow-400">
-                    <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> We will place a $50.00 hold on your
-                      payment method. After admin review, you will be charged
-                      the actual amount (${selectedCase?.amount}) and the hold
-                      will be released.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Cardholder Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={paymentDetails.holderName}
-                      onChange={handleHolderNameChange}
-                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        paymentErrors.holderName ? "border-red-500" : ""
-                      }`}
-                      placeholder="Enter cardholder name"
-                    />
-                    {paymentErrors.holderName && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {paymentErrors.holderName}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Card Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={paymentDetails.cardNumber}
-                      onChange={handleCardNumberChange}
-                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        paymentErrors.cardNumber ? "border-red-500" : ""
-                      }`}
-                      placeholder="1234 5678 9012 3456"
-                      maxLength="19"
-                    />
-                    {paymentErrors.cardNumber && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {paymentErrors.cardNumber}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Expiry Date <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={paymentDetails.expiryDate}
-                        onChange={handleExpiryChange}
-                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          paymentErrors.expiryDate ? "border-red-500" : ""
-                        }`}
-                        placeholder="MM/YY"
-                        maxLength="5"
-                      />
-                      {paymentErrors.expiryDate && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {paymentErrors.expiryDate}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        CVV <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={paymentDetails.cvv}
-                        onChange={handleCvvChange}
-                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          paymentErrors.cvv ? "border-red-500" : ""
-                        }`}
-                        placeholder="123"
-                        maxLength="4"
-                      />
-                      {paymentErrors.cvv && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {paymentErrors.cvv}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4 mt-6">
-                    <button
-                      onClick={handleBackToRecords}
-                      className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handlePayment}
-                      className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <CreditCard className="w-5 h-5" />
-                      Place $50.00 Hold & Request Records
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <PaymentModal
+                selectedCase={selectedCase}
+                requestType={requestType}
+                paymentDetails={paymentDetails}
+                paymentErrors={paymentErrors}
+                handleCardNumberChange={handleCardNumberChange}
+                handleExpiryChange={handleExpiryChange}
+                handleCvvChange={handleCvvChange}
+                handleHolderNameChange={handleHolderNameChange}
+                handlePayment={handlePayment}
+                handleBackToRecords={handleBackToRecords}
+              />
             ) : (
-              // View Records Modal Content
-              <div className="p-6">
-                <h2 className="text-2xl font-bold mb-6">Search Records</h2>
-
-                <div className="grid md:grid-cols-3 gap-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={searchForm.firstName}
-                      onChange={(e) =>
-                        setSearchForm({
-                          ...searchForm,
-                          firstName: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter first name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={searchForm.lastName}
-                      onChange={(e) =>
-                        setSearchForm({
-                          ...searchForm,
-                          lastName: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter last name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Date of Birth
-                    </label>
-                    <input
-                      type="date"
-                      value={searchForm.dateOfBirth}
-                      onChange={(e) =>
-                        setSearchForm({
-                          ...searchForm,
-                          dateOfBirth: e.target.value,
-                        })
-                      }
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  <div className="md:col-span-3 flex items-center justify-center w-full mt-6">
-                    <Button
-                      onClick={handleSearch}
-                      className="px-6 lg:px-10 py-6 transition-colors "
-                    >
-                      <Search className="w-5 h-5" />
-                      Search Records
-                    </Button>
-                  </div>
+              <>
+                <SearchRecordsModal
+                  searchForm={searchForm}
+                  setSearchForm={setSearchForm}
+                  searchResults={searchResults}
+                  handleSearch={handleSearch}
+                  handlePersonSelect={handlePersonSelect}
+                  onClose={handleBackToHome}
+                />
+                <div className="px-6 pb-6">
+                  <CaseDetailsView
+                    selectedPerson={selectedPerson}
+                    handleRecordsRequest={handleRecordsRequest}
+                  />
                 </div>
-
-                {/* Search Results */}
-                {searchResults.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold mb-4">Search Results</h3>
-                    <div className="space-y-3">
-                      {searchResults.map((person) => (
-                        <div
-                          key={person.id}
-                          onClick={() => handlePersonSelect(person)}
-                          className="p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                        >
-                          <div className="flex items-center gap-4">
-                            <User className="w-8 h-8 text-gray-600" />
-                            <div>
-                              <div className="font-medium text-lg">
-                                {person.fullName}
-                              </div>
-                              <div className="text-gray-600 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                {person.dateOfBirth}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Person Details */}
-                {selectedPerson && (
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold mb-4">
-                      Case Records for {selectedPerson.fullName}
-                    </h3>
-                    <div className="space-y-4">
-                      {selectedPerson.caseIds.map((caseData) => (
-                        <div
-                          key={caseData.id}
-                          className="border rounded-lg p-4"
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <div className="font-medium text-lg">
-                                {caseData.id}
-                              </div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Gavel className="w-4 h-4 text-gray-600" />
-                                <span
-                                  className={`px-2 py-1 rounded text-sm ${
-                                    caseData.verdictCode === "GUILTY"
-                                      ? "bg-red-100 text-red-800"
-                                      : caseData.verdictCode === "NOT GUILTY"
-                                      ? "bg-green-100 text-green-800"
-                                      : caseData.verdictCode === "PENDING"
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-gray-100 text-gray-800"
-                                  }`}
-                                >
-                                  {caseData.verdictCode}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="grid sm:grid-cols-3 gap-3">
-                            <Button
-                              onClick={() =>
-                                handleRecordsRequest(caseData, "Full Case File")
-                              }
-                              className="px-4 py-6 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
-                            >
-                              Full Case File
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                handleRecordsRequest(
-                                  caseData,
-                                  "Party Submissions"
-                                )
-                              }
-                              className="px-4 py-6 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
-                            >
-                              Party Submissions
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                handleRecordsRequest(
-                                  caseData,
-                                  "Juror Voting Materials"
-                                )
-                              }
-                              className="px-4 py-6 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm"
-                            >
-                              Juror Voting Materials
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {searchResults.length === 0 &&
-                  searchForm.firstName &&
-                  searchForm.lastName && (
-                    <div className="text-center py-8">
-                      <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        No Records Found
-                      </h3>
-                      <p className="text-gray-600">
-                        No records match your search criteria. Please verify the
-                        information and try again.
-                      </p>
-                    </div>
-                  )}
-              </div>
+              </>
             )}
           </div>
         </div>

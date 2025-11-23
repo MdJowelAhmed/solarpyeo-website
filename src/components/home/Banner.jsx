@@ -24,7 +24,7 @@ export default function PigeonHub() {
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center w-full">
           <div className="w-full max-w-2xl mt-40 relative text-center">
-            <Image src="/assets/logo.png" alt="logo" width={100} height={100} className="mx-auto"/>
+            <Image src="/assests/logo.png" alt="logo" width={100} height={100} className="mx-auto"/>
             <h2 className="text-white text-3xl md:text-5xl lg:text-7xl mb-4 md:mb-6 font-bold">Glass File</h2>
             <h2 className="text-white text-xl md:text-2xl mb-4">
               DOCUMENT. VERIFY. PROTECT.
