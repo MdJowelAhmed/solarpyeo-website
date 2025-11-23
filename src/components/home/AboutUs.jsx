@@ -225,7 +225,7 @@ const RelationshipArchive = () => {
               <div className="flex justify-center items-center">
                 <Button
                   onClick={handleViewRecordsClick}
-                  className=" py-3 px-12 rounded-md transition-colors duration-200  gap-2"
+                  className=" py-6 px-12 rounded-md transition-colors duration-200  gap-2"
                 >
                   <Eye className="w-5 h-5" />
                   View a Record
@@ -249,7 +249,7 @@ const RelationshipArchive = () => {
               <div className="flex justify-center items-center">
                 <Button
                   onClick={handleLearnProcessClick}
-                  className=" py-3 px-8 rounded-md transition-colors duration-200 "
+                  className=" py-6 px-8 rounded-md transition-colors duration-200 "
                 >
                   <Download className="w-5 h-5" />
                   Learn the Process

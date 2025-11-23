@@ -34,7 +34,7 @@ export default function PigeonHub() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-24">
-              <Button className="px-16 text-white bg-primary rounded-lg" onClick={handleFileNewRecordClick}>
+              <Button className="px-16 py-6 text-white bg-primary rounded-lg" onClick={handleFileNewRecordClick}>
                 File New Record
               </Button>
             </div>

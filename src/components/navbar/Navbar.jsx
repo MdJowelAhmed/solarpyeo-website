@@ -554,7 +554,7 @@ export default function Navbar() {
               {/* Login Button - Show when no user is logged in */}
               {!userData?._id ? (
                 <Link href="/login">
-                  <Button className="bg-primary text-accent px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
+                  <Button className="bg-primary text-accent px-6 py-6 rounded-md hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
                     <FaUser size={16} />
                     Login
                   </Button>
