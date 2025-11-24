@@ -14,7 +14,14 @@ const dashboardPageApi = api.injectEndpoints({
       query: () => ({
         url: `/dashboard/juror/status`,
         method: "GET",
-     
+      }),
+      providesTags: ["DashboardPage"],
+    }),
+
+    getRecordHistory: builder.query({
+      query: () => ({
+        url: `/dashboard/history`,
+        method: "GET",
       }),
       providesTags: ["DashboardPage"],
     }),
@@ -33,5 +40,6 @@ const dashboardPageApi = api.injectEndpoints({
 export const { 
   useGetDashboardPageQuery, 
   useGetJurorStatusMonitoringQuery,
+  useGetRecordHistoryQuery,
   useUpdateDashboardPageMutation 
 } = dashboardPageApi;
