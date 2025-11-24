@@ -10,7 +10,7 @@ import ViewRecordsModal from "./ViewRecordsModal";
 import AppealModal from "./AppealModal";
 import SealExpungeModal from "./SealExpungeModal";
 import ViewDetailsModal from "./ViewDetailsModal";
-import { useGetDashboardPageQuery, useGetJurorStatusMonitoringQuery } from "@/redux/featured/dashboard/dashboardPageApi";
+import { useGetDashboardPageQuery, useGetJurorStatusMonitoringQuery, useGetRecordHistoryQuery } from "@/redux/featured/dashboard/dashboardPageApi";
 
 const DashboardContainer = () => {
   // State for modals
@@ -24,7 +24,8 @@ const DashboardContainer = () => {
   
   const {data: dashboardPage} = useGetDashboardPageQuery();
   const {data: jurorStatusMonitoring} = useGetJurorStatusMonitoringQuery();
-  console.log("jurorStatusMonitoring", jurorStatusMonitoring)
+  const {data: recordHistory} = useGetRecordHistoryQuery();
+  console.log("recordHistory", recordHistory)
   console.log("dashboardPage", dashboardPage)
   
   // Transform API data for current submissions
