@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-const Pagination = ({
+const CustomPagination = ({
   currentPage = 1,
   totalPages = 1,
   onPageChange = () => {},
@@ -106,4 +106,4 @@ const Pagination = ({
   );
 };
 
-export default Pagination;
+export default CustomPagination;

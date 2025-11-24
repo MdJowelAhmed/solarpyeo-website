@@ -95,49 +95,23 @@ const DashboardContainer = () => {
     };
   });
 
-  const submissionHistory = [
-    {
-      caseId: "#A2394B",
-      respondent: "P. Lee",
-      outcome: "LAND",
-      appealed: "Rejected (Insufficient Basis)",
-      actions: ["View Records", "Seal/Expunge"],
-    },
-    {
-      caseId: "#B11803",
-      respondent: "P. Lee",
-      outcome: "VP",
-      appealed: "Withdrawn by Initiator",
-      actions: ["View Records", "Appeal", "Seal/Expunge"],
-    },
-    {
-      caseId: "#B11803",
-      respondent: "P. Lee",
-      outcome: "VP",
-      appealed: "N/A",
-      actions: ["View Records", "Appeal", "Seal/Expunge"],
-    },
-    {
-      caseId: "#B11803",
-      respondent: "P. Lee",
-      outcome: "N/A",
-      appealed: "No",
-      actions: ["View Records", "Appeal", "Seal/Expunge"],
-    },
-    {
-      caseId: "#B11803",
-      respondent: "P. Lee",
-      outcome: "WON",
-      appealed: "No",
-      actions: ["View Records", "Appeal", "Seal/Expunge"],
-    },
-  ];
+  const submissionHistory = (recordHistory?.data || []).map((item) => ({
+    caseId: item.caseId,
+    respondent: `${item.respondentFastName} ${item.respondentLastName}`.trim(),
+    outcome: item.status || "N/A",
+    appealed: item.appealStatus || "N/A",
+    actions: ["View Records", "Appeal", "Seal/Expunge"],
+    fullData: item,
+  }));
 
   const getOutcomeBadge = (outcome) => {
     const styles = {
       LAND: "bg-orange-100 text-orange-800 border-orange-200",
       VP: "bg-green-100 text-green-800 border-green-200",
       WON: "bg-red-100 text-red-800 border-red-200",
+      APPROVED: "bg-green-100 text-green-800 border-green-200",
+      REJECTED: "bg-red-100 text-red-800 border-red-200",
+      REVIEW: "bg-blue-100 text-blue-800 border-blue-200",
       "N/A": "bg-gray-100 text-gray-800 border-gray-200",
     };
     return styles[outcome] || "bg-gray-100 text-gray-800 border-gray-200";
