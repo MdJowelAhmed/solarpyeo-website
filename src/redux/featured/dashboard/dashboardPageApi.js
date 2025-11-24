@@ -9,7 +9,7 @@ const dashboardPageApi = api.injectEndpoints({
       }),
       providesTags: ["DashboardPage"],
     }),
-    
+
     getJurorStatusMonitoring: builder.query({
       query: () => ({
         url: `/dashboard/juror/status`,
@@ -19,13 +19,22 @@ const dashboardPageApi = api.injectEndpoints({
     }),
 
     getRecordHistory: builder.query({
-      query: () => ({
-        url: `/dashboard/history`,
-        method: "GET",
-      }),
+      query: (args) => {
+        const params = new URLSearchParams();
+        if(args) {
+          args.forEach((arg) => {
+            params.append(arg.name, arg.value);
+          });
+        }
+        return {
+          url: `/dashboard/history`,
+          method: "GET",
+          params,
+        }
+      },
       providesTags: ["DashboardPage"],
     }),
-    
+
     updateDashboardPage: builder.mutation({
       query: ({ id, data }) => ({
         url: `/featured/identity-dispute/${id}`,
@@ -37,9 +46,9 @@ const dashboardPageApi = api.injectEndpoints({
   }),
 });
 
-export const { 
-  useGetDashboardPageQuery, 
+export const {
+  useGetDashboardPageQuery,
   useGetJurorStatusMonitoringQuery,
   useGetRecordHistoryQuery,
-  useUpdateDashboardPageMutation 
+  useUpdateDashboardPageMutation
 } = dashboardPageApi;

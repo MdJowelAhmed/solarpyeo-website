@@ -82,12 +82,12 @@ const ViewRecordsModal = ({ isOpen, onClose, record }) => {
             </div>
           </div>
         </div>
-        <DialogFooter>
+        {/* <DialogFooter>
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
           <Button>Download Records</Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, MessageSquare } from "lucide-react";
+import { CloudCog, Eye, MessageSquare } from "lucide-react";
 import FormDropdown from "@/components/FormDropdown";
 import ViewRecordsModal from "./ViewRecordsModal";
 import AppealModal from "./AppealModal";
 import SealExpungeModal from "./SealExpungeModal";
 import ViewDetailsModal from "./ViewDetailsModal";
 import { useGetDashboardPageQuery, useGetJurorStatusMonitoringQuery, useGetRecordHistoryQuery } from "@/redux/featured/dashboard/dashboardPageApi";
+import CustomPagination from "../share/CustomPagination";
 
 const DashboardContainer = () => {
   // State for modals
@@ -21,10 +22,22 @@ const DashboardContainer = () => {
   const [messageModal, setMessageModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1;
+
+  const queryParams=[{
+    name:"page",
+    value:currentPage,
+  },{
+    name:"limit",
+    value:itemsPerPage,
+  }]
   
   const {data: dashboardPage} = useGetDashboardPageQuery();
   const {data: jurorStatusMonitoring} = useGetJurorStatusMonitoringQuery();
-  const {data: recordHistory} = useGetRecordHistoryQuery();
+  const {data: recordHistory} = useGetRecordHistoryQuery(queryParams);
+  
+
   console.log("recordHistory", recordHistory)
   console.log("dashboardPage", dashboardPage)
   
@@ -150,6 +163,15 @@ const DashboardContainer = () => {
     };
     return styles[status] || "bg-gray-100 text-gray-800 border-gray-200";
   };
+
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= recordHistory?.pagination?.totalPage) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  console.log("recordHistory?.pagination?.totalPages:", recordHistory?.pagination?.totalPage);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
@@ -602,6 +624,12 @@ const DashboardContainer = () => {
                 </Card>
               ))}
             </div>
+
+            <CustomPagination
+              totalPages={recordHistory?.pagination?.totalPage || 0}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
           </CardContent>
         </div>
       </div>

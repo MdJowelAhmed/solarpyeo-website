@@ -8,7 +8,7 @@ const CustomPagination = ({
   totalPages = 1,
   onPageChange = () => {},
   maxVisiblePages = 8,
-  scrollToTop = true, // optional
+  scrollToTop = false, // optional
 }) => {
   if (totalPages <= 1) return null;
 
@@ -80,7 +80,7 @@ const CustomPagination = ({
               onClick={() => goToPage(num)}
               variant={currentPage === num ? "default" : "outline"}
               className={cn(
-                "w-8 h-8 p-0 rounded-full",
+                "w-8 h-8 p-0 rounded-md",
                 currentPage === num &&
                   "bg-primary text-white hover:bg-primary/90"
               )}
