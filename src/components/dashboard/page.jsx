@@ -42,36 +42,33 @@ const DashboardContainer = () => {
     fullData: item // Store full data for modal
   })) || [];
 
-  // Transform API data for juror status monitoring
-  const jurorStatus = jurorStatusMonitoring?.data?.map(item => {
-    const submission = item.submissionId;
+  // Transform API data for juror status monitoring (matches API format provided)
+  const jurorStatus = (jurorStatusMonitoring?.data || []).map(item => {
     const totalJurors = 3;
-    const currentVotes = submission?.jurorDecisions?.length || 0;
-    
-    // Determine vote action display
+    const decisions = Array.isArray(item.jurorDecisions) ? item.jurorDecisions : [];
+    const currentVotes = decisions.length;
+
     let myVoteDisplay = "Pending Review";
-    if (submission?.jurorDecisions && submission.jurorDecisions.length > 0) {
-      const firstVote = submission.jurorDecisions[0];
-      if (firstVote.action === "ACCEPT") {
+    // If a decision exists, display its action; otherwise keep pending
+    if (decisions.length > 0) {
+      const firstVote = decisions[0];
+      if (firstVote?.action === "ACCEPT") {
         myVoteDisplay = "ACCEPT";
-      } else if (firstVote.action === "REJECT") {
+      } else if (firstVote?.action === "REJECT") {
         myVoteDisplay = "REJECT";
-      } else if (firstVote.action === "UNABLETODECIDE") {
+      } else if (firstVote?.action === "UNABLETODECIDE") {
         myVoteDisplay = "UNABLE TO DECIDE";
       }
     }
-    
-    // Calculate outcome based on juror decisions
+
     let outcomeDisplay = "——";
-    if (submission?.status === "APPROVED") {
+    if (item.status === "APPROVED") {
       outcomeDisplay = "APPROVED";
-    } else if (submission?.status === "REJECTED") {
+    } else if (item.status === "REJECTED") {
       outcomeDisplay = "REJECTED";
     } else if (currentVotes === totalJurors) {
-      // All votes are in, calculate majority
-      const acceptVotes = submission.jurorDecisions.filter(d => d.action === "ACCEPT").length;
-      const rejectVotes = submission.jurorDecisions.filter(d => d.action === "REJECT").length;
-      
+      const acceptVotes = decisions.filter(d => d.action === "ACCEPT").length;
+      const rejectVotes = decisions.filter(d => d.action === "REJECT").length;
       if (acceptVotes > rejectVotes) {
         outcomeDisplay = "LIKELY APPROVED";
       } else if (rejectVotes > acceptVotes) {
@@ -79,19 +76,23 @@ const DashboardContainer = () => {
       } else {
         outcomeDisplay = "PENDING DECISION";
       }
+    } else if (item.status === "REVIEW" || item.status === "UNDER_REVIEW") {
+      outcomeDisplay = "PENDING DECISION";
     }
-    
+
+    const progressPercent = Math.min(100, Math.round((currentVotes / totalJurors) * 100));
+
     return {
       _id: item._id,
-      caseId: submission?.caseId || "N/A",
+      caseId: item.caseId || "N/A",
       myVote: myVoteDisplay,
-      jury: totalJurors.toString(),
-      progress: `${currentVotes} of ${totalJurors} votes`,
+      jury: String(totalJurors),
+      progressText: `${currentVotes} of ${totalJurors} votes`,
+      progressPercent,
       outcome: outcomeDisplay,
       fullData: item,
-      submissionData: submission
     };
-  }) || [];
+  });
 
   const submissionHistory = [
     {
@@ -256,7 +257,7 @@ const DashboardContainer = () => {
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
-                            <Button 
+                            {/* <Button 
                               size="sm" 
                               variant="outline"
                               onClick={() => {
@@ -265,7 +266,7 @@ const DashboardContainer = () => {
                               }}
                             >
                               <MessageSquare className="w-4 h-4" />
-                            </Button>
+                            </Button> */}
                           </div>
                         </td>
                       </tr>
@@ -392,13 +393,11 @@ const DashboardContainer = () => {
                         <td className="p-4">{status.jury}</td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
-                            <span>{status.progress}</span>
+                            <span>{status.progressText}</span>
                             <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-blue-500 transition-all"
-                                style={{ 
-                                  width: `${(parseInt(status.progress.split(' ')[0]) / parseInt(status.progress.split(' ')[2])) * 100}%` 
-                                }}
+                                style={{ width: `${status.progressPercent}%` }}
                               ></div>
                             </div>
                           </div>
@@ -445,13 +444,11 @@ const DashboardContainer = () => {
                           <div className="col-span-2">
                             <span className="text-gray-500 block mb-2">Progress:</span>
                             <div className="flex items-center gap-2">
-                              <span className="font-medium">{status.progress}</span>
+                              <span className="font-medium">{status.progressText}</span>
                               <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-blue-500 transition-all"
-                                  style={{ 
-                                    width: `${(parseInt(status.progress.split(' ')[0]) / parseInt(status.progress.split(' ')[2])) * 100}%` 
-                                  }}
+                                  style={{ width: `${status.progressPercent}%` }}
                                 ></div>
                               </div>
                             </div>

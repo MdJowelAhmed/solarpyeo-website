@@ -475,7 +475,7 @@ export default function Navbar() {
               className="flex items-center space-x-2 text-lg font-bold"
             >
               <Image
-                src="/assets/logo.png"
+                src="/assests/logo.png"
                 alt="Logo"
                 width={100}
                 height={100}

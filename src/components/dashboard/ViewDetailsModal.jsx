@@ -195,7 +195,7 @@ const ViewDetailsModal = ({ isOpen, onClose, submission }) => {
           )}
 
           {/* Timeline */}
-          <Card>
+          {/* <Card>
             <CardContent className="pt-6">
               <h3 className="font-semibold mb-4 text-lg">Case Timeline</h3>
               <div className="space-y-3">
@@ -215,7 +215,7 @@ const ViewDetailsModal = ({ isOpen, onClose, submission }) => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Payment Information */}
           <Card>
