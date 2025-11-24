@@ -18,8 +18,16 @@ import { Calendar as CalendarIcon, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateSealOrExpungeMutation } from "@/redux/featured/sealForm/SealOrExpungeApi";
 import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
+import moment from "moment";
 
-const SealExpungeForm = () => {
+const SealExpungeForm = ({ recordData }) => {
+  console.log("recordData", recordData)
+  const submissionId = recordData?.caseId || "[Case-ID-Here]";
+  const respondent = recordData 
+  ? `${recordData.respondentFastName} ${recordData.respondentLastName}`.trim()
+  : "[Your-Name-Here]";
+  const submissionDate = recordData?.createdAt || "[Submission-Date-Here]";
+
   const [createSealOrExpunge, { isLoading }] = useCreateSealOrExpungeMutation();
   const {data:userData}=useMyProfileQuery()
   console.log("user data form seal page", userData)
@@ -200,8 +208,8 @@ const SealExpungeForm = () => {
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardHeader className="mb-5">
-              <p className="">Submission ID: Auto-generated</p>
-              <p className="">Submission Date: {new Date().toLocaleDateString()}</p>
+              <p className="">Submission ID: {submissionId}</p>
+              <p className="">Submission Date: { moment(submissionDate).format('L')}</p>
             </CardHeader>
           </CardHeader>
 
@@ -234,8 +242,8 @@ const SealExpungeForm = () => {
                   id="platform-account-email"
                   type="email"
                   placeholder="Write email address"
-                  value={userData?.email || platformEmail}
-                  onChange={(e) => setPlatformEmail(userData?.email || e.target.value)}
+                  value={ platformEmail}
+                  onChange={(e) => setPlatformEmail(e.target.value)}
                 />
               </div>
 

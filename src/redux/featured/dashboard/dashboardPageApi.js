@@ -35,6 +35,16 @@ const dashboardPageApi = api.injectEndpoints({
       providesTags: ["DashboardPage"],
     }),
 
+      getRecordById: builder.query({
+      query: (recordId) => ({
+        url: `/initial/submission/${recordId}`, // Adjust URL according to your API
+        method: 'GET',
+      }),
+      providesTags: (result, error, recordId) => [
+        { type: 'Record', id: recordId }
+      ],
+    }),
+
     updateDashboardPage: builder.mutation({
       query: ({ id, data }) => ({
         url: `/featured/identity-dispute/${id}`,
@@ -50,5 +60,6 @@ export const {
   useGetDashboardPageQuery,
   useGetJurorStatusMonitoringQuery,
   useGetRecordHistoryQuery,
+  useGetRecordByIdQuery,
   useUpdateDashboardPageMutation
 } = dashboardPageApi;

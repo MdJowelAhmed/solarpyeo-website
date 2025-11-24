@@ -12,45 +12,49 @@ import SealExpungeModal from "./SealExpungeModal";
 import ViewDetailsModal from "./ViewDetailsModal";
 import { useGetDashboardPageQuery, useGetJurorStatusMonitoringQuery, useGetRecordHistoryQuery } from "@/redux/featured/dashboard/dashboardPageApi";
 import CustomPagination from "../share/CustomPagination";
+import { useRouter } from "next/navigation";
 
 const DashboardContainer = () => {
   // State for modals
+  const router = useRouter();
+
   const [viewRecordsModal, setViewRecordsModal] = useState(false);
   const [appealModal, setAppealModal] = useState(false);
   const [sealExpungeModal, setSealExpungeModal] = useState(false);
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  console.log("selectedRecord:", selectedRecord);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
 
-  const queryParams=[{
-    name:"page",
-    value:currentPage,
-  },{
-    name:"limit",
-    value:itemsPerPage,
+  const queryParams = [{
+    name: "page",
+    value: currentPage,
+  }, {
+    name: "limit",
+    value: itemsPerPage,
   }]
-  
-  const {data: dashboardPage} = useGetDashboardPageQuery();
-  const {data: jurorStatusMonitoring} = useGetJurorStatusMonitoringQuery();
-  const {data: recordHistory} = useGetRecordHistoryQuery(queryParams);
-  
+
+  const { data: dashboardPage } = useGetDashboardPageQuery();
+  const { data: jurorStatusMonitoring } = useGetJurorStatusMonitoringQuery();
+  const { data: recordHistory } = useGetRecordHistoryQuery(queryParams);
+
 
   console.log("recordHistory", recordHistory)
   console.log("dashboardPage", dashboardPage)
-  
+
   // Transform API data for current submissions
   const currentSubmissions = dashboardPage?.data?.map(item => ({
     _id: item._id,
     caseId: item.caseId,
     respondent: `${item.respondentFastName} ${item.respondentLastName}`,
     status: item.status,
-    lastActivity: new Date(item.updatedAt).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    lastActivity: new Date(item.updatedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     }),
     statusType: item.status === "PENDING" ? "pending" : item.status === "APPROVED" ? "approved" : "notice",
     fullData: item // Store full data for modal
@@ -244,8 +248,8 @@ const DashboardContainer = () => {
                         <td className="p-4">{submission.lastActivity}</td>
                         <td className="p-4">
                           <div className="flex gap-2">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
                               onClick={() => {
                                 setSelectedSubmission(submission);
@@ -291,8 +295,8 @@ const DashboardContainer = () => {
                             {submission.caseId}
                           </span>
                           <div className="flex gap-2">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
                               onClick={() => {
                                 setSelectedSubmission(submission);
@@ -301,8 +305,8 @@ const DashboardContainer = () => {
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
                               onClick={() => {
                                 setSelectedSubmission(submission);
@@ -392,7 +396,7 @@ const DashboardContainer = () => {
                           <div className="flex items-center gap-2">
                             <span>{status.progressText}</span>
                             <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                              <div 
+                              <div
                                 className="h-full bg-blue-500 transition-all"
                                 style={{ width: `${status.progressPercent}%` }}
                               ></div>
@@ -443,7 +447,7 @@ const DashboardContainer = () => {
                             <div className="flex items-center gap-2">
                               <span className="font-medium">{status.progressText}</span>
                               <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
+                                <div
                                   className="h-full bg-blue-500 transition-all"
                                   style={{ width: `${status.progressPercent}%` }}
                                 ></div>
@@ -528,25 +532,26 @@ const DashboardContainer = () => {
                               key={actionIndex}
                               size="sm"
                               variant="outline"
-                              className={`text-xs ${
-                                action === "View Records"
+                              className={`text-xs ${action === "View Records"
                                   ? "bg-red-50 text-red-600 border-red-200"
                                   : action === "Cancel"
-                                  ? "bg-red-100 text-red-700 border-red-300"
-                                  : action === "Appeal"
-                                  ? "bg-blue-50 text-blue-600 border-blue-200"
-                                  : action === "Seal/Expunge"
-                                  ? "bg-purple-50 text-purple-600 border-purple-200"
-                                  : "bg-blue-50 text-blue-600 border-blue-200"
-                              }`}
+                                    ? "bg-red-100 text-red-700 border-red-300"
+                                    : action === "Appeal"
+                                      ? "bg-blue-50 text-blue-600 border-blue-200"
+                                      : action === "Seal/Expunge"
+                                        ? "bg-purple-50 text-purple-600 border-purple-200"
+                                        : "bg-blue-50 text-blue-600 border-blue-200"
+                                }`}
                               onClick={() => {
-                                setSelectedRecord(record);
                                 if (action === "View Records") {
+                                  setSelectedRecord(record);
                                   setViewRecordsModal(true);
                                 } else if (action === "Appeal") {
-                                  setAppealModal(true);
+                                  // Navigate to appeal form with record ID
+                                  router.push(`/form-submission?form=appeal-request&recordId=${record.fullData._id}`);
                                 } else if (action === "Seal/Expunge") {
-                                  setSealExpungeModal(true);
+                                  // Navigate to seal/expunge form with record ID
+                                  router.push(`/form-submission?form=seal-expunge&recordId=${record.fullData._id}`);
                                 }
                               }}
                             >
@@ -593,17 +598,16 @@ const DashboardContainer = () => {
                             key={actionIndex}
                             size="sm"
                             variant="outline"
-                            className={`text-xs ${
-                              action === "View Records"
+                            className={`text-xs ${action === "View Records"
                                 ? "bg-red-50 text-red-600 border-red-200"
                                 : action === "Cancel"
-                                ? "bg-red-100 text-red-700 border-red-300"
-                                : action === "Appeal"
-                                ? "bg-blue-50 text-blue-600 border-blue-200"
-                                : action === "Seal/Expunge"
-                                ? "bg-purple-50 text-purple-600 border-purple-200"
-                                : "bg-blue-50 text-blue-600 border-blue-200"
-                            }`}
+                                  ? "bg-red-100 text-red-700 border-red-300"
+                                  : action === "Appeal"
+                                    ? "bg-blue-50 text-blue-600 border-blue-200"
+                                    : action === "Seal/Expunge"
+                                      ? "bg-purple-50 text-purple-600 border-purple-200"
+                                      : "bg-blue-50 text-blue-600 border-blue-200"
+                              }`}
                             onClick={() => {
                               setSelectedRecord(record);
                               if (action === "View Records") {
@@ -635,25 +639,25 @@ const DashboardContainer = () => {
       </div>
 
       {/* Modals */}
-      <ViewRecordsModal 
-        isOpen={viewRecordsModal} 
-        onClose={() => setViewRecordsModal(false)} 
-        record={selectedRecord} 
+      <ViewRecordsModal
+        isOpen={viewRecordsModal}
+        onClose={() => setViewRecordsModal(false)}
+        record={selectedRecord}
       />
-      <AppealModal 
-        isOpen={appealModal} 
-        onClose={() => setAppealModal(false)} 
-        record={selectedRecord} 
+      <AppealModal
+        isOpen={appealModal}
+        onClose={() => setAppealModal(false)}
+        record={selectedRecord}
       />
-      <SealExpungeModal 
-        isOpen={sealExpungeModal} 
-        onClose={() => setSealExpungeModal(false)} 
-        record={selectedRecord} 
+      <SealExpungeModal
+        isOpen={sealExpungeModal}
+        onClose={() => setSealExpungeModal(false)}
+        record={selectedRecord}
       />
-      <ViewDetailsModal 
-        isOpen={viewDetailsModal} 
-        onClose={() => setViewDetailsModal(false)} 
-        submission={selectedSubmission} 
+      <ViewDetailsModal
+        isOpen={viewDetailsModal}
+        onClose={() => setViewDetailsModal(false)}
+        submission={selectedSubmission}
       />
     </div>
   );

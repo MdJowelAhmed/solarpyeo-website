@@ -21,39 +21,41 @@ import IdentityDisputeForm from "../identity-dispute/page";
 import AppealRequestForm from "../appeal-request/page";
 import JurorRecusalForm from "../juror-recusal/page";
 import JurorApplicationForm from "../juror-enrollment/page";
+import { useGetRecordByIdQuery } from "@/redux/featured/dashboard/dashboardPageApi";
 
-const GlassFileForm = () => {
+// Import your API hook to fetch record details
+// import { useGetRecordByIdQuery } from "@/redux/featured/dashboard/dashboardPageApi";
+
+const FormClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Avoid reading searchParams synchronously during render to prevent
-  // the runtime bailout warning. Initialize to a safe default and let the
-  // effect below pick up any `?form=` param.
   const [selectedFormId, setSelectedFormId] = useState("initial-submission");
-
-  const formOptions = [
-    { name: "Initial Submission Form", id: "initial-submission" },
-    { name: "Misuse Report Form", id: "misuse-report" },
-    { name: "Request to Seal or Expunge", id: "seal-expunge" },
-    { name: "Technical Support Request Form", id: "technical-support" },
-    { name: "Application for Juror Program", id: "juror-enrollment" },
-    { name: "Respondent Submission Form", id: "respondent-submission" },
-    { name: "Identity Dispute Claim Form", id: "identity-dispute" },
-    { name: "Appeal Request Form", id: "appeal-request" },
-    { name: "Juror Recusal Form", id: "juror-recusal" },
-  ];
+  const [recordId, setRecordId] = useState(null);
 
   useEffect(() => {
     const formParam = searchParams.get("form");
+    const recordParam = searchParams.get("recordId");
+    
     if (formParam && formParam !== selectedFormId) {
       setSelectedFormId(formParam);
     }
+    
+    if (recordParam) {
+      setRecordId(recordParam);
+    }
   }, [searchParams]);
 
+  // Fetch record data if recordId exists
+  const { data: recordData, isLoading, error } = useGetRecordByIdQuery(recordId, {
+    skip: !recordId, // Only fetch if recordId exists
+  });
 
   const handleFormChange = (value) => {
     setSelectedFormId(value);
+    // Clear recordId when manually changing form
     router.push(`?form=${value}`, { scroll: false });
+    setRecordId(null);
   };
 
   const renderForm = () => {
@@ -63,7 +65,7 @@ const GlassFileForm = () => {
       case "misuse-report":
         return <MisuseReportForm />;
       case "seal-expunge":
-        return <SealExpungeForm />;
+        return <SealExpungeForm recordData={recordData?.data} />;
       case "technical-support":
         return <TechnicalSupportForm />;
       case "juror-enrollment":
@@ -73,7 +75,7 @@ const GlassFileForm = () => {
       case "identity-dispute":
         return <IdentityDisputeForm />;
       case "appeal-request":
-        return <AppealRequestForm />;
+        return <AppealRequestForm recordData={recordData?.data} />;
       case "juror-recusal":
         return <JurorRecusalForm />;
       default:
@@ -95,7 +97,7 @@ const GlassFileForm = () => {
   };
 
   return (
-    <div className="w-full py-8   pb-10">
+    <div className="w-full py-8 pb-10">
       <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-48 mx-auto w-full flex flex-col md:flex-row justify-between gap-4 pb-10">
         <div className="text-left w-full lg:w-3/5">
           <h1>Choose Your Submission Type</h1>
@@ -105,7 +107,7 @@ const GlassFileForm = () => {
             appropriate team.
           </p>
         </div>
-        <div className=" flex-1 flex justify-end w-full lg:w-2/5">
+        <div className="flex-1 flex justify-end w-full lg:w-2/5">
           <Select onValueChange={handleFormChange} value={selectedFormId}>
             <SelectTrigger className="w-full lg:w-2/5 bg-white border border-gray-300 py-6 text-gray-800 font-medium rounded-md focus:ring-2 focus:ring-red-500">
               <SelectValue placeholder="Select a Form" />
@@ -121,9 +123,25 @@ const GlassFileForm = () => {
         </div>
       </div>
 
-      {renderForm()}
+      {isLoading && recordId ? (
+        <div className="text-center py-8">Loading record data...</div>
+      ) : (
+        renderForm()
+      )}
     </div>
   );
 };
 
-export default GlassFileForm;
+const formOptions = [
+  { name: "Initial Submission Form", id: "initial-submission" },
+  { name: "Misuse Report Form", id: "misuse-report" },
+  { name: "Request to Seal or Expunge", id: "seal-expunge" },
+  { name: "Technical Support Request Form", id: "technical-support" },
+  { name: "Application for Juror Program", id: "juror-enrollment" },
+  { name: "Respondent Submission Form", id: "respondent-submission" },
+  { name: "Identity Dispute Claim Form", id: "identity-dispute" },
+  { name: "Appeal Request Form", id: "appeal-request" },
+  { name: "Juror Recusal Form", id: "juror-recusal" },
+];
+
+export default FormClient;

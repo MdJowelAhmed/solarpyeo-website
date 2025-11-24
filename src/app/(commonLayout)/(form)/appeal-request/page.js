@@ -6,11 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, AlertTriangle, X, Loader2 } from "lucide-react";
+import { Upload, FileText, AlertTriangle, X, Loader2, CloudCog } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateAppealFormMutation } from "@/redux/featured/appealForm/appealFormApi";
 
-const AppealRequestForm = () => {
+const AppealRequestForm = ({ recordData }) => {
+  console.log(recordData);
   const [selectedGrounds, setSelectedGrounds] = useState([]);
   const [reviewOption, setReviewOption] = useState("");
   const [justification, setJustification] = useState("");
@@ -21,6 +22,13 @@ const AppealRequestForm = () => {
 
   const [files, setFiles] = useState([]);
   // const [files2, setFiles2] = useState([]);
+
+
+   const caseId = recordData?.caseId || "[Case-ID-Here]";
+   const status= recordData?.status || " [A-las-2025-4-docs]";
+    const respondent = recordData 
+    ? `${recordData.respondentFastName} ${recordData.respondentLastName}`.trim()
+    : "[Your-Name-Here]";
 
   const handleFileUpload1 = (event) => {
     const uploadedFiles = Array.from(event.target.files);
@@ -177,14 +185,15 @@ const AppealRequestForm = () => {
             <div className="space-y-1 text-center mt-6">
               <div>
                 <span className="font-medium">Platform Case Reference ID:</span>{" "}
-                [Case-ID-Here]
+                {caseId}
               </div>
               <div>
                 <span className="font-medium">Case Outcome Appealed:</span>{" "}
-                [A-las-2025-4-docs]
+                {status}
               </div>
               <div>
-                <span className="font-medium">Filed By:</span> [Your-Name-Here]
+                <span className="font-medium">Filed By:</span>{" "}
+                {respondent}
               </div>
             </div>
           </div>
