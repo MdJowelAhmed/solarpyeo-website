@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, Download, X } from "lucide-react";
+import { Eye, Download, X, Loader2 } from "lucide-react";
 import { Card } from "../ui/card";
 import {
   File,
@@ -15,42 +15,11 @@ import { toast } from "sonner";
 import SearchRecordsModal from "./SearchRecordsModal";
 import CaseDetailsView from "./CaseDetailsView";
 import PaymentModal from "./PaymentModal";
-
-// Mock data
-const mockRecords = [
-  {
-    id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    dateOfBirth: "1990-05-15",
-    fullName: "John Doe",
-    caseIds: [
-      { id: "CASE-001", verdictCode: "GUILTY", amount: 25.0 },
-      { id: "CASE-002", verdictCode: "DISMISSED", amount: 15.0 },
-      { id: "CASE-003", verdictCode: "PENDING", amount: 25.0 },
-      { id: "CASE-004", verdictCode: "CONCLUDED", amount: 15.0 },
-    ],
-  },
-  {
-    id: 2,
-    firstName: "Jane",
-    lastName: "Smith",
-    dateOfBirth: "1985-12-08",
-    fullName: "Jane Smith",
-    caseIds: [{ id: "CASE-003", verdictCode: "PENDING", amount: 35.0 }],
-  },
-  {
-    id: 3,
-    firstName: "John",
-    lastName: "Smith",
-    dateOfBirth: "1992-03-22",
-    fullName: "John Smith",
-    caseIds: [
-      { id: "CASE-004", verdictCode: "NOT GUILTY", amount: 20.0 },
-      { id: "CASE-005", verdictCode: "GUILTY", amount: 45.0 },
-    ],
-  },
-];
+import { usePaymentForFilesMutation, useSearchFilesByUserMutation } from "@/redux/featured/searchFiles/searchFilesApi";
+// import {
+//   useSearchFilesByUserMutation,
+//   usePaymentForFilesMutation,
+// } from "@/redux/api/searchFilesApi";
 
 const RelationshipArchive = () => {
   const [showViewRecords, setShowViewRecords] = useState(false);
@@ -76,6 +45,10 @@ const RelationshipArchive = () => {
     cvv: "",
     holderName: "",
   });
+  const [isSearching, setIsSearching] = useState(false);
+
+  const [searchFilesByUser] = useSearchFilesByUserMutation();
+  const [paymentForFiles, { isLoading: isPaymentLoading }] = usePaymentForFilesMutation();
 
   const handleViewRecordsClick = () => {
     setShowViewRecords(true);
@@ -96,23 +69,104 @@ const RelationshipArchive = () => {
     });
   };
 
-  const handleSearch = () => {
-    const results = mockRecords.filter(
-      (record) =>
-        record.firstName
-          .toLowerCase()
-          .includes(searchForm.firstName.toLowerCase()) &&
-        record.lastName
-          .toLowerCase()
-          .includes(searchForm.lastName.toLowerCase()) &&
-        (searchForm.dateOfBirth === "" ||
-          record.dateOfBirth === searchForm.dateOfBirth)
-    );
-    setSearchResults(results);
+  const handleSearch = async () => {
+    if (!searchForm.firstName || !searchForm.lastName || !searchForm.dateOfBirth) {
+      toast.error("Please fill in all search fields");
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const formattedDate = new Date(searchForm.dateOfBirth).toISOString();
+      
+      const response = await searchFilesByUser({
+        firstName: searchForm.firstName,
+        lastName: searchForm.lastName,
+        birthDate: formattedDate,
+      }).unwrap();
+
+      if (response.success && response.data) {
+        // Transform API data to match the expected format
+        const transformedResults = response.data.map((item) => ({
+          id: item.user._id,
+          firstName: item.user.firstName,
+          middleName: item.user.middleName,
+          lastName: item.user.lastName,
+          dateOfBirth: item.user.birthDate,
+          fullName: `${item.user.firstName} ${item.user.middleName || ''} ${item.user.lastName}`.trim(),
+          email: item.user.email,
+          profile: item.user.profile,
+          // Store the case information
+          rawCases: response.data.filter(caseItem => caseItem.user._id === item.user._id)
+        }));
+
+        // Remove duplicates based on user ID
+        const uniqueResults = transformedResults.filter(
+          (result, index, self) =>
+            index === self.findIndex((r) => r.id === result.id)
+        );
+
+        setSearchResults(uniqueResults);
+        
+        if (uniqueResults.length === 0) {
+          toast.info("No records found for the provided information");
+        } else {
+          toast.success(`Found ${uniqueResults.length} matching record(s)`);
+        }
+      } else {
+        setSearchResults([]);
+        toast.info("No records found");
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      toast.error(error?.data?.message || "Failed to search records. Please try again.");
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handlePersonSelect = (person) => {
-    setSelectedPerson(person);
+    // Transform the cases for display
+    const casesWithVerdict = person.rawCases.map((caseItem) => {
+      // Calculate verdict based on juror decisions
+      let verdictCode = "PENDING";
+      
+      if (caseItem.status === "APPROVED" && caseItem.jurorDecisions.length > 0) {
+        const decisions = caseItem.jurorDecisions;
+        const acceptCount = decisions.filter(d => d.action === "ACCEPT").length;
+        const rejectCount = decisions.filter(d => d.action === "REJECT").length;
+        const unableCount = decisions.filter(d => d.action === "UNABLETODECIDE").length;
+
+        if (acceptCount > rejectCount && acceptCount > unableCount) {
+          verdictCode = "PROVEN";
+        } else if (rejectCount > acceptCount && rejectCount > unableCount) {
+          verdictCode = "DISPROVEN";
+        } else if (unableCount >= acceptCount && unableCount >= rejectCount) {
+          verdictCode = "INCONCLUSIVE";
+        } else {
+          verdictCode = "CONCLUDED";
+        }
+      } else if (caseItem.status === "REJECTED") {
+        verdictCode = "DISMISSED";
+      }
+
+      return {
+        id: caseItem.caseId,
+        caseId: caseItem.caseId,
+        verdictCode: verdictCode,
+        amount: 25.0, // Base amount, will be determined by record type
+        submissionId: caseItem._id,
+        status: caseItem.status,
+        typeOfFiling: caseItem.typeOfFiling,
+        createdAt: caseItem.createdAt,
+      };
+    });
+
+    setSelectedPerson({
+      ...person,
+      caseIds: casesWithVerdict,
+    });
   };
 
   const handleRecordsRequest = (caseData, type) => {
@@ -191,7 +245,7 @@ const RelationshipArchive = () => {
     }
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     const errors = {
       cardNumber: "",
       expiryDate: "",
@@ -239,31 +293,55 @@ const RelationshipArchive = () => {
       return;
     }
 
-    toast.success(
-      `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
-    );
+    try {
+      // Map request type to API type format
+      const typeMapping = {
+        "Full Case File": "caseFile",
+        "Party Submissions": "partySubmissions",
+        "Juror Voting Materials": "jurorVotingMaterials",
+      };
 
-    setTimeout(() => {
-      setShowPayment(false);
-      setSelectedCase(null);
-      setRequestType("");
-      setPaymentDetails({
-        cardNumber: "",
-        expiryDate: "",
-        cvv: "",
-        holderName: "",
-      });
-      setPaymentErrors({
-        cardNumber: "",
-        expiryDate: "",
-        cvv: "",
-        holderName: "",
-      });
-    }, 2000);
+      const paymentData = {
+        initialsubmittion: selectedCase.submissionId,
+        type: typeMapping[requestType] || "caseFile",
+        price: 50,
+      };
+
+      const response = await paymentForFiles(paymentData).unwrap();
+
+      if (response.success) {
+        toast.success(
+          `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
+        );
+
+        setTimeout(() => {
+          setShowPayment(false);
+          setSelectedCase(null);
+          setRequestType("");
+          setPaymentDetails({
+            cardNumber: "",
+            expiryDate: "",
+            cvv: "",
+            holderName: "",
+          });
+          setPaymentErrors({
+            cardNumber: "",
+            expiryDate: "",
+            cvv: "",
+            holderName: "",
+          });
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error(error?.data?.message || "Payment processing failed. Please try again.");
+    }
   };
 
   const handleLearnProcessClick = () => {
     toast.success("Opening How It Works PDF...");
+    // Add actual PDF download/open logic here
+    // window.open('/path-to-pdf/how-it-works.pdf', '_blank');
   };
 
   return (
@@ -349,7 +427,7 @@ const RelationshipArchive = () => {
               <div className="flex justify-center items-center">
                 <Button
                   onClick={handleViewRecordsClick}
-                  className=" py-6 px-12 rounded-md transition-colors duration-200  gap-2"
+                  className="py-6 px-12 rounded-md transition-colors duration-200 gap-2"
                 >
                   <Eye className="w-5 h-5" />
                   View a Record
@@ -372,7 +450,7 @@ const RelationshipArchive = () => {
               <div className="flex justify-center items-center">
                 <Button
                   onClick={handleLearnProcessClick}
-                  className=" py-6 px-8 rounded-md transition-colors duration-200 "
+                  className="py-6 px-8 rounded-md transition-colors duration-200"
                 >
                   <Download className="w-5 h-5" />
                   Learn the Process
@@ -410,6 +488,7 @@ const RelationshipArchive = () => {
                 handleHolderNameChange={handleHolderNameChange}
                 handlePayment={handlePayment}
                 handleBackToRecords={handleBackToRecords}
+                isLoading={isPaymentLoading}
               />
             ) : (
               <>
@@ -420,6 +499,7 @@ const RelationshipArchive = () => {
                   handleSearch={handleSearch}
                   handlePersonSelect={handlePersonSelect}
                   onClose={handleBackToHome}
+                  isSearching={isSearching}
                 />
                 <div className="px-6 pb-6">
                   <CaseDetailsView
