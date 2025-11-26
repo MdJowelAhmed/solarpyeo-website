@@ -29,6 +29,14 @@ const searchFilesApi = api.injectEndpoints({
       }),
       invalidatesTags: ["SearchFiles"],
     }),
+
+    searchMySubmissionForm: builder.query({
+      query: () => ({
+        url: `/dashboard/caseId`,
+        method: "GET",
+      }),
+      providesTags: ["SearchFiles"],
+    }),
   }),
 });
 
@@ -36,6 +44,7 @@ export const {
   useSearchFilesQuery,
   useSearchFilesByUserMutation,
   usePaymentForFilesMutation,
+  useSearchMySubmissionFormQuery,
 } = searchFilesApi;
 
 export default searchFilesApi;
