@@ -49,10 +49,10 @@ export default function RespondentSubmissionForm() {
     e.preventDefault();
 
     // Validation
-    if (!digitalSignature.trim()) {
-      toast.error("Please enter your digital signature");
-      return;
-    }
+    // if (!digitalSignature.trim()) {
+    //   toast.error("Please enter your digital signature");
+    //   return;
+    // }
 
     if (selectedResponse === "deny" && uploadedFiles.length === 0) {
       toast.error("Please upload evidence to support your response");
