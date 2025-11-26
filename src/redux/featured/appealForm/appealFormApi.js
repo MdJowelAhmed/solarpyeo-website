@@ -27,11 +27,20 @@ const appealFormApi = api.injectEndpoints({
       }),
       invalidatesTags: ["AppealForm"],
     }),
+    appealSubmissionForPayment: builder.mutation({
+      query: (data) => ({
+        url: `/appeal-request/pay`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["AppealForm"],
+    }),
   }),
 });
 
 export const { 
     useGetAppealFormQuery, 
     useCreateAppealFormMutation, 
-    useUpdateAppealFormMutation 
+    useUpdateAppealFormMutation,
+    useAppealSubmissionForPaymentMutation,
 } = appealFormApi;

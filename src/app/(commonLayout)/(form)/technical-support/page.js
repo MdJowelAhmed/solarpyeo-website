@@ -31,7 +31,7 @@ export default function TechnicalSupportForm() {
   const [formData, setFormData] = useState({
     name: "",
     userName: "",
-    email: "",
+    receiveSupport: "",
     phone: "",
     issueClassification: [],
     otherIssueDescription: "",
@@ -141,8 +141,8 @@ export default function TechnicalSupportForm() {
       if (formData.userName) {
         submitData.append("userName", formData.userName);
       }
-      if (formData.email) {
-        submitData.append("email", formData.email);
+      if (formData.receiveSupport) {
+        submitData.append("email", formData.receiveSupport);
       }
       if (formData.issueClassification.length > 0) {
         submitData.append(
@@ -208,7 +208,7 @@ export default function TechnicalSupportForm() {
     setFormData({
       name: "",
       userName: "",
-      email: "",
+      receiveSupport: "",
       phone: "",
       issueClassification: [],
       otherIssueDescription: "",
@@ -286,8 +286,8 @@ export default function TechnicalSupportForm() {
                   id="email"
                   type="email"
                   placeholder="user@example.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  value={formData.receiveSupport}
+                  onChange={(e) => handleInputChange("receiveSupport", e.target.value)} 
                   required
                 />
               </div>

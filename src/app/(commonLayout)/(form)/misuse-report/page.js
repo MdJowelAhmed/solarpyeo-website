@@ -81,10 +81,10 @@ export default function MisuseReportForm() {
       return;
     }
 
-    if (!dateOfBirth) {
-      toast.error("Please select your date of birth");
-      return;
-    }
+    // if (!dateOfBirth) {
+    //   toast.error("Please select your date of birth");
+    //   return;
+    // }
 
     if (misuseNature.length === 0) {
       toast.error("Please select at least one nature of misuse");
@@ -106,10 +106,10 @@ export default function MisuseReportForm() {
       return;
     }
 
-    if (!signature) {
-      toast.error("Please provide your signature");
-      return;
-    }
+    // if (!signature) {
+    //   toast.error("Please provide your signature");
+    //   return;
+    // }
 
     try {
       // Create FormData for file uploads
@@ -182,7 +182,7 @@ export default function MisuseReportForm() {
       setResolutionRequested([]);
       setAffirmation(false);
       setSignature("");
-      setDateOfBirth(undefined);
+      // setDateOfBirth(undefined);
     } catch (error) {
       console.error("Submission error:", error);
       toast.error(
