@@ -3,17 +3,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AlertTriangle, Calendar as CalendarIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateMisuseFormMutation } from "@/redux/featured/misuseForm/misuseFormApi";
 
@@ -37,9 +30,8 @@ export default function MisuseReportForm() {
   // Incident Details
   const [incidentDetails, setIncidentDetails] = useState("");
 
-  // Supporting Evidence
-  const [selectedFiles1, setSelectedFiles1] = useState(null);
-  const [selectedFiles2, setSelectedFiles2] = useState(null);
+  // Supporting Evidence - UPDATED: Single array for multiple files
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [supportingLink, setSupportingLink] = useState("");
 
   // Resolution Requested
@@ -53,15 +45,17 @@ export default function MisuseReportForm() {
   // RTK Query mutation
   const [createMisuseForm, { isLoading }] = useCreateMisuseFormMutation();
 
-  const handleFileChange = (event, fileNumber) => {
-    const files = event.target.files;
+  // UPDATED: Handle multiple file selection
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
     if (files && files.length > 0) {
-      if (fileNumber === 1) {
-        setSelectedFiles1(files[0]);
-      } else {
-        setSelectedFiles2(files[0]);
-      }
+      setSelectedFiles(files);
     }
+  };
+
+  // UPDATED: Remove individual file
+  const removeFile = (indexToRemove) => {
+    setSelectedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const handleMisuseNatureChange = (value, checked) => {
@@ -153,12 +147,11 @@ export default function MisuseReportForm() {
         affirmation ? "true" : "false"
       );
 
-      // Supporting Documents
-      if (selectedFiles1) {
-        formData.append("supportingDocument", selectedFiles1);
-      }
-      if (selectedFiles2) {
-        formData.append("supportingDocument", selectedFiles2);
+      // UPDATED: Supporting Documents - append all files
+      if (selectedFiles && selectedFiles.length > 0) {
+        selectedFiles.forEach((file) => {
+          formData.append("supportingDocument", file);
+        });
       }
 
       // Debug FormData contents
@@ -184,8 +177,7 @@ export default function MisuseReportForm() {
       setSubjectEmail("");
       setAllegedOfficial("");
       setIncidentDetails("");
-      setSelectedFiles1(null);
-      setSelectedFiles2(null);
+      setSelectedFiles([]); // UPDATED
       setSupportingLink("");
       setResolutionRequested([]);
       setAffirmation(false);
@@ -399,10 +391,10 @@ export default function MisuseReportForm() {
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
             <CardHeader className="w-full lg:w-1/5">
               <CardTitle className="text-red-700">Incident Details</CardTitle>
-                   <hp className="text-justify">
+                   <p className="text-justify">
                 Please describe the event(s), behavior(s), and any associated
                 case(s). Include dates, communication, or submissions if known.
-              </hp>
+              </p>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
          
@@ -423,63 +415,64 @@ export default function MisuseReportForm() {
         <div className="custom-padding bg-secondary-foreground">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
             <CardHeader className="w-full lg:w-1/5">
-              <CardTitle >Supporting Evidence</CardTitle>
-                     <p className="text-justify ">
+              <CardTitle>Supporting Evidence</CardTitle>
+              <p className="text-justify">
                 Attach any documents you cite and the documents that you can
                 provide to support maintaining an administrative filing etc.
               </p>
             </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:pl-10">
-       
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
 
               <div className="mb-6">
                 <p className="block text-gray-700 font-medium mb-3">
-                  Upload File 1:
+                  Upload Files (Multiple images allowed):
                 </p>
                 <div className="relative">
                   <input
                     type="file"
-                    id="file1"
-                    onChange={(e) => handleFileChange(e, 1)}
+                    id="fileUpload"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
                     className="hidden"
                   />
-                  <p
-                    htmlFor="file1"
+                  <label
+                    htmlFor="fileUpload"
                     className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                   >
                     <span className="text-gray-700">
-                      {selectedFiles1 ? selectedFiles1.name : "Choose File"}
+                      {selectedFiles.length > 0 
+                        ? `${selectedFiles.length} file(s) selected` 
+                        : "Choose File"}
                     </span>
                     <span className="text-gray-500 text-sm">
-                      {selectedFiles1 ? "" : "No file chosen"}
+                      {selectedFiles.length === 0 ? "No file chosen" : ""}
                     </span>
-                  </p>
+                  </label>
                 </div>
-              </div>
 
-              <div className="mb-6">
-                <p className="block text-gray-700 font-medium mb-3">
-                  Upload File 2:
-                </p>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="file2"
-                    onChange={(e) => handleFileChange(e, 2)}
-                    className="hidden"
-                  />
-                  <p
-                    htmlFor="file2"
-                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                  >
-                    <span className="text-gray-700">
-                      {selectedFiles2 ? selectedFiles2.name : "Choose File"}
-                    </span>
-                    <span className="text-gray-500 text-sm">
-                      {selectedFiles2 ? "" : "No file chosen"}
-                    </span>
-                  </p>
-                </div>
+                {/* Display selected files */}
+                {selectedFiles.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {selectedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200 text-sm"
+                      >
+                        <span className="text-gray-700 truncate flex-1">
+                          {file.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="ml-2 text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="mb-8">
@@ -568,41 +561,6 @@ export default function MisuseReportForm() {
                   I affirm and attest to the absolute statement. *
                 </p>
               </div>
-
-              {/* <div className="grid md:grid-cols-1 gap-4">
-                <div>
-                  <p>Report Signature: *</p>
-                  <Input
-                    className="mt-1"
-                    value={signature}
-                    onChange={(e) => setSignature(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <p>Date of Birth *</p>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dateOfBirth
-                          ? dateOfBirth.toLocaleDateString()
-                          : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-6">
-                      <Calendar
-                        mode="single"
-                        selected={dateOfBirth}
-                        onSelect={setDateOfBirth}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div> */}
             </CardContent>
           </div>
      

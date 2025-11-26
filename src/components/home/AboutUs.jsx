@@ -14,7 +14,6 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import SearchRecordsModal from "./SearchRecordsModal";
 import CaseDetailsView from "./CaseDetailsView";
-import PaymentModal from "./PaymentModal";
 import { usePaymentForFilesMutation, useSearchFilesByUserMutation } from "@/redux/featured/searchFiles/searchFilesApi";
 // import {
 //   useSearchFilesByUserMutation,
@@ -30,21 +29,6 @@ const RelationshipArchive = () => {
   });
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [selectedCase, setSelectedCase] = useState(null);
-  const [requestType, setRequestType] = useState("");
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    holderName: "",
-  });
-  const [showPayment, setShowPayment] = useState(false);
-  const [paymentErrors, setPaymentErrors] = useState({
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    holderName: "",
-  });
   const [isSearching, setIsSearching] = useState(false);
 
   const [searchFilesByUser] = useSearchFilesByUserMutation();
@@ -56,17 +40,9 @@ const RelationshipArchive = () => {
 
   const handleBackToHome = () => {
     setShowViewRecords(false);
-    setShowPayment(false);
     setSearchResults([]);
     setSelectedPerson(null);
-    setSelectedCase(null);
     setSearchForm({ firstName: "", lastName: "", dateOfBirth: "" });
-    setPaymentErrors({
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      holderName: "",
-    });
   };
 
   const handleSearch = async () => {
@@ -169,172 +145,41 @@ const RelationshipArchive = () => {
     });
   };
 
-  const handleRecordsRequest = (caseData, type) => {
-    setSelectedCase(caseData);
-    setRequestType(type);
-    setShowPayment(true);
-  };
-
-  const handleBackToRecords = () => {
-    setShowPayment(false);
-    setSelectedCase(null);
-    setRequestType("");
-    setPaymentDetails({
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      holderName: "",
-    });
-    setPaymentErrors({
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      holderName: "",
-    });
-  };
-
-  const formatCardNumber = (value) => {
-    const cleaned = value.replace(/\s/g, "");
-    const formatted = cleaned.match(/.{1,4}/g);
-    return formatted ? formatted.join(" ") : cleaned;
-  };
-
-  const handleCardNumberChange = (e) => {
-    const value = e.target.value.replace(/\s/g, "");
-    if (/^\d*$/.test(value) && value.length <= 16) {
-      setPaymentDetails({
-        ...paymentDetails,
-        cardNumber: formatCardNumber(value),
-      });
-      if (paymentErrors.cardNumber) {
-        setPaymentErrors({ ...paymentErrors, cardNumber: "" });
-      }
-    }
-  };
-
-  const handleExpiryChange = (e) => {
-    let value = e.target.value.replace(/\D/g, "");
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + "/" + value.slice(2, 4);
-    }
-    if (value.length <= 5) {
-      setPaymentDetails({ ...paymentDetails, expiryDate: value });
-      if (paymentErrors.expiryDate) {
-        setPaymentErrors({ ...paymentErrors, expiryDate: "" });
-      }
-    }
-  };
-
-  const handleCvvChange = (e) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value) && value.length <= 4) {
-      setPaymentDetails({ ...paymentDetails, cvv: value });
-      if (paymentErrors.cvv) {
-        setPaymentErrors({ ...paymentErrors, cvv: "" });
-      }
-    }
-  };
-
-  const handleHolderNameChange = (e) => {
-    const value = e.target.value;
-    if (/^[a-zA-Z\s]*$/.test(value)) {
-      setPaymentDetails({ ...paymentDetails, holderName: value });
-      if (paymentErrors.holderName) {
-        setPaymentErrors({ ...paymentErrors, holderName: "" });
-      }
-    }
-  };
-
-  const handlePayment = async () => {
-    const errors = {
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      holderName: "",
-    };
-
-    if (!paymentDetails.holderName.trim()) {
-      errors.holderName = "Cardholder name is required";
-    } else if (paymentDetails.holderName.trim().length < 3) {
-      errors.holderName = "Name must be at least 3 characters";
-    }
-
-    const cardNumberClean = paymentDetails.cardNumber.replace(/\s/g, "");
-    if (!cardNumberClean) {
-      errors.cardNumber = "Card number is required";
-    } else if (!/^\d+$/.test(cardNumberClean)) {
-      errors.cardNumber = "Card number must contain only digits";
-    } else if (cardNumberClean.length !== 16) {
-      errors.cardNumber = "Card number must be exactly 16 digits";
-    }
-
-    if (!paymentDetails.expiryDate) {
-      errors.expiryDate = "Expiry date is required";
-    } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
-      errors.expiryDate = "Format must be MM/YY";
-    } else {
-      const [month] = paymentDetails.expiryDate.split("/");
-      const monthNum = parseInt(month);
-      if (monthNum < 1 || monthNum > 12) {
-        errors.expiryDate = "Month must be between 01 and 12";
-      }
-    }
-
-    if (!paymentDetails.cvv) {
-      errors.cvv = "CVV is required";
-    } else if (!/^\d{3,4}$/.test(paymentDetails.cvv)) {
-      errors.cvv = "CVV must be 3 or 4 digits";
-    }
-
-    setPaymentErrors(errors);
-
-    if (Object.values(errors).some((error) => error !== "")) {
-      toast.error("Please fix all errors before submitting");
-      return;
-    }
+  const handleRecordsRequest = async (caseData, type) => {
+    if (isPaymentLoading) return;
 
     try {
       // Map request type to API type format
       const typeMapping = {
         "Full Case File": "caseFile",
-        "Party Submissions": "partySubmissions",
-        "Juror Voting Materials": "jurorVotingMaterials",
+        "Party Submissions": "partySubmission",
+        "Juror Voting Materials": "jurorMonitoring",
       };
 
       const paymentData = {
-        initialsubmittion: selectedCase.submissionId,
-        type: typeMapping[requestType] || "caseFile",
+        initialsubmittion: caseData.submissionId,
+        type: typeMapping[type] || "caseFile",
         price: 50,
       };
 
+      toast.loading("Processing your request...");
+
       const response = await paymentForFiles(paymentData).unwrap();
 
-      if (response.success) {
-        toast.success(
-          `Payment hold of $50.00 placed for ${requestType}. Admin will process your request and charge the actual amount of $${selectedCase.amount}.`
-        );
+      toast.dismiss();
 
-        setTimeout(() => {
-          setShowPayment(false);
-          setSelectedCase(null);
-          setRequestType("");
-          setPaymentDetails({
-            cardNumber: "",
-            expiryDate: "",
-            cvv: "",
-            holderName: "",
-          });
-          setPaymentErrors({
-            cardNumber: "",
-            expiryDate: "",
-            cvv: "",
-            holderName: "",
-          });
-        }, 2000);
+      if (response.success && response.data?.url) {
+        toast.success("Redirecting to payment...");
+        
+        // Redirect to Stripe payment URL
+        window.location.href = response.data.url;
+      } else {
+        toast.error("Failed to get payment URL. Please try again.");
       }
     } catch (error) {
-      console.error("Payment error:", error);
-      toast.error(error?.data?.message || "Payment processing failed. Please try again.");
+      toast.dismiss();
+      console.error("Payment request error:", error);
+      toast.error(error?.data?.message || "Failed to process request. Please try again.");
     }
   };
 
@@ -462,7 +307,7 @@ const RelationshipArchive = () => {
       </div>
 
       {/* Modal Overlay */}
-      {(showViewRecords || showPayment) && (
+      {showViewRecords && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/50"
@@ -476,39 +321,22 @@ const RelationshipArchive = () => {
               <X className="w-5 h-5 text-gray-600" />
             </button>
 
-            {showPayment ? (
-              <PaymentModal
-                selectedCase={selectedCase}
-                requestType={requestType}
-                paymentDetails={paymentDetails}
-                paymentErrors={paymentErrors}
-                handleCardNumberChange={handleCardNumberChange}
-                handleExpiryChange={handleExpiryChange}
-                handleCvvChange={handleCvvChange}
-                handleHolderNameChange={handleHolderNameChange}
-                handlePayment={handlePayment}
-                handleBackToRecords={handleBackToRecords}
+            <SearchRecordsModal
+              searchForm={searchForm}
+              setSearchForm={setSearchForm}
+              searchResults={searchResults}
+              handleSearch={handleSearch}
+              handlePersonSelect={handlePersonSelect}
+              onClose={handleBackToHome}
+              isSearching={isSearching}
+            />
+            <div className="px-6 pb-6">
+              <CaseDetailsView
+                selectedPerson={selectedPerson}
+                handleRecordsRequest={handleRecordsRequest}
                 isLoading={isPaymentLoading}
               />
-            ) : (
-              <>
-                <SearchRecordsModal
-                  searchForm={searchForm}
-                  setSearchForm={setSearchForm}
-                  searchResults={searchResults}
-                  handleSearch={handleSearch}
-                  handlePersonSelect={handlePersonSelect}
-                  onClose={handleBackToHome}
-                  isSearching={isSearching}
-                />
-                <div className="px-6 pb-6">
-                  <CaseDetailsView
-                    selectedPerson={selectedPerson}
-                    handleRecordsRequest={handleRecordsRequest}
-                  />
-                </div>
-              </>
-            )}
+            </div>
           </div>
         </div>
       )}
