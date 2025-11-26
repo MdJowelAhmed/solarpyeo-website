@@ -10,14 +10,31 @@ import { Label } from "@/components/ui/label";
 // import { useCreateIdentityDisputeMutation } from "@/redux/api/identityDisputeApi";
 import { toast } from "sonner"; // or your toast library
 import { useCreateIdentityDisputeMutation } from "@/redux/featured/identityDispute/indentityDisputeApi";
+import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 
 export default function IdentityDisputeForm() {
   const [selectedReasons, setSelectedReasons] = useState([]);
   const [otherReason, setOtherReason] = useState("");
+  const [selectedCaseId, setSelectedCaseId] = useState("");
   // const [digitalSignature, setDigitalSignature] = useState("");
   
   const [createIdentityDispute, { isLoading }] = useCreateIdentityDisputeMutation();
+   const { data: submissionFormResponse, isLoading: isDataLoading } = useSearchMySubmissionFormQuery();
+  
+    const submissionData = submissionFormResponse?.data || [];
+  
+    // Get selected case data
+    const selectedCase = submissionData.find(
+      (item) => item.submissionId.caseId === selectedCaseId
+    );
+  
+    const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+ const submissionId = selectedCase?.submissionId?._id || "[Submission-ID-Here]";
 
+    const respondent = selectedCase
+      ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${selectedCase.user.lastName}`.trim()
+      : "[Your-Name-Here]";
+const email = selectedCase?.user?.email || "[Email-Here]";
   const disputeReasons = [
     "I am not the individual referenced in this case/allegation.",
     "Someone used my name or likeness without authorization.",
@@ -56,6 +73,9 @@ export default function IdentityDisputeForm() {
     const formData = {
       identityDispute: identityDisputeArray,
       // digitalSignature: digitalSignature.trim(),
+
+      submissionId,
+    
       submittedAt: new Date().toISOString(),
     };
 
@@ -91,20 +111,47 @@ export default function IdentityDisputeForm() {
               allegation, or profile record on the platform.
             </p>
           </div>
+             <div className="w-full md:w-1/2 lg:w-1/3">
+                          <Label className="text-sm font-medium text-gray-700">
+                            Select a Case to Auto fill *
+                          </Label>
+                          <select
+                            value={selectedCaseId}
+                            onChange={(e) => setSelectedCaseId(e.target.value)}
+                            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                          >
+                            <option value="">-- Choose a case --</option>
+                            {isDataLoading ? (
+                              <option disabled>Loading cases...</option>
+                            ) : submissionData.length === 0 ? (
+                              <option disabled>No cases found</option>
+                            ) : (
+                              submissionData.map((item) => (
+                                <option
+                                  key={item._id}
+                                  value={item.submissionId.caseId}
+                                >
+                                  {item.submissionId.caseId} - {item.user.firstName}{" "}
+                                  {item.user.lastName} ({item.status})
+                                </option>
+                              ))
+                            )}
+                          </select>
+                        </div>
 
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <strong>Platform Case Reference ID:</strong> [Auto-populated]
+              <strong>Platform Case Reference ID:</strong> {caseId}
             </div>
-            <div>
+            {/* <div>
               <strong>Linked Record or Profile ID:</strong> [Auto-populated]
-            </div>
+            </div> */}
             <div>
-              <strong>Your Full Legal Name:</strong> [Auto-populated]
+              <strong>Your Full Legal Name:</strong> {respondent}
             </div>
             <div>
               <strong>Your Verified Platform Account Email:</strong>{" "}
-              [Auto-populated]
+              {email}
             </div>
           </div>
         </div>
