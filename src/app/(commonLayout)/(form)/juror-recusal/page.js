@@ -5,9 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, FileText, Shield, PenTool } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
+// import { useCreateJurorRecusalMutation } from "@/redux/api/jurorRecusalApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useCreateJurorRecusalMutation } from "@/redux/featured/jurorRecusal/jurorRecusalApi";
 
 const JurorRecusalForm = () => {
+  const router = useRouter();
+  const [createJurorRecusal, { isLoading }] = useCreateJurorRecusalMutation();
+
   const [conflictChecks, setConflictChecks] = useState({
     knowParties: false,
     priorDispute: false,
@@ -20,9 +27,18 @@ const JurorRecusalForm = () => {
 
   const [recusalReason, setRecusalReason] = useState("");
   const [requestingRecusal, setRequestingRecusal] = useState(false);
-  const [consentPlatformUse, setConsentPlatformUse] = useState(false);
-  const [digitalSignature, setDigitalSignature] = useState("");
   const [otherConflictText, setOtherConflictText] = useState("");
+  const [submissionId, setSubmissionId] = useState("690c4267229f0256db9e57b7"); // Replace with actual ID
+
+  const conflictMapping = {
+    knowParties: "I personally know the parties in this case",
+    priorDispute: "I have worked with or had a prior dispute with either party",
+    socialMedia: "I am connected via social media or past relationship with either party",
+    priorJuror: "I have previously served as a juror on a related case involving either party",
+    financialRelationship: "I have a financial, familial or organizational relationship with either party",
+    emotionalStress: "This case presents content that would cause emotional or psychological stress",
+    otherConflict: otherConflictText || "Other conflict or concern",
+  };
 
   const handleConflictChange = (key, checked) => {
     setConflictChecks((prev) => ({
@@ -31,13 +47,78 @@ const JurorRecusalForm = () => {
     }));
   };
 
+  const handleSubmit = async () => {
+    // Validation
+    const hasAnyConflict = Object.values(conflictChecks).some((value) => value);
+    
+    if (!hasAnyConflict) {
+      toast.error("Please select at least one conflict to request recusal");
+      return;
+    }
+
+    if (!requestingRecusal) {
+      toast.error("Please confirm that you are requesting recusal");
+      return;
+    }
+
+    if (!recusalReason.trim()) {
+      toast.error("Please provide a reason for recusal");
+      return;
+    }
+
+    if (conflictChecks.otherConflict && !otherConflictText.trim()) {
+      toast.error("Please describe the other conflict");
+      return;
+    }
+
+    // Build conflict array
+    const conflictArray = Object.keys(conflictChecks)
+      .filter((key) => conflictChecks[key])
+      .map((key) => conflictMapping[key]);
+
+    // Prepare payload
+    const payload = {
+      conflict: conflictArray,
+      reason: recusalReason,
+      submittionId: submissionId,
+    };
+
+    try {
+      const response = await createJurorRecusal(payload).unwrap();
+      toast.success("Recusal form submitted successfully!");
+      
+      // Reset form
+      setConflictChecks({
+        knowParties: false,
+        priorDispute: false,
+        socialMedia: false,
+        priorJuror: false,
+        financialRelationship: false,
+        emotionalStress: false,
+        otherConflict: false,
+      });
+      setRecusalReason("");
+      setRequestingRecusal(false);
+      setOtherConflictText("");
+      
+      // Redirect to dashboard
+      // router.push("/juror-dashboard");
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to submit recusal form");
+      console.error("Submission error:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    router.push("/juror-dashboard");
+  };
+
   return (
     <div className="">
       {/* Header */}
       <div className="bg-secondary-foreground custom-padding">
         <div className="mb-6">
           <div className=" mb-3">
-            {/* <FileText className="w-6 h-6 text-gray-600" /> */}
             <h3 className="">📄 Juror Recusal & Conflict Declaration Form</h3>
           </div>
 
@@ -57,7 +138,6 @@ const JurorRecusalForm = () => {
         </div>
 
         {/* Section 1: Declare A Conflict Of Interest Or Personal Involvement */}
-
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardTitle className="">
@@ -194,12 +274,15 @@ const JurorRecusalForm = () => {
                   </label>
                 </div>
 
-                <Textarea
-                  placeholder="Please describe..."
-                  value={otherConflictText}
-                  onChange={(e) => setOtherConflictText(e.target.value)}
-                  className=" min-h-[150px]"
-                />
+                {conflictChecks.otherConflict && (
+                  <Textarea
+                    placeholder="Please describe..."
+                    value={otherConflictText}
+                    onChange={(e) => setOtherConflictText(e.target.value)}
+                    className="min-h-[150px]"
+                    required
+                  />
+                )}
               </div>
             </div>
           </CardContent>
@@ -210,10 +293,7 @@ const JurorRecusalForm = () => {
       <div className="bg-secondary custom-padding">
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
-            <CardTitle className="">
-              {/* <Shield className="w-5 h-5" /> */}
-              Request Recusal
-            </CardTitle>
+            <CardTitle className="">Request Recusal</CardTitle>
             <p className="text-justify">
               You must check at least one box above to request recusal from this
               case.
@@ -222,16 +302,19 @@ const JurorRecusalForm = () => {
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             <div className="space-y-5">
               <div>
-                <label className="">Reason For Recusal Request:</label>
+                <label className="font-medium">
+                  Reason For Recusal Request: <span className="text-red-500">*</span>
+                </label>
                 <Textarea
                   placeholder="Please elaborate..."
                   value={recusalReason}
                   onChange={(e) => setRecusalReason(e.target.value)}
-                  className="min-h-[120px]"
+                  className="min-h-[120px] mt-2"
+                  required
                 />
               </div>
 
-              <div className="flex items-start space-x-3 ">
+              <div className="flex items-start space-x-3">
                 <Checkbox
                   id="requestingRecusal"
                   checked={requestingRecusal}
@@ -243,7 +326,7 @@ const JurorRecusalForm = () => {
                   className="text-gray-700 cursor-pointer"
                 >
                   I am requesting a recusal from this case and understand that
-                  another juror will be assigned in my place.
+                  another juror will be assigned in my place. <span className="text-red-500">*</span>
                 </label>
               </div>
             </div>
@@ -251,89 +334,11 @@ const JurorRecusalForm = () => {
         </div>
       </div>
 
-      {/* Section 3: Platform Use Of Conflict Data */}
-      {/* <div className="bg-secondary-foreground custom-padding">
-        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
-          <CardHeader className="w-full lg:w-1/5">
-            <CardTitle className="">
-              Platform Use of Conflict Data (Optional)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-            <div className="flex items-start space-x-3">
-              <Checkbox
-                id="consentPlatformUse"
-                checked={consentPlatformUse}
-                onCheckedChange={setConsentPlatformUse}
-                className="mt-1"
-              />
-              <label
-                htmlFor="consentPlatformUse"
-                className="text-gray-700 cursor-pointer"
-              >
-                I consent to the platform using this declaration to avoid
-                matching me to future cases involving the same individuals.
-              </label>
-            </div>
-          </CardContent>
-        </div>
-      </div> */}
-
-      {/* Section 4: Affirmation & Digital Signature */}
-      {/* <div className="bg-secondary-foreground custom-padding">
-        <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
-          <CardHeader className="w-full lg:w-1/5">
-            <CardTitle className="">
-             
-               Affirmation & Digital Signature
-             
-            </CardTitle>
-            <p className="text-justify">
-              You must check at least one box above to request recusal from this case.
-            </p>
-          </CardHeader>
-          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-            <p className="text-gray-700 mb-6">
-              I declare that all information on this form is true and correct,
-              to the best of my knowledge. I understand that false declarations
-              may result in removal from the Juror Program and platform
-              sanctions.
-            </p>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium  mb-3">
-                  Digital Signature: <span className="text-red-500">*</span>{" "}
-                </label>
-                <div className="text-xs text-gray-500 mb-3">
-                  Type your legal name:
-                </div>
-                <input
-                  type="text"
-                  value={digitalSignature}
-                  onChange={(e) => setDigitalSignature(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your full legal name"
-                />
-              </div>
-
-              <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-                📅 [Auto-Date/Time] date: {new Date().toLocaleDateString()}
-              </div>
-            </div>
-          </CardContent>
-        </div>
-      </div> */}
-
       {/* Warning Messages */}
       <div className="bg-secondary custom-padding">
-        {/* Main Alert Box */}
         <div className="bg-primary-foreground border-l-4 border-red-700 rounded-md p-4">
           <div className="flex items-start gap-2">
-            {/* Icon */}
             <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-
-            {/* Text Content */}
             <div className="text-sm text-red-700 leading-relaxed">
               <p>
                 <span className="font-medium text-red-800">
@@ -373,10 +378,26 @@ const JurorRecusalForm = () => {
 
       {/* Action Buttons */}
       <div className="container mx-auto flex gap-4 justify-end mb-12">
-        <Button className="" size="lg">
-          Submit Declaration Form
+        <Button 
+          onClick={handleSubmit} 
+          size="lg"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            "Submit Declaration Form"
+          )}
         </Button>
-        <Button variant="outline" className="" size="lg">
+        <Button 
+          variant="outline" 
+          size="lg"
+          onClick={handleCancel}
+          disabled={isLoading}
+        >
           Return To Juror Dashboard
         </Button>
       </div>

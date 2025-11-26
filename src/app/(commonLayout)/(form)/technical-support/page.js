@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { useCreateTechnicalSupportMutation } from "@/redux/featured/technicalSupport/technicalSupportApi";
 // import { useCreateTechnicalSupportMutation } from "@/redux/api/technicalSupportApi";
+import { toast } from "sonner";
 
 export default function TechnicalSupportForm() {
   const [createTechnicalSupport, { isLoading }] =
@@ -27,11 +28,12 @@ export default function TechnicalSupportForm() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [initiatorDob, setInitiatorDob] = useState(null);
+  const [issueDate, setIssueDate] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
     userName: "",
-    receiveSupport: "",
+    email: "",
     phone: "",
     issueClassification: [],
     otherIssueDescription: "",
@@ -85,39 +87,39 @@ export default function TechnicalSupportForm() {
     try {
       // Validation - check all required fields
       if (!formData.name) {
-        alert("Please enter your name");
+        toast.error("Please enter your name");
         return;
       }
       if (!formData.phone) {
-        alert("Please enter your phone number");
+        toast.error("Please enter your phone number");
         return;
       }
       if (!formData.description) {
-        alert("Please enter issue description");
+        toast.error("Please enter issue description");
         return;
       }
       if (!formData.dateAndTime) {
-        alert("Please enter date and time of issue");
+        toast.error("Please select the issue date");
         return;
       }
       if (formData.deviceType.length === 0) {
-        alert("Please select device type");
+        toast.error("Please select device type");
         return;
       }
       if (formData.browserApp.length === 0) {
-        alert("Please select browser/app");
+        toast.error("Please select browser/app");
         return;
       }
       if(formData.impact === ""){
-        alert("Please enter impact");
+        toast.error("Please select impact");
         return;
       }
       if (!formData.receiveSupport) {
-        alert("Please select preferred support method");
+        toast.error("Please select preferred support method");
         return;
       }
       if (!formData.scheduleCall) {
-        alert("Please select if you want to schedule a call");
+        toast.error("Please select if you want to schedule a call");
         return;
       }
 
@@ -134,15 +136,15 @@ export default function TechnicalSupportForm() {
       submitData.append("dateAndTime", formData.dateAndTime);
       submitData.append("deviceType", formData.deviceType.join(", "));
       submitData.append("browserApp", formData.browserApp.join(", "));
-      submitData.append("receiveSupport", formData.receiveSupport);
+      submitData.append("receiveSupport", (formData.receiveSupport || "").toLowerCase());
       submitData.append("scheduleCall", formData.scheduleCall);
 
       // Optional fields
       if (formData.userName) {
         submitData.append("userName", formData.userName);
       }
-      if (formData.receiveSupport) {
-        submitData.append("email", formData.receiveSupport);
+      if (formData.email) {
+        submitData.append("email", formData.email);
       }
       if (formData.issueClassification.length > 0) {
         submitData.append(
@@ -189,17 +191,15 @@ export default function TechnicalSupportForm() {
       // Submit the form
       const response = await createTechnicalSupport(submitData).unwrap();
 
-      alert("Technical Support Request submitted successfully!");
+      toast.success("Technical Support Request submitted successfully!");
       console.log("Response:", response);
 
       // Reset form
       resetForm();
     } catch (error) {
       console.error("Submission error:", error);
-      alert(
-        `Failed to submit request: ${
-          error?.data?.message || error.message || "Unknown error"
-        }`
+      toast.error(
+        error?.data?.message || error.message || "Failed to submit request"
       );
     }
   };
@@ -208,7 +208,7 @@ export default function TechnicalSupportForm() {
     setFormData({
       name: "",
       userName: "",
-      receiveSupport: "",
+      email: "",
       phone: "",
       issueClassification: [],
       otherIssueDescription: "",
@@ -286,8 +286,8 @@ export default function TechnicalSupportForm() {
                   id="email"
                   type="email"
                   placeholder="user@example.com"
-                  value={formData.receiveSupport}
-                  onChange={(e) => handleInputChange("receiveSupport", e.target.value)} 
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   required
                 />
               </div>
@@ -394,16 +394,40 @@ export default function TechnicalSupportForm() {
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             <div>
               <Label className="text-base font-medium">
-                Date and Time Issue Occurred:
+                Date Issue Occurred:
               </Label>
-              <Input
-                type="text"
-                placeholder="write occurred date and time"
-                value={formData.dateAndTime}
-                onChange={(e) =>
-                  handleInputChange("dateAndTime", e.target.value)
-                }
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {issueDate
+                      ? issueDate.toLocaleDateString()
+                      : "Pick a date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-6">
+                  <div className="space-y-2">
+                    <Input
+                      type="date"
+                      value={issueDate ? issueDate.toISOString().split("T")[0] : ""}
+                      onChange={(e) => {
+                        const val = e.target.value; // YYYY-MM-DD
+                        if (val) {
+                          const d = new Date(val);
+                          setIssueDate(d);
+                          handleInputChange("dateAndTime", `${val}T00:00:00.000Z`);
+                        } else {
+                          setIssueDate(null);
+                          handleInputChange("dateAndTime", "");
+                        }
+                      }}
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
               <div className="mt-3 space-y-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <Label>Device Type:</Label>
@@ -631,7 +655,7 @@ export default function TechnicalSupportForm() {
                   handleRadioChange("receiveSupport", value)
                 }
               >
-                {["Email", "Phone"].map((method, index) => (
+                {["email", "phone"].map((method, index) => (
                   <div key={index} className="flex items-center space-x-3">
                     <RadioGroupItem value={method} id={`contact-${index}`} />
                     <Label htmlFor={`contact-${index}`} className="text-sm">
