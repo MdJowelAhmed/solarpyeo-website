@@ -396,10 +396,10 @@ export default function TechnicalSupportForm() {
           </CardHeader>
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
             <div className="">
-              <Label className="text-base font-medium">
+              {/* <Label className="text-base font-medium">
                 Date Issue Occurred:
-              </Label>
-              <div className="w-full md:w-1/2">
+              </Label> */}
+              {/* <div className="w-full md:w-1/2">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -438,7 +438,32 @@ export default function TechnicalSupportForm() {
                     </div>
                   </PopoverContent>
                 </Popover>
+              </div> */}
+
+              <div className="w-full md:w-1/2">
+                <Label className="text-base font-medium">
+                  Date Issue Occurred:
+                </Label>
+
+                <input
+                  type="date"
+                  value={issueDate ? issueDate.toISOString().split("T")[0] : ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+
+                    if (val) {
+                      const d = new Date(val);
+                      setIssueDate(d);
+                      handleInputChange("dateAndTime", `${val}T00:00:00.000Z`);
+                    } else {
+                      setIssueDate(null);
+                      handleInputChange("dateAndTime", "");
+                    }
+                  }}
+                  className="w-full  p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
+
               <div className="mt-3 space-y-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <Label>Device Type:</Label>
