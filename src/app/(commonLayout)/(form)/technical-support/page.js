@@ -110,7 +110,7 @@ export default function TechnicalSupportForm() {
         toast.error("Please select browser/app");
         return;
       }
-      if(formData.impact === ""){
+      if (formData.impact === "") {
         toast.error("Please select impact");
         return;
       }
@@ -136,7 +136,10 @@ export default function TechnicalSupportForm() {
       submitData.append("dateAndTime", formData.dateAndTime);
       submitData.append("deviceType", formData.deviceType.join(", "));
       submitData.append("browserApp", formData.browserApp.join(", "));
-      submitData.append("receiveSupport", (formData.receiveSupport || "").toLowerCase());
+      submitData.append(
+        "receiveSupport",
+        (formData.receiveSupport || "").toLowerCase()
+      );
       submitData.append("scheduleCall", formData.scheduleCall);
 
       // Optional fields
@@ -392,42 +395,50 @@ export default function TechnicalSupportForm() {
             <CardTitle className="">Technical Details (If Known)</CardTitle>
           </CardHeader>
           <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-            <div>
+            <div className="">
               <Label className="text-base font-medium">
                 Date Issue Occurred:
               </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-left font-normal"
-                  >
-                    <Calendar className="mr-2 h-4 w-4" />
-                    {issueDate
-                      ? issueDate.toLocaleDateString()
-                      : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-6">
-                  <div className="space-y-2">
-                    <Input
-                      type="date"
-                      value={issueDate ? issueDate.toISOString().split("T")[0] : ""}
-                      onChange={(e) => {
-                        const val = e.target.value; // YYYY-MM-DD
-                        if (val) {
-                          const d = new Date(val);
-                          setIssueDate(d);
-                          handleInputChange("dateAndTime", `${val}T00:00:00.000Z`);
-                        } else {
-                          setIssueDate(null);
-                          handleInputChange("dateAndTime", "");
+              <div className="w-full md:w-1/2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal"
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {issueDate
+                        ? issueDate.toLocaleDateString()
+                        : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-6">
+                    <div className="space-y-2 ">
+                      <Input
+                        type="date"
+                        value={
+                          issueDate ? issueDate.toISOString().split("T")[0] : ""
                         }
-                      }}
-                    />
-                  </div>
-                </PopoverContent>
-              </Popover>
+                        onChange={(e) => {
+                          const val = e.target.value; // YYYY-MM-DD
+                          if (val) {
+                            const d = new Date(val);
+                            setIssueDate(d);
+                            handleInputChange(
+                              "dateAndTime",
+                              `${val}T00:00:00.000Z`
+                            );
+                          } else {
+                            setIssueDate(null);
+                            handleInputChange("dateAndTime", "");
+                          }
+                        }}
+                        className="w-full  "
+                      />
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className="mt-3 space-y-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <Label>Device Type:</Label>
