@@ -10,10 +10,38 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateJurorProgramMutation } from "@/redux/featured/jurorProgram/jurorProgramApi";
+import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
+import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
+import moment from "moment";
 
 const JurorApplicationForm = () => {
   const [createJurorProgram, { isLoading }] = useCreateJurorProgramMutation();
-  
+  // const [selectedCaseId, setSelectedCaseId] = useState("");
+  // const { data: submissionFormResponse, isLoading: isDataLoading } =
+  //   useSearchMySubmissionFormQuery();
+  //   console.log(submissionFormResponse);
+
+  // const submissionData = submissionFormResponse?.data || [];
+
+  // // Get selected case data
+  // const selectedCase = submissionData.find(
+  //   (item) => item.submissionId.caseId === selectedCaseId
+  // );
+
+  // const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+  // const submissionId =
+  //   selectedCase?.submissionId?._id || "[Submission-ID-Here]";
+
+  // const respondent = selectedCase
+  //   ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
+  //       selectedCase.user.lastName
+  //     }`.trim()
+  //   : "[Your-Name-Here]";
+  // const email = selectedCase?.user?.email || "[Email-Here]";
+
+    const { data: userData } = useMyProfileQuery();
+    console.log("from submission page", userData);
+
   const [formData, setFormData] = useState({
     showCurrentAddress: "no",
     eligibilityChecks: [],
@@ -30,7 +58,7 @@ const JurorApplicationForm = () => {
     "I will serve impartially, based solely on the evidence provided.",
     "I will not share my platform credentials or allow anyone other than myself to operate using my unique platform-based Juror ID.",
     "I understand completion of the Juror Orientation and Ethics Test is required.",
-    "I must submit a government-issued photo ID that is not expired."
+    "I must submit a government-issued photo ID that is not expired.",
   ];
 
   const platformItems = [
@@ -39,7 +67,7 @@ const JurorApplicationForm = () => {
     "I consent to receiving notifications for Juror assignments.",
     "I understand my performance may be reviewed and audited for fairness and consistency.",
     "I understand I may be removed from the juror pool at the Platform's discretion.",
-    "I understand I will be contacted regarding this application to complete this process."
+    "I understand I will be contacted regarding this application to complete this process.",
   ];
 
   const handleCheckboxChange = (section, value, checked) => {
@@ -70,15 +98,17 @@ const JurorApplicationForm = () => {
 
     try {
       const submitData = {
-        eligibilityAttestation: formData.eligibilityChecks.map((idx) => eligibilityTexts[idx]),
+        eligibilityAttestation: formData.eligibilityChecks.map(
+          (idx) => eligibilityTexts[idx]
+        ),
         affidavit: [formData.digitalSignature, formData.showCurrentAddress],
         platform: formData.platformConsent.map((idx) => platformItems[idx]),
       };
 
       const response = await createJurorProgram(submitData).unwrap();
-      
+
       toast.success("Application submitted successfully!");
-      
+
       // Reset form
       setFormData({
         showCurrentAddress: "no",
@@ -86,10 +116,12 @@ const JurorApplicationForm = () => {
         digitalSignature: "",
         platformConsent: [],
       });
-      
     } catch (error) {
       console.error("Submission error:", error);
-      toast.error(error?.data?.message || "Failed to submit application. Please try again.");
+      toast.error(
+        error?.data?.message ||
+          "Failed to submit application. Please try again."
+      );
     }
   };
 
@@ -105,6 +137,7 @@ const JurorApplicationForm = () => {
                 📝 Application and Affidavit for Enrollment in Juror Program
               </h2>
             </div>
+
             <p className="text-sm mb-8">
               <strong>Platform Name</strong>: Glass File
             </p>
@@ -124,6 +157,31 @@ const JurorApplicationForm = () => {
                 </div>
               </div>
             </div>
+
+            {/* <div className="w-full md:w-1/2 lg:w-1/3">
+              <Label className="text-sm font-medium ">
+                Select a Case to Auto fill *
+              </Label>
+              <select
+                value={selectedCaseId}
+                onChange={(e) => setSelectedCaseId(e.target.value)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+              >
+                <option value="">-- Choose a case --</option>
+                {isDataLoading ? (
+                  <option disabled>Loading cases...</option>
+                ) : submissionData.length === 0 ? (
+                  <option disabled>No cases found</option>
+                ) : (
+                  submissionData.map((item) => (
+                    <option key={item._id} value={item.submissionId.caseId}>
+                      {item.submissionId.caseId} - {item.user.firstName}{" "}
+                      {item.user.lastName} ({item.status})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div> */}
           </div>
         </div>
 
@@ -138,39 +196,39 @@ const JurorApplicationForm = () => {
                 <div>
                   <Label
                     htmlFor="fullName"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
-                    Full Legal Name: (Auto-filled)
+                    Full Legal Name: <span className=" font-bold">{userData?.firstName} {userData?.middleName || ""} {userData?.lastName}</span>
                   </Label>
                 </div>
-                <div>
+                {/* <div>
                   <Label
                     htmlFor="username"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
                     Username: (Auto-filled)
                   </Label>
-                </div>
+                </div> */}
                 <div>
                   <Label
                     htmlFor="dateOfBirth"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
-                    Date of Birth: (Auto-filled)
+                    Date of Birth: <span className=" font-bold">{moment(userData?.birthDate).format("L")}</span>
                   </Label>
                 </div>
                 <div>
                   <Label
                     htmlFor="email"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
-                    Email Address: (Auto-filled)
+                    Email Address: <span className=" font-bold">{userData?.email}</span>
                   </Label>
                 </div>
               </div>
 
               <div className="mt-6">
-                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                <Label className="text-sm font-medium  mb-3 block">
                   Does your ID show your current address?
                 </Label>
                 <RadioGroup
@@ -184,15 +242,15 @@ const JurorApplicationForm = () => {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="yes" id="yes" />
-                    <Label htmlFor="yes" className="text-sm">
+                    <p htmlFor="yes" className="text-sm">
                       Yes
-                    </Label>
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="no" id="no" />
-                    <Label htmlFor="no" className="text-sm">
+                    <p htmlFor="no" className="text-sm">
                       No
-                    </Label>
+                    </p>
                   </div>
                 </RadioGroup>
               </div>
@@ -207,7 +265,7 @@ const JurorApplicationForm = () => {
               <CardTitle className="">ELIGIBILITY ATTESTATION</CardTitle>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-              <p className="text-sm text-gray-700 mb-4">
+              <p className="text-sm  mb-4">
                 Please confirm each of the following:
               </p>
               <div className="space-y-5">
@@ -271,7 +329,7 @@ const JurorApplicationForm = () => {
                     />
                     <Label
                       htmlFor={`eligibility-${index}`}
-                      className="text-sm text-gray-700"
+                      className="text-sm "
                     >
                       {item}
                     </Label>
@@ -295,7 +353,7 @@ const JurorApplicationForm = () => {
                 <h2 className="font-bold text-gray-800 mb-3">
                   I, The Undersigned, Affirm Under Penalty Of Perjury:
                 </h2>
-                <ul className="space-y-2 text-sm text-gray-700">
+                <ul className="space-y-2 text-sm ">
                   <li>
                     • That the information I have provided in this application
                     is true and complete to the best of my knowledge.
@@ -323,7 +381,7 @@ const JurorApplicationForm = () => {
                 <div>
                   <Label
                     htmlFor="signature"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
                     Digital Signature (type full legal name):
                   </Label>
@@ -343,7 +401,7 @@ const JurorApplicationForm = () => {
                 <div>
                   <Label
                     htmlFor="date"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium "
                   >
                     Date: (Auto-filled)
                   </Label>
@@ -363,7 +421,7 @@ const JurorApplicationForm = () => {
               <CardTitle className="">PLATFORM USE AND CONSENT</CardTitle>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-              <p className="text-sm text-gray-700 mb-4">
+              <p className="text-sm  mb-4">
                 By submitting this form:
               </p>
               <div className="space-y-3">
@@ -386,7 +444,7 @@ const JurorApplicationForm = () => {
                     />
                     <Label
                       htmlFor={`consent-${index}`}
-                      className="text-sm text-gray-700"
+                      className="text-sm "
                     >
                       {item}
                     </Label>
@@ -398,7 +456,7 @@ const JurorApplicationForm = () => {
 
           {/* Submit Button */}
           <div className="flex justify-center py-6">
-            <Button 
+            <Button
               onClick={handleSubmit}
               disabled={isLoading}
               className="px-8 py-6"

@@ -16,6 +16,7 @@ import {
 // import { useCreateRespondentSubmissionMutation } from "@/redux/api/respondentSubmissionApi";
 import { toast } from "sonner"; // or your toast library
 import { useCreateRespondentSubmissionMutation } from "@/redux/featured/RespondentSubmission/RespondentSubmissionApi";
+import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 
 export default function RespondentSubmissionForm() {
   const [selectedResponse, setSelectedResponse] = useState("deny");
@@ -25,6 +26,29 @@ export default function RespondentSubmissionForm() {
 
   const [createRespondentSubmission, { isLoading }] =
     useCreateRespondentSubmissionMutation();
+
+      const [selectedCaseId, setSelectedCaseId] = useState("");
+  const { data: submissionFormResponse, isLoading: isDataLoading } =
+    useSearchMySubmissionFormQuery();
+    console.log(submissionFormResponse);
+
+  const submissionData = submissionFormResponse?.data || [];
+
+  // Get selected case data
+  const selectedCase = submissionData.find(
+    (item) => item.submissionId.caseId === selectedCaseId
+  );
+
+  const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+  const submissionId =
+    selectedCase?.submissionId?._id || "[Submission-ID-Here]";
+
+  const respondent = selectedCase
+    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
+        selectedCase.user.lastName
+      }`.trim()
+    : "[Your-Name-Here]";
+  const email = selectedCase?.user?.email || "[Email-Here]";
 
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
