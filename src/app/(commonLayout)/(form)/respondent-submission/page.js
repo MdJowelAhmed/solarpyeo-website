@@ -99,6 +99,7 @@ export default function RespondentSubmissionForm() {
 
       // Add signature
       formData.append("signature", digitalSignature);
+      formData.append("submissionId", submissionId);
 
       // Add signature date (ISO format)
       const signatureDate = new Date().toISOString();

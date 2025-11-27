@@ -32,35 +32,43 @@ const JurorRecusalForm = () => {
   const [requestingRecusal, setRequestingRecusal] = useState(false);
   const [otherConflictText, setOtherConflictText] = useState("");
   const [selectedCaseId, setSelectedCaseId] = useState("");
-    const { data: userData } = useMyProfileQuery();
-      console.log("from juror recusal page", userData);
+  const { data: userData } = useMyProfileQuery();
+  console.log("from juror recusal page", userData);
 
-       const { data: submissionFormResponse, isLoading: isDataLoading } = useSearchMySubmissionFormQuery();
-       console.log("from juror recusal page", submissionFormResponse);
-        
-          const submissionData = submissionFormResponse?.data || [];
-        
-          // Get selected case data
-          const selectedCase = submissionData.find(
-            (item) => item.submissionId.caseId === selectedCaseId
-          );
-        
-          const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
-       const submissionId = selectedCase?.submissionId?._id || "[Submission-ID-Here]";
-      
-          const respondent = selectedCase
-            ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${selectedCase.user.lastName}`.trim()
-            : "[Your-Name-Here]";
-      const email = selectedCase?.user?.email || "[Email-Here]";
+  const { data: submissionFormResponse, isLoading: isDataLoading } =
+    useSearchMySubmissionFormQuery();
+  console.log("from juror recusal page", submissionFormResponse);
+
+  const submissionData = submissionFormResponse?.data || [];
+
+  // Get selected case data
+  const selectedCase = submissionData.find(
+    (item) => item.submissionId.caseId === selectedCaseId
+  );
+
+  const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+  const submissionId =
+    selectedCase?.submissionId?._id || "[Submission-ID-Here]";
+
+  const respondent = selectedCase
+    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
+        selectedCase.user.lastName
+      }`.trim()
+    : "[Your-Name-Here]";
+  const email = selectedCase?.user?.email || "[Email-Here]";
   // const [submissionId, setSubmissionId] = useState("690c4267229f0256db9e57b7"); // Replace with actual ID
 
   const conflictMapping = {
     knowParties: "I personally know the parties in this case",
     priorDispute: "I have worked with or had a prior dispute with either party",
-    socialMedia: "I am connected via social media or past relationship with either party",
-    priorJuror: "I have previously served as a juror on a related case involving either party",
-    financialRelationship: "I have a financial, familial or organizational relationship with either party",
-    emotionalStress: "This case presents content that would cause emotional or psychological stress",
+    socialMedia:
+      "I am connected via social media or past relationship with either party",
+    priorJuror:
+      "I have previously served as a juror on a related case involving either party",
+    financialRelationship:
+      "I have a financial, familial or organizational relationship with either party",
+    emotionalStress:
+      "This case presents content that would cause emotional or psychological stress",
     otherConflict: otherConflictText || "Other conflict or concern",
   };
 
@@ -74,7 +82,7 @@ const JurorRecusalForm = () => {
   const handleSubmit = async () => {
     // Validation
     const hasAnyConflict = Object.values(conflictChecks).some((value) => value);
-    
+
     if (!hasAnyConflict) {
       toast.error("Please select at least one conflict to request recusal");
       return;
@@ -110,7 +118,7 @@ const JurorRecusalForm = () => {
     try {
       const response = await createJurorRecusal(payload).unwrap();
       toast.success("Recusal form submitted successfully!");
-      
+
       // Reset form
       setConflictChecks({
         knowParties: false,
@@ -124,7 +132,7 @@ const JurorRecusalForm = () => {
       setRecusalReason("");
       setRequestingRecusal(false);
       setOtherConflictText("");
-      
+
       // Redirect to dashboard
       // router.push("/juror-dashboard");
     } catch (error) {
@@ -145,46 +153,44 @@ const JurorRecusalForm = () => {
           <div className=" mb-3">
             <h3 className="">📄 Juror Recusal & Conflict Declaration Form</h3>
           </div>
-  <div className="w-full md:w-1/2 lg:w-1/3">
-                          <Label className="text-sm font-medium text-gray-700">
-                            Select a Case to Auto fill *
-                          </Label>
-                          <select
-                            value={selectedCaseId}
-                            onChange={(e) => setSelectedCaseId(e.target.value)}
-                            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
-                          >
-                            <option value="">-- Choose a case --</option>
-                            {isDataLoading ? (
-                              <option disabled>Loading cases...</option>
-                            ) : submissionData.length === 0 ? (
-                              <option disabled>No cases found</option>
-                            ) : (
-                              submissionData.map((item) => (
-                                <option
-                                  key={item._id}
-                                  value={item.submissionId.caseId}
-                                >
-                                  {item.submissionId.caseId} - {item.user.firstName}{" "}
-                                  {item.user.lastName} ({item.status})
-                                </option>
-                              ))
-                            )}
-                          </select>
-                        </div>
+          <div className="w-full md:w-1/2 lg:max-w-2xl mx-auto mb-6">
+            <Label className="text-sm font-medium text-gray-700">
+              Select a Case to Auto fill *
+            </Label>
+            <select
+              value={selectedCaseId}
+              onChange={(e) => setSelectedCaseId(e.target.value)}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+            >
+              <option value="">-- Choose a case --</option>
+              {isDataLoading ? (
+                <option disabled>Loading cases...</option>
+              ) : submissionData.length === 0 ? (
+                <option disabled>No cases found</option>
+              ) : (
+                submissionData.map((item) => (
+                  <option key={item._id} value={item.submissionId.caseId}>
+                    {item.submissionId.caseId} - {item.user.firstName}{" "}
+                    {item.user.lastName} ({item.status})
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
           <div className="space-y-2 max-w-2xl mx-auto ">
             <div>
-              <span className="font-medium">Juror ID:</span> {userData?._id} [Auto-generated]
+              Juror ID:
+              <span className="font-medium">{userData?._id}</span>
             </div>
             <div>
-              <span className="font-medium">Assigned Case Reference ID:</span>{" "}
-              {caseId}
-              [Auto-populated]
+              Assigned Case Reference ID:
+              <span className="font-medium"> {caseId}</span>{" "}
             </div>
-            <div>
-              <span className="font-medium">Case Type:</span> [Major/Minor -
-              Appeal] [Auto-populated]
-            </div>
+            {/* <div>
+              Case Type:
+              <span className="font-medium"> {caseType}</span>
+             
+            </div> */}
           </div>
         </div>
 
@@ -354,7 +360,8 @@ const JurorRecusalForm = () => {
             <div className="space-y-5">
               <div>
                 <label className="font-medium">
-                  Reason For Recusal Request: <span className="text-red-500">*</span>
+                  Reason For Recusal Request:{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <Textarea
                   placeholder="Please elaborate..."
@@ -377,7 +384,8 @@ const JurorRecusalForm = () => {
                   className="text-gray-700 cursor-pointer"
                 >
                   I am requesting a recusal from this case and understand that
-                  another juror will be assigned in my place. <span className="text-red-500">*</span>
+                  another juror will be assigned in my place.{" "}
+                  <span className="text-red-500">*</span>
                 </label>
               </div>
             </div>
@@ -429,11 +437,7 @@ const JurorRecusalForm = () => {
 
       {/* Action Buttons */}
       <div className="container mx-auto flex gap-4 justify-end mb-12">
-        <Button 
-          onClick={handleSubmit} 
-          size="lg"
-          disabled={isLoading}
-        >
+        <Button onClick={handleSubmit} size="lg" disabled={isLoading}  className="py-6">
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -443,14 +447,14 @@ const JurorRecusalForm = () => {
             "Submit Declaration Form"
           )}
         </Button>
-        <Button 
-          variant="outline" 
+        {/* <Button
+          variant="outline"
           size="lg"
           onClick={handleCancel}
           disabled={isLoading}
         >
           Return To Juror Dashboard
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
