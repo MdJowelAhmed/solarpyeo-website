@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, Download, X, Loader2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Eye, Download, X, Loader2, CloudFog } from "lucide-react";
 import { Card } from "../ui/card";
 import {
   File,
@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import SearchRecordsModal from "./SearchRecordsModal";
 import CaseDetailsView from "./CaseDetailsView";
-import { usePaymentForFilesMutation, useSearchFilesByUserMutation } from "@/redux/featured/searchFiles/searchFilesApi";
+import { usePaymentForFilesMutation, useSearchFilesByUserMutation, useSearchFilesQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 // import {
 //   useSearchFilesByUserMutation,
 //   usePaymentForFilesMutation,
@@ -33,6 +33,7 @@ const RelationshipArchive = () => {
 
   const [searchFilesByUser] = useSearchFilesByUserMutation();
   const [paymentForFiles, { isLoading: isPaymentLoading }] = usePaymentForFilesMutation();
+  const { data: userCasesRes } = useSearchFilesQuery(selectedPerson?.id, { skip: !selectedPerson?.id });
 
   const handleViewRecordsClick = () => {
     setShowViewRecords(true);
@@ -60,20 +61,17 @@ const RelationshipArchive = () => {
         lastName: searchForm.lastName,
         birthDate: formattedDate,
       }).unwrap();
-
+console.log("response", response);
       if (response.success && response.data) {
-        // Transform API data to match the expected format
         const transformedResults = response.data.map((item) => ({
-          id: item.user._id,
-          firstName: item.user.firstName,
-          middleName: item.user.middleName,
-          lastName: item.user.lastName,
-          dateOfBirth: item.user.birthDate,
-          fullName: `${item.user.firstName} ${item.user.middleName || ''} ${item.user.lastName}`.trim(),
-          email: item.user.email,
-          profile: item.user.profile,
-          // Store the case information
-          rawCases: response.data.filter(caseItem => caseItem.user._id === item.user._id)
+          id: item._id,
+          firstName: item.firstName,
+          middleName: item.middleName,
+          lastName: item.lastName,
+          dateOfBirth: item.birthDate,
+          fullName: `${item.firstName} ${item.middleName || ''} ${item.lastName}`.trim(),
+          email: item.email,
+          profile: item.profile,
         }));
 
         // Remove duplicates based on user ID
@@ -103,47 +101,44 @@ const RelationshipArchive = () => {
   };
 
   const handlePersonSelect = (person) => {
-    // Transform the cases for display
-    const casesWithVerdict = person.rawCases.map((caseItem) => {
-      // Calculate verdict based on juror decisions
-      let verdictCode = "PENDING";
-      
-      if (caseItem.status === "APPROVED" && caseItem.jurorDecisions.length > 0) {
-        const decisions = caseItem.jurorDecisions;
-        const acceptCount = decisions.filter(d => d.action === "ACCEPT").length;
-        const rejectCount = decisions.filter(d => d.action === "REJECT").length;
-        const unableCount = decisions.filter(d => d.action === "UNABLETODECIDE").length;
-
-        if (acceptCount > rejectCount && acceptCount > unableCount) {
-          verdictCode = "PROVEN";
-        } else if (rejectCount > acceptCount && rejectCount > unableCount) {
-          verdictCode = "DISPROVEN";
-        } else if (unableCount >= acceptCount && unableCount >= rejectCount) {
-          verdictCode = "INCONCLUSIVE";
-        } else {
-          verdictCode = "CONCLUDED";
-        }
-      } else if (caseItem.status === "REJECTED") {
-        verdictCode = "DISMISSED";
-      }
-
-      return {
-        id: caseItem.caseId,
-        caseId: caseItem.caseId,
-        verdictCode: verdictCode,
-        amount: 25.0, // Base amount, will be determined by record type
-        submissionId: caseItem._id,
-        status: caseItem.status,
-        typeOfFiling: caseItem.typeOfFiling,
-        createdAt: caseItem.createdAt,
-      };
-    });
-
-    setSelectedPerson({
-      ...person,
-      caseIds: casesWithVerdict,
-    });
+    setSelectedPerson({ ...person, caseIds: [] });
   };
+
+  useEffect(() => {
+    if (selectedPerson && userCasesRes?.success && Array.isArray(userCasesRes.data)) {
+      const casesWithVerdict = userCasesRes.data.map((caseItem) => {
+        let verdictCode = "PENDING";
+        if (caseItem.status === "APPROVED" && caseItem.jurorDecisions?.length > 0) {
+          const decisions = caseItem.jurorDecisions;
+          const acceptCount = decisions.filter((d) => d.action === "ACCEPT").length;
+          const rejectCount = decisions.filter((d) => d.action === "REJECT").length;
+          const unableCount = decisions.filter((d) => d.action === "UNABLETODECIDE").length;
+          if (acceptCount > rejectCount && acceptCount > unableCount) {
+            verdictCode = "PROVEN";
+          } else if (rejectCount > acceptCount && rejectCount > unableCount) {
+            verdictCode = "DISPROVEN";
+          } else if (unableCount >= acceptCount && unableCount >= rejectCount) {
+            verdictCode = "INCONCLUSIVE";
+          } else {
+            verdictCode = "CONCLUDED";
+          }
+        } else if (caseItem.status === "REJECTED") {
+          verdictCode = "DISMISSED";
+        }
+        return {
+          id: caseItem.caseId,
+          caseId: caseItem.caseId,
+          verdictCode,
+          amount: 25.0,
+          submissionId: caseItem._id,
+          status: caseItem.status,
+          typeOfFiling: caseItem.typeOfFiling,
+          createdAt: caseItem.createdAt,
+        };
+      });
+      setSelectedPerson((prev) => ({ ...(prev || {}), caseIds: casesWithVerdict }));
+    }
+  }, [selectedPerson?.id, userCasesRes]);
 
   const handleRecordsRequest = async (caseData, type) => {
     if (isPaymentLoading) return;

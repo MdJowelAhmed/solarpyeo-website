@@ -10,6 +10,7 @@ const SearchRecordsModal = ({
   handlePersonSelect,
   onClose,
 }) => {
+  console.log(searchResults);
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Search Records</h2>
