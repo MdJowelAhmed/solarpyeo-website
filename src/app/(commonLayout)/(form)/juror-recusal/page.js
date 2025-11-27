@@ -10,6 +10,9 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCreateJurorRecusalMutation } from "@/redux/featured/jurorRecusal/jurorRecusalApi";
+import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
+import { Label } from "@/components/ui/label";
+import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 
 const JurorRecusalForm = () => {
   const router = useRouter();
@@ -28,7 +31,28 @@ const JurorRecusalForm = () => {
   const [recusalReason, setRecusalReason] = useState("");
   const [requestingRecusal, setRequestingRecusal] = useState(false);
   const [otherConflictText, setOtherConflictText] = useState("");
-  const [submissionId, setSubmissionId] = useState("690c4267229f0256db9e57b7"); // Replace with actual ID
+  const [selectedCaseId, setSelectedCaseId] = useState("");
+    const { data: userData } = useMyProfileQuery();
+      console.log("from juror recusal page", userData);
+
+       const { data: submissionFormResponse, isLoading: isDataLoading } = useSearchMySubmissionFormQuery();
+       console.log("from juror recusal page", submissionFormResponse);
+        
+          const submissionData = submissionFormResponse?.data || [];
+        
+          // Get selected case data
+          const selectedCase = submissionData.find(
+            (item) => item.submissionId.caseId === selectedCaseId
+          );
+        
+          const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+       const submissionId = selectedCase?.submissionId?._id || "[Submission-ID-Here]";
+      
+          const respondent = selectedCase
+            ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${selectedCase.user.lastName}`.trim()
+            : "[Your-Name-Here]";
+      const email = selectedCase?.user?.email || "[Email-Here]";
+  // const [submissionId, setSubmissionId] = useState("690c4267229f0256db9e57b7"); // Replace with actual ID
 
   const conflictMapping = {
     knowParties: "I personally know the parties in this case",
@@ -121,13 +145,40 @@ const JurorRecusalForm = () => {
           <div className=" mb-3">
             <h3 className="">📄 Juror Recusal & Conflict Declaration Form</h3>
           </div>
-
+  <div className="w-full md:w-1/2 lg:w-1/3">
+                          <Label className="text-sm font-medium text-gray-700">
+                            Select a Case to Auto fill *
+                          </Label>
+                          <select
+                            value={selectedCaseId}
+                            onChange={(e) => setSelectedCaseId(e.target.value)}
+                            className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                          >
+                            <option value="">-- Choose a case --</option>
+                            {isDataLoading ? (
+                              <option disabled>Loading cases...</option>
+                            ) : submissionData.length === 0 ? (
+                              <option disabled>No cases found</option>
+                            ) : (
+                              submissionData.map((item) => (
+                                <option
+                                  key={item._id}
+                                  value={item.submissionId.caseId}
+                                >
+                                  {item.submissionId.caseId} - {item.user.firstName}{" "}
+                                  {item.user.lastName} ({item.status})
+                                </option>
+                              ))
+                            )}
+                          </select>
+                        </div>
           <div className="space-y-2 max-w-2xl mx-auto ">
             <div>
-              <span className="font-medium">Juror ID:</span> [Auto-generated]
+              <span className="font-medium">Juror ID:</span> {userData?._id} [Auto-generated]
             </div>
             <div>
               <span className="font-medium">Assigned Case Reference ID:</span>{" "}
+              {caseId}
               [Auto-populated]
             </div>
             <div>
