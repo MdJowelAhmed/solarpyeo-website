@@ -19,14 +19,39 @@ import { toast } from "sonner";
 import { useCreateSealOrExpungeMutation } from "@/redux/featured/sealForm/SealOrExpungeApi";
 import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
 import moment from "moment";
+import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 
 const SealExpungeForm = ({ recordData }) => {
-  console.log("recordData", recordData)
-  const submissionId = recordData?.caseId || "[Case-ID-Here]";
-  const respondent = recordData 
-  ? `${recordData.respondentFastName} ${recordData.respondentLastName}`.trim()
-  : "[Your-Name-Here]";
-  const submissionDate = recordData?.createdAt || "[Submission-Date-Here]";
+
+  // console.log("recordData", recordData)
+  // const submissionId = recordData?.caseId || "[Case-ID-Here]";
+  // const respondent = recordData 
+  // ? `${recordData.respondentFastName} ${recordData.respondentLastName}`.trim()
+  // : "[Your-Name-Here]";
+  // const submissionDate = recordData?.createdAt || "[Submission-Date-Here]";
+
+    const [selectedCaseId, setSelectedCaseId] = useState("");
+  const { data: submissionFormResponse, isLoading: isDataLoading } =
+    useSearchMySubmissionFormQuery();
+    console.log(submissionFormResponse);
+
+  const submissionData = submissionFormResponse?.data || [];
+
+  // Get selected case data
+  const selectedCase = submissionData.find(
+    (item) => item.submissionId.caseId === selectedCaseId
+  );
+
+  const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
+  const submissionId =
+    selectedCase?.submissionId?._id || "[Submission-ID-Here]";
+const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
+  const respondent = selectedCase
+    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
+        selectedCase.user.lastName
+      }`.trim()
+    : "[Your-Name-Here]";
+  const email = selectedCase?.user?.email || "[Email-Here]";
 
   const [createSealOrExpunge, { isLoading }] = useCreateSealOrExpungeMutation();
   const {data:userData}=useMyProfileQuery()
@@ -203,13 +228,39 @@ const SealExpungeForm = ({ recordData }) => {
             For reporting abuse, falsified submissions, retaliation, unethical
             activity, or other violations of the Platform Terms.
           </p>
+
+
+            <div className="w-full md:w-1/2 lg:w-1/3 flex items-center justify-center mx-auto">
+              <Label className="text-sm font-medium ">
+                Select a Case to Auto fill *
+              </Label>
+              <select
+                value={selectedCaseId}
+                onChange={(e) => setSelectedCaseId(e.target.value)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+              >
+                <option value="">-- Choose a case --</option>
+                {isDataLoading ? (
+                  <option disabled>Loading cases...</option>
+                ) : submissionData.length === 0 ? (
+                  <option disabled>No cases found</option>
+                ) : (
+                  submissionData.map((item) => (
+                    <option key={item._id} value={item.submissionId.caseId}>
+                      {item.submissionId.caseId} - {item.user.firstName}{" "}
+                      {item.user.lastName} ({item.status})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
         </div>
 
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardHeader className="mb-5">
-              <p className="">Submission ID: {submissionId}</p>
-              <p className="">Submission Date: { moment(submissionDate).format('L')}</p>
+              <p className="">Submission ID: <span className="font-medium">{caseId}</span></p>
+              <p className="">Submission Date: <span className="font-medium">{ moment(submissionDate).format('L')}</span></p>
             </CardHeader>
           </CardHeader>
 

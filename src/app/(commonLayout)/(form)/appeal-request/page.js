@@ -186,10 +186,10 @@ const AppealRequestForm = () => {
                 <span className="font-medium">Platform Case Reference ID:</span>{" "}
                 {caseId}
               </div>
-              <div>
+              {/* <div>
                 <span className="font-medium">Case Outcome Appealed:</span>{" "}
                 {status}
-              </div>
+              </div> */}
               <div>
                 <span className="font-medium">Filed By:</span>{" "}
                 {respondent}

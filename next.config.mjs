@@ -14,7 +14,8 @@ const nextConfig = {
       "web.yogawithjen.life",
       "10.10.7.44",
       "206.162.244.188",
-      "res.cloudinary.com"
+      "res.cloudinary.com",
+      "https://api.glassfile.xyz"
  
     ],
   },

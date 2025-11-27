@@ -145,14 +145,41 @@ export default function RespondentSubmissionForm() {
             <h3 className="text-2xl lg:text-4xl font-semibold mb-6 text-center">
               📄 Respondent Submission Form
             </h3>
+
+             <div className="w-full flex items-center justify-center mb-6">
+                <div className="w-full md:w-1/2 lg:w-1/3 ">
+              <Label className="text-sm font-medium ">
+                Select a Case to Auto fill *
+              </Label>
+              <select
+                value={selectedCaseId}
+                onChange={(e) => setSelectedCaseId(e.target.value)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+              >
+                <option value="">-- Choose a case --</option>
+                {isDataLoading ? (
+                  <option disabled>Loading cases...</option>
+                ) : submissionData.length === 0 ? (
+                  <option disabled>No cases found</option>
+                ) : (
+                  submissionData.map((item) => (
+                    <option key={item._id} value={item.submissionId.caseId}>
+                      {item.submissionId.caseId} - {item.user.firstName}{" "}
+                      {item.user.lastName} ({item.status})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+             </div>
             <div className="space-y-2 text-sm max-w-xl mx-auto">
               <div>
-                <span className="font-medium">Platform Case Reference ID:</span>{" "}
-                [Auto-populated]
+                Platform Case Reference ID:<span className="font-medium">  {caseId}</span>{" "} 
+              
               </div>
               <div>
-                <span className="font-medium">Respondent Legal Name:</span>{" "}
-                [Auto-populated if matched to user account]
+                Respondent Legal Name:<span className="font-medium"> {selectedCase?.user?.firstName} {selectedCase?.user?.middleName} {selectedCase?.user?.lastName}</span>{" "}
+               
               </div>
             </div>
           </div>
