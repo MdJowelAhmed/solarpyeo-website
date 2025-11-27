@@ -84,10 +84,10 @@ const AppealRequestForm = () => {
       return false;
     }
 
-    if (!digitalSignature.trim()) {
-      toast.error("Please provide your digital signature");
-      return false;
-    }
+    // if (!digitalSignature.trim()) {
+    //   toast.error("Please provide your digital signature");
+    //   return false;
+    // }
 
     return true;
   };
@@ -540,7 +540,7 @@ const AppealRequestForm = () => {
               </div>
 
               {/* Digital Signature */}
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <Label className="text-sm font-medium text-gray-700">
                   Digital Signature *
                 </Label>
@@ -551,7 +551,7 @@ const AppealRequestForm = () => {
                   placeholder="Type your full name as signature"
                   className="mt-2"
                 />
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <div className="text-center flex justify-end items-center">

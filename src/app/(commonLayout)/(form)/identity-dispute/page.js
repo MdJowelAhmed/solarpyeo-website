@@ -141,17 +141,20 @@ const email = selectedCase?.user?.email || "[Email-Here]";
 
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <strong>Platform Case Reference ID:</strong> {caseId}
+              Platform Case Reference ID : 
+              <strong>{caseId}</strong> 
             </div>
             {/* <div>
               <strong>Linked Record or Profile ID:</strong> [Auto-populated]
             </div> */}
             <div>
-              <strong>Your Full Legal Name:</strong> {respondent}
+              Your Full Legal Name:
+              <strong>{respondent}</strong> 
             </div>
             <div>
-              <strong>Your Verified Platform Account Email:</strong>{" "}
-              {email}
+              Your Verified Platform Account Email:
+              <strong>  {email}</strong>{" "}
+            
             </div>
           </div>
         </div>
