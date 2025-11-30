@@ -37,6 +37,7 @@ export default function UserCreate() {
   const [registrationStatus, setRegistrationStatus] = useState("");
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       // registration data prepare
       const registrationData = {
@@ -51,7 +52,7 @@ export default function UserCreate() {
         password: data.password,
         confirmPassword: data.confirmPassword,
       };
-
+      console.log(registrationData);
       // API call
       const response = await registerUser(registrationData).unwrap();
 
@@ -280,40 +281,43 @@ export default function UserCreate() {
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.gender && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.gender.message}
+                  </p>
+                )}
               </div> */}
 
               <div>
                 <label className="block text-sm mb-2 text-black">Gender*</label>
-
-                <Controller
-                  name="gender"
-                  control={control}
-                  rules={{ required: "Gender is required" }}
-                  render={({ field, fieldState: { error } }) => (
-                    <>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full border-black">
-                          <SelectValue placeholder="Select gender" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      {error && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {error.message}
-                        </p>
-                      )}
-                    </>
-                  )}
+                <Select
+                  onValueChange={(val) => {
+                    setValue("gender", val, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    });
+                  }}
+                >
+                  <SelectTrigger className="w-full border-black">
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.gender && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.gender.message}
+                  </p>
+                )}
+                <input
+                  type="hidden"
+                  {...register("gender", { required: "Gender is required" })}
                 />
               </div>
+
               <div className="md:col-span-1">
                 <label
                   htmlFor="address"
@@ -327,11 +331,11 @@ export default function UserCreate() {
                   {...register("address", { required: "Address is required" })}
                   className="w-full py-6 text-black border border-black rounded-lg placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
                 />
-                 {errors.address && (
-    <p className="text-red-500 text-sm mt-1">
-      {errors.address.message}
-    </p>
-  )}
+                {errors.address && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.address.message}
+                  </p>
+                )}
               </div>
 
               <div>
