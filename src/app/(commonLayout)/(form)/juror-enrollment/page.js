@@ -39,8 +39,8 @@ const JurorApplicationForm = () => {
   //   : "[Your-Name-Here]";
   // const email = selectedCase?.user?.email || "[Email-Here]";
 
-    const { data: userData } = useMyProfileQuery();
-    console.log("from submission page", userData);
+  const { data: userData } = useMyProfileQuery();
+  console.log("from submission page", userData);
 
   const [formData, setFormData] = useState({
     showCurrentAddress: "no",
@@ -80,19 +80,15 @@ const JurorApplicationForm = () => {
   };
 
   const handleSubmit = async () => {
-    // Validation
-    // if (formData.eligibilityChecks.length !== 9) {
-    //   toast.error("Please check all eligibility attestation items");
-    //   return;
-    // }
+    // Validation - all eligibility checkboxes must be checked
+    if (formData.eligibilityChecks.length !== 9) {
+      toast.error("Please check all eligibility attestation items");
+      return;
+    }
 
-    // if (!formData.digitalSignature.trim()) {
-    //   toast.error("Please provide your digital signature");
-    //   return;
-    // }
-
-    if (formData.platformConsent.length < 1) {
-      toast.error("Please check at least one platform consent item");
+    // All platform consent checkboxes must be checked
+    if (formData.platformConsent.length !== 6) {
+      toast.error("Please check all platform use and consent items");
       return;
     }
 
@@ -194,11 +190,12 @@ const JurorApplicationForm = () => {
             <CardContent className=" w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
-                  <Label
-                    htmlFor="fullName"
-                    className="text-sm font-medium "
-                  >
-                    Full Legal Name: <span className=" font-bold">{userData?.firstName} {userData?.middleName || ""} {userData?.lastName}</span>
+                  <Label htmlFor="fullName" className="text-sm font-medium ">
+                    Full Legal Name:{" "}
+                    <span className=" font-bold">
+                      {userData?.firstName} {userData?.middleName || ""}{" "}
+                      {userData?.lastName}
+                    </span>
                   </Label>
                 </div>
                 {/* <div>
@@ -210,19 +207,17 @@ const JurorApplicationForm = () => {
                   </Label>
                 </div> */}
                 <div>
-                  <Label
-                    htmlFor="dateOfBirth"
-                    className="text-sm font-medium "
-                  >
-                    Date of Birth: <span className=" font-bold">{moment(userData?.birthDate).format("L")}</span>
+                  <Label htmlFor="dateOfBirth" className="text-sm font-medium ">
+                    Date of Birth:{" "}
+                    <span className=" font-bold">
+                      {moment(userData?.birthDate).format("L")}
+                    </span>
                   </Label>
                 </div>
                 <div>
-                  <Label
-                    htmlFor="email"
-                    className="text-sm font-medium "
-                  >
-                    Email Address: <span className=" font-bold">{userData?.email}</span>
+                  <Label htmlFor="email" className="text-sm font-medium ">
+                    Email Address:{" "}
+                    <span className=" font-bold">{userData?.email}</span>
                   </Label>
                 </div>
               </div>
@@ -262,56 +257,80 @@ const JurorApplicationForm = () => {
         <div className="bg-secondary-foreground custom-padding">
           <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
             <CardHeader className="w-full lg:w-1/5">
-              <CardTitle className="">ELIGIBILITY ATTESTATION</CardTitle>
+              <CardTitle>ELIGIBILITY ATTESTATION</CardTitle>
             </CardHeader>
+
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-              <p className="text-sm  mb-4">
+              <p className="text-sm mb-4">
                 Please confirm each of the following:
               </p>
+
               <div className="space-y-5">
                 {[
                   <>
-                    I am at least <strong>21 years of age</strong>.
-                  </>,
-                  <>
-                    I agree<strong> not to serve as a Juror</strong> on any case
-                    involving myself, a spouse or former spouse, partner or
-                    steppartner with whom I have a personal, familial, or
-                    professional relationship.
-                  </>,
-                  <>
-                    I have <strong>no criminal record</strong> involving
-                    perjury, fraud of any kind, or violation of a court order
-                    within the past 5 years.
-                  </>,
-                  <>
-                    I am able to{" "}
-                    <strong>
-                      objectively review sensitive and emotional materials
-                    </strong>
+                    I am at least{" "}
+                    <span className="font-bold inline-block">
+                      21 years of age
+                    </span>
                     .
                   </>,
                   <>
-                    I agree to maintain <strong>strict confidentiality</strong>{" "}
+                    I agree{" "}
+                    <span className="font-bold inline-block">
+                      not to serve as a Juror
+                    </span>{" "}
+                    on any case involving myself, a spouse or former spouse,
+                    partner or steppartner with whom I have a personal,
+                    familial, or professional relationship.
+                  </>,
+                  <>
+                    I have{" "}
+                    <span className="font-bold inline-block">
+                      no criminal record
+                    </span>{" "}
+                    involving perjury, fraud of any kind, or violation of a
+                    court order within the past 5 years.
+                  </>,
+                  <>
+                    I am able to{" "}
+                    <span className="font-bold inline-block">
+                      objectively review sensitive and emotional materials
+                    </span>
+                    .
+                  </>,
+                  <>
+                    I agree to maintain{" "}
+                    <span className="font-bold inline-block">
+                      strict confidentiality
+                    </span>{" "}
                     in all case reviews.
                   </>,
                   <>
-                    I will <strong>serve impartially</strong>, based solely on
-                    the evidence provided.
+                    I will{" "}
+                    <span className="font-bold inline-block">
+                      serve impartially
+                    </span>
+                    , based solely on the evidence provided.
                   </>,
                   <>
                     I will not share my platform credentials or allow anyone
                     other than myself to operate using my unique{" "}
-                    <strong>platform-based Juror ID</strong>.
+                    <span className="font-bold inline-block">
+                      platform-based Juror ID
+                    </span>
+                    .
                   </>,
                   <>
                     I understand completion of the{" "}
-                    <strong>Juror Orientation and Ethics Test</strong> is
-                    required.
+                    <span className="font-bold inline-block">
+                      Juror Orientation and Ethics Test
+                    </span>{" "}
+                    is required.
                   </>,
                   <>
                     I understand I must submit a government-issued photo ID that
-                    is <strong>not expired</strong>.
+                    is{" "}
+                    <span className="font-bold inline-block">not expired</span>.
                   </>,
                 ].map((item, index) => (
                   <div key={index} className="flex items-start space-x-2">
@@ -327,12 +346,12 @@ const JurorApplicationForm = () => {
                       }
                       className="mt-1"
                     />
-                    <Label
+                    <p
                       htmlFor={`eligibility-${index}`}
-                      className="text-sm "
+                      className="text-sm whitespace-normal leading-6 break-words"
                     >
                       {item}
-                    </Label>
+                    </p>
                   </div>
                 ))}
               </div>
@@ -421,9 +440,7 @@ const JurorApplicationForm = () => {
               <CardTitle className="">PLATFORM USE AND CONSENT</CardTitle>
             </CardHeader>
             <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-              <p className="text-sm  mb-4">
-                By submitting this form:
-              </p>
+              <p className="text-sm  mb-4">By submitting this form:</p>
               <div className="space-y-3">
                 {[
                   "I agree to the Terms of Service, Juror Protocol, and Privacy Policy.",
@@ -442,10 +459,7 @@ const JurorApplicationForm = () => {
                       }
                       className="mt-1"
                     />
-                    <Label
-                      htmlFor={`consent-${index}`}
-                      className="text-sm "
-                    >
+                    <Label htmlFor={`consent-${index}`} className="text-sm ">
                       {item}
                     </Label>
                   </div>

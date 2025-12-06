@@ -175,7 +175,7 @@ const InitialForm = () => {
       // Add allegations
       const validAllegations = allegations.filter((a) => a.trim() !== "");
       validAllegations.forEach((allegation, index) => {
-        formData.append(`allegation[${index}]`, allegation);
+        formData.append(`allegation`, allegation);
       });
 
       // Add files with correct field name
@@ -696,8 +696,8 @@ const InitialForm = () => {
                     type="submit"
                     disabled={!isAgreed || isLoading}
                     className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${isAgreed && !isLoading
-                        ? "bg-primary hover:bg-primary/90 cursor-pointer"
-                        : "bg-gray-400 cursor-not-allowed"
+                      ? "bg-primary hover:bg-primary/90 cursor-pointer"
+                      : "bg-gray-400 cursor-not-allowed"
                       }`}
                   >
                     {isLoading ? "Submitting..." : "Submit Securely"}
