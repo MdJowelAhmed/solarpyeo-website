@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -45,10 +46,10 @@ const InitialForm = () => {
   const [respondentEmail, setRespondentEmail] = useState("");
   const [gender, setGender] = useState("");
   const [respondentGender, setRespondentGender] = useState("");
-  
+
   // Filing type and allegations
   const [filingType, setFilingType] = useState("");
-  const [allegations, setAllegations] = useState(["", ""]);
+  const [allegations, setAllegations] = useState([""]);
 
   // Evidence
   const [selectedFiles1, setSelectedFiles1] = useState([]);
@@ -105,6 +106,18 @@ const InitialForm = () => {
 
   const addAnotherAllegation = () => {
     setAllegations([...allegations, ""]);
+  };
+
+  const removeAllegation = (index) => {
+    if (allegations.length > 1) {
+      const newAllegations = allegations.filter((_, i) => i !== index);
+      setAllegations(newAllegations);
+    }
+  };
+
+  const removeFile = (index) => {
+    const newFiles = selectedFiles1.filter((_, i) => i !== index);
+    setSelectedFiles1(newFiles);
   };
 
   const handleSubmit = async (e) => {
@@ -212,7 +225,7 @@ const InitialForm = () => {
       setRespondentGender("");
       setGender("");
       setFilingType("");
-      setAllegations(["", ""]);
+      setAllegations([""]);
       setSelectedFiles1([]);
       setSupportingLink("");
       setIsAgreed(false);
@@ -303,8 +316,8 @@ const InitialForm = () => {
                             {initiatorDob
                               ? initiatorDob.toLocaleDateString()
                               : userData?.birthDate
-                              ? new Date(userData.birthDate).toLocaleDateString()
-                              : "Pick a date"}
+                                ? new Date(userData.birthDate).toLocaleDateString()
+                                : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
@@ -505,18 +518,32 @@ const InitialForm = () => {
                     <CardContent className="w-full grid grid-cols-1 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                       <div className="mt-6 space-y-4">
                         {allegations.map((allegation, index) => (
-                          <div key={index}>
-                            <Label htmlFor={`allegation-${index}`}>
-                              {index === 0 ? "What happened?" : `Allegation ${index + 1}`}
-                              {index < 2 && " *"}
-                            </Label>
+                          <div key={index} className="relative">
+                            <div className="flex items-center justify-between mb-2">
+                              <Label htmlFor={`allegation-${index}`}>
+                                {index === 0 ? "What happened?" : `Allegation ${index + 1}`}
+                                {index === 0 && " *"}
+                              </Label>
+                              {allegations.length > 1 && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => removeAllegation(index)}
+                                  className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <X className="h-4 w-4 mr-1" />
+                                  Remove
+                                </Button>
+                              )}
+                            </div>
                             <Textarea
                               id={`allegation-${index}`}
                               placeholder={`Allegation ${index + 1}`}
                               className="min-h-32"
                               value={allegation}
                               onChange={(e) => handleAllegationChange(index, e.target.value)}
-                              required={index < 2}
+                              required={index === 0}
                             />
                           </div>
                         ))}
@@ -546,10 +573,10 @@ const InitialForm = () => {
                       including screenshots, messages, case submission links, etc.
                     </h4>
                   </CardHeader>
-                  <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
+                  <div className="w-full lg:w-4/5 grid grid-cols-1 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div className="mb-6">
                       <label className="block text-gray-700 font-medium mb-3">
-                        Upload File(s):
+                        Upload File(s) (Optional - Max 15 files):
                       </label>
                       <div className="relative">
                         <input
@@ -562,40 +589,58 @@ const InitialForm = () => {
                         />
                         <label
                           htmlFor="file1"
-                          className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                          className="flex items-center justify-between px-4 py-3 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 hover:border-primary transition-colors"
                         >
-                          <span className="text-gray-700">
+                          <span className="text-gray-700 font-medium">
                             {selectedFiles1.length > 0
-                              ? `${selectedFiles1.length} file(s) selected`
-                              : "Choose File(s)"}
+                              ? `${selectedFiles1.length} file(s) selected (Click to add more)`
+                              : "Click to choose file(s)"}
                           </span>
                           <span className="text-gray-500 text-sm">
-                            {selectedFiles1.length === 0 ? "No file chosen" : ""}
+                            {selectedFiles1.length > 0 ? `${selectedFiles1.length}/15` : ""}
                           </span>
                         </label>
                         {previews1.length > 0 && (
-                          <ul className="mt-2 text-sm text-gray-600 flex gap-2 flex-wrap">
-                            {previews1.map((p, i) => (
-                              <li key={i} className="flex flex-col items-center">
-                                {p.type.startsWith("image/") ? (
-                                  <Image
-                                    src={p.url}
-                                    alt={p.name}
-                                    width={96}
-                                    height={96}
-                                    className="w-24 h-24 object-cover rounded-md"
-                                  />
-                                ) : (
-                                  <div className="px-2 py-1 border rounded">
+                          <div className="mt-4">
+                            <p className="text-sm font-medium text-gray-700 mb-2">Selected Files:</p>
+                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                              {previews1.map((p, i) => (
+                                <li key={i} className="relative group">
+                                  <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary transition-colors">
+                                    {p.type.startsWith("image/") ? (
+                                      <Image
+                                        src={p.url}
+                                        alt={p.name}
+                                        width={120}
+                                        height={120}
+                                        className="w-full h-28 object-cover"
+                                      />
+                                    ) : (
+                                      <div className="w-full h-28 flex items-center justify-center bg-gray-50">
+                                        <div className="text-center px-2">
+                                          <div className="text-2xl mb-1">📄</div>
+                                          <div className="text-xs text-gray-600 truncate max-w-[100px]">
+                                            {p.name.split('.').pop().toUpperCase()}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => removeFile(i)}
+                                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                      title="Remove file"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                  <div className="text-xs mt-1 text-gray-600 truncate text-center" title={p.name}>
                                     {p.name}
                                   </div>
-                                )}
-                                <div className="text-xs mt-1 max-w-[120px] truncate">
-                                  {p.name}
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -650,11 +695,10 @@ const InitialForm = () => {
                   <button
                     type="submit"
                     disabled={!isAgreed || isLoading}
-                    className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${
-                      isAgreed && !isLoading
+                    className={`px-8 py-3 rounded-md font-medium text-white transition-colors ${isAgreed && !isLoading
                         ? "bg-primary hover:bg-primary/90 cursor-pointer"
                         : "bg-gray-400 cursor-not-allowed"
-                    }`}
+                      }`}
                   >
                     {isLoading ? "Submitting..." : "Submit Securely"}
                   </button>
