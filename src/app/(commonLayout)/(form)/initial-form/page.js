@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { useCreateInitialSubmissionMutation } from "@/redux/featured/initialSubmission/initialSubmissionApi";
 import PaymentModal from "./PaymentModal";
 import { useMyProfileQuery } from "@/redux/featured/auth/authApi";
+import Image from "next/image";
 
 const InitialForm = () => {
   // Initiator fields
@@ -31,29 +32,27 @@ const InitialForm = () => {
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [initiatorDob, setInitiatorDob] = useState();
-  // control popover open state so we can close it after picking a date
   const [isInitiatorPopoverOpen, setIsInitiatorPopoverOpen] = useState(false);
   const [state, setState] = useState("");
   const { data: userData } = useMyProfileQuery();
-  console.log("from submission page", userData);
 
   // Respondent fields
   const [respondentFirstName, setRespondentFirstName] = useState("");
   const [respondentMiddleName, setRespondentMiddleName] = useState("");
   const [respondentLastName, setRespondentLastName] = useState("");
   const [respondentDob, setRespondentDob] = useState();
-  // control popover open state for respondent DOB
   const [isRespondentPopoverOpen, setIsRespondentPopoverOpen] = useState(false);
   const [respondentEmail, setRespondentEmail] = useState("");
   const [gender, setGender] = useState("");
   const [respondentGender, setRespondentGender] = useState("");
+  
   // Filing type and allegations
   const [filingType, setFilingType] = useState("");
   const [allegations, setAllegations] = useState(["", ""]);
 
   // Evidence
-  const [selectedFiles1, setSelectedFiles1] = useState(null);
-  const [selectedFiles2, setSelectedFiles2] = useState(null);
+  const [selectedFiles1, setSelectedFiles1] = useState([]);
+  const [previews1, setPreviews1] = useState([]);
   const [supportingLink, setSupportingLink] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
 
@@ -65,16 +64,38 @@ const InitialForm = () => {
   const [createInitialSubmission, { isLoading }] =
     useCreateInitialSubmissionMutation();
 
-  const handleFileChange = (event, fileNumber) => {
+  const states = [
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+    "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+    "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+    "New Hampshire", "New Jersey", "New Mexico", "New York",
+    "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+    "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+    "West Virginia", "Wisconsin", "Wyoming", "Other",
+  ];
+
+  const handleFileChange = (event, fileNumber = 1) => {
     const files = event.target.files;
-    if (files && files.length > 0) {
-      if (fileNumber === 1) {
-        setSelectedFiles1(files[0]);
-      } else {
-        setSelectedFiles2(files[0]);
-      }
+    if (!files) return;
+    const arr = Array.from(files).slice(0, 15); // max 15
+    if (fileNumber === 1) {
+      setSelectedFiles1(arr);
     }
   };
+
+  useEffect(() => {
+    previews1.forEach((p) => URL.revokeObjectURL(p.url));
+    const next = selectedFiles1.map((f) => ({
+      name: f.name,
+      url: URL.createObjectURL(f),
+      type: f.type,
+    }));
+    setPreviews1(next);
+    return () => next.forEach((p) => URL.revokeObjectURL(p.url));
+  }, [selectedFiles1]);
 
   const handleAllegationChange = (index, value) => {
     const newAllegations = [...allegations];
@@ -89,24 +110,14 @@ const InitialForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
-    // if (
-    //   !firstName ||
-    //   !lastName ||
-    //   !respondentFirstName ||
-    //   !respondentLastName
-    // ) {
-    //   toast.error("Please fill in all required fields");
-    //   return;
-    // }
-
     if (!respondentDob) {
       toast.error("Please select dates of birth");
       return;
     }
 
     const initiatorDobDate =
-      initiatorDob || (userData?.birthDate ? new Date(userData.birthDate) : undefined);
+      initiatorDob ||
+      (userData?.birthDate ? new Date(userData.birthDate) : undefined);
 
     if (!initiatorDobDate) {
       toast.error("Initiator date of birth is missing");
@@ -129,43 +140,53 @@ const InitialForm = () => {
     }
 
     try {
-      // Create FormData for file uploads
       const formData = new FormData();
 
       // Add all text fields
-      formData.append("fastName", firstName);
-      formData.append("middleName", middleName);
-      formData.append("lastName", lastName);
+      formData.append("fastName", firstName || userData?.firstName || "");
+      formData.append("middleName", middleName || userData?.middleName || "");
+      formData.append("lastName", lastName || userData?.lastName || "");
       formData.append("dob", initiatorDobDate.toISOString());
       formData.append("state", state);
+      formData.append("gender", userData?.gender || gender || "");
 
       formData.append("respondentFastName", respondentFirstName);
       formData.append("respondentMiddleName", respondentMiddleName);
       formData.append("respondentLastName", respondentLastName);
       formData.append("respondentDOB", new Date(respondentDob).toISOString());
       formData.append("respondentEmail", respondentEmail);
-      formData.append("link", supportingLink);
+      formData.append("respondentGender", respondentGender);
 
       formData.append("typeOfFiling", filingType);
 
-      // Add allegations (filter out empty ones)
+      // Add allegations
       const validAllegations = allegations.filter((a) => a.trim() !== "");
       validAllegations.forEach((allegation, index) => {
         formData.append(`allegation[${index}]`, allegation);
       });
 
-      // Add files
-      if (selectedFiles1) {
-        formData.append("evidence", selectedFiles1);
-      }
-      if (selectedFiles2) {
-        formData.append("evidence", selectedFiles2);
+      // Add files with correct field name
+      if (selectedFiles1?.length > 0) {
+        selectedFiles1.forEach((file) => {
+          formData.append("evidence", file);
+        });
       }
 
-      // Add optional link if provided
+      // Add optional link
       if (supportingLink) {
-        formData.append("supportingLink", supportingLink);
+        formData.append("link", supportingLink);
       }
+
+      // Debug: Log FormData contents
+      console.log("=== FormData Debug ===");
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`${key}:`, `File - ${value.name} (${value.size} bytes)`);
+        } else {
+          console.log(`${key}:`, value);
+        }
+      }
+      console.log("======================");
 
       // Submit the form
       const result = await createInitialSubmission(formData).unwrap();
@@ -188,10 +209,11 @@ const InitialForm = () => {
       setRespondentLastName("");
       setRespondentDob(undefined);
       setRespondentEmail("");
+      setRespondentGender("");
+      setGender("");
       setFilingType("");
       setAllegations(["", ""]);
-      setSelectedFiles1(null);
-      setSelectedFiles2(null);
+      setSelectedFiles1([]);
       setSupportingLink("");
       setIsAgreed(false);
     } catch (error) {
@@ -212,7 +234,6 @@ const InitialForm = () => {
       <div className="w-full py-8">
         <div className="w-full">
           <form onSubmit={handleSubmit}>
-            {/* Main Form */}
             <div className="w-full">
               {/* Information About The Initiator */}
               <div className="custom-padding bg-secondary-foreground">
@@ -263,7 +284,6 @@ const InitialForm = () => {
                         value={userData?.lastName || lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
-                        className="disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -277,16 +297,13 @@ const InitialForm = () => {
                           <Button
                             type="button"
                             variant="outline"
-                            aria-disabled="true"
                             className="w-full justify-start text-left font-normal py-[23px] cursor-not-allowed opacity-50"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {initiatorDob
                               ? initiatorDob.toLocaleDateString()
                               : userData?.birthDate
-                              ? new Date(
-                                  userData.birthDate
-                                ).toLocaleDateString()
+                              ? new Date(userData.birthDate).toLocaleDateString()
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
@@ -312,10 +329,9 @@ const InitialForm = () => {
                         </PopoverContent>
                       </Popover>
                     </div>
+
                     <div>
-                      <Label htmlFor="gender-select" className="mb-2">
-                        Gender *
-                      </Label>
+                      <Label htmlFor="gender-select">Gender *</Label>
                       <Select
                         value={userData?.gender || gender}
                         onValueChange={setGender}
@@ -325,7 +341,7 @@ const InitialForm = () => {
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
-                        <SelectContent className="w-full">
+                        <SelectContent>
                           <SelectItem value="male">Male</SelectItem>
                           <SelectItem value="female">Female</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
@@ -334,23 +350,17 @@ const InitialForm = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="state-select" className="mb-2">
-                        What State do you reside in? *
-                      </Label>
-                      <Select
-                        value={ state}
-                        onValueChange={setState}
-                        required
-                      >
+                      <Label htmlFor="state-select">What State do you reside in? *</Label>
+                      <Select value={state} onValueChange={setState} required>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="California" />
+                          <SelectValue placeholder="Select State" />
                         </SelectTrigger>
-                        <SelectContent className="w-full">
-                          <SelectItem value="California">California</SelectItem>
-                          <SelectItem value="Texas">Texas</SelectItem>
-                          <SelectItem value="Florida">Florida</SelectItem>
-                          <SelectItem value="New York">New York</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                        <SelectContent>
+                          {states.map((stateOption) => (
+                            <SelectItem key={stateOption} value={stateOption}>
+                              {stateOption}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -366,12 +376,10 @@ const InitialForm = () => {
                   </CardHeader>
                   <CardContent className="space-y-4 w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div>
-                      <Label htmlFor="respondent-first-name">
-                        First Name *
-                      </Label>
+                      <Label htmlFor="respondent-first-name">First Name *</Label>
                       <Input
                         id="respondent-first-name"
-                        placeholder="John Doe Jr Max"
+                        placeholder="Enter First Name"
                         value={respondentFirstName}
                         onChange={(e) => setRespondentFirstName(e.target.value)}
                         required
@@ -379,16 +387,12 @@ const InitialForm = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="respondent-middle-name">
-                        Middle Name
-                      </Label>
+                      <Label htmlFor="respondent-middle-name">Middle Name</Label>
                       <Input
                         id="respondent-middle-name"
-                        placeholder="Doe John Junior"
+                        placeholder="Enter Middle Name"
                         value={respondentMiddleName}
-                        onChange={(e) =>
-                          setRespondentMiddleName(e.target.value)
-                        }
+                        onChange={(e) => setRespondentMiddleName(e.target.value)}
                       />
                     </div>
 
@@ -396,7 +400,7 @@ const InitialForm = () => {
                       <Label htmlFor="respondent-last-name">Last Name *</Label>
                       <Input
                         id="respondent-last-name"
-                        placeholder="Doe John Junior"
+                        placeholder="Enter Last Name"
                         value={respondentLastName}
                         onChange={(e) => setRespondentLastName(e.target.value)}
                         required
@@ -438,6 +442,7 @@ const InitialForm = () => {
                         </PopoverContent>
                       </Popover>
                     </div>
+
                     <div>
                       <Label htmlFor="respondent-gender">Gender *</Label>
                       <Select
@@ -448,7 +453,7 @@ const InitialForm = () => {
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
-                        <SelectContent className="w-full">
+                        <SelectContent>
                           <SelectItem value="male">Male</SelectItem>
                           <SelectItem value="female">Female</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
@@ -457,13 +462,11 @@ const InitialForm = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="respondent-email">
-                        Respondents Email *
-                      </Label>
+                      <Label htmlFor="respondent-email">Respondents Email *</Label>
                       <Input
                         id="respondent-email"
                         type="email"
-                        placeholder="doe.john@email.com"
+                        placeholder="Enter Respondents Email"
                         value={respondentEmail}
                         onChange={(e) => setRespondentEmail(e.target.value)}
                         required
@@ -478,37 +481,24 @@ const InitialForm = () => {
                 <div className="bg-white rounded-md p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between">
                   <CardHeader className="w-full lg:w-1/5">
                     <CardTitle>Type Of Filing *</CardTitle>
-                    <div>
-                      <RadioGroup
-                        value={filingType}
-                        onValueChange={setFilingType}
-                        required
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="Jurisdiction"
-                            id="jurisdiction"
-                          />
-                          <Label htmlFor="jurisdiction">Jurisdiction</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="ProceduralIssue"
-                            id="procedural-issue"
-                          />
-                          <Label htmlFor="ProceduralIssue">
-                            Procedural Issue
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="SubjectMatter"
-                            id="subject-matter"
-                          />
-                          <Label htmlFor="SubjectMatter">Subject Matter</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
+                    <RadioGroup
+                      value={filingType}
+                      onValueChange={setFilingType}
+                      required
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="RomanticMisconduct" id="romantic-misconduct" />
+                        <Label htmlFor="romantic-misconduct">Romantic Misconduct</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="ProtectionOrder" id="protection-order" />
+                        <Label htmlFor="protection-order">Protection Order</Label>
+                      </div>
+                      {/* <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="SubjectMatter" id="subject-matter" />
+                        <Label htmlFor="subject-matter">Subject Matter</Label>
+                      </div> */}
+                    </RadioGroup>
                   </CardHeader>
 
                   <div className="w-full lg:w-4/5">
@@ -517,9 +507,7 @@ const InitialForm = () => {
                         {allegations.map((allegation, index) => (
                           <div key={index}>
                             <Label htmlFor={`allegation-${index}`}>
-                              {index === 0
-                                ? "What happened?"
-                                : `Allegation ${index + 1}`}
+                              {index === 0 ? "What happened?" : `Allegation ${index + 1}`}
                               {index < 2 && " *"}
                             </Label>
                             <Textarea
@@ -527,9 +515,7 @@ const InitialForm = () => {
                               placeholder={`Allegation ${index + 1}`}
                               className="min-h-32"
                               value={allegation}
-                              onChange={(e) =>
-                                handleAllegationChange(index, e.target.value)
-                              }
+                              onChange={(e) => handleAllegationChange(index, e.target.value)}
                               required={index < 2}
                             />
                           </div>
@@ -557,14 +543,13 @@ const InitialForm = () => {
                     <CardTitle>Upload Evidence</CardTitle>
                     <h4 className="mb-4 text-justify text-sm">
                       Upload any documentation you believe supports your claim,
-                      including screenshots, messages, case submission links,
-                      etc.
+                      including screenshots, messages, case submission links, etc.
                     </h4>
                   </CardHeader>
                   <div className="w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-x-8 lg:gap-x-12 lg:border-l-4 h-full lg:pl-10">
                     <div className="mb-6">
                       <label className="block text-gray-700 font-medium mb-3">
-                        Upload File 1:
+                        Upload File(s):
                       </label>
                       <div className="relative">
                         <input
@@ -572,20 +557,46 @@ const InitialForm = () => {
                           id="file1"
                           onChange={(e) => handleFileChange(e, 1)}
                           className="hidden"
+                          multiple
+                          accept="image/*,.pdf,.doc,.docx"
                         />
                         <label
                           htmlFor="file1"
                           className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                         >
                           <span className="text-gray-700">
-                            {selectedFiles1
-                              ? selectedFiles1.name
-                              : "Choose File"}
+                            {selectedFiles1.length > 0
+                              ? `${selectedFiles1.length} file(s) selected`
+                              : "Choose File(s)"}
                           </span>
                           <span className="text-gray-500 text-sm">
-                            {selectedFiles1 ? "" : "No file chosen"}
+                            {selectedFiles1.length === 0 ? "No file chosen" : ""}
                           </span>
                         </label>
+                        {previews1.length > 0 && (
+                          <ul className="mt-2 text-sm text-gray-600 flex gap-2 flex-wrap">
+                            {previews1.map((p, i) => (
+                              <li key={i} className="flex flex-col items-center">
+                                {p.type.startsWith("image/") ? (
+                                  <Image
+                                    src={p.url}
+                                    alt={p.name}
+                                    width={96}
+                                    height={96}
+                                    className="w-24 h-24 object-cover rounded-md"
+                                  />
+                                ) : (
+                                  <div className="px-2 py-1 border rounded">
+                                    {p.name}
+                                  </div>
+                                )}
+                                <div className="text-xs mt-1 max-w-[120px] truncate">
+                                  {p.name}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
 
@@ -614,8 +625,7 @@ const InitialForm = () => {
                   <p className="text-sm mb-4 leading-relaxed">
                     I hereby declare and affirm in accordance with the laws of
                     the jurisdiction(s) involved, UNDER PENALTY OF PERJURY, that
-                    the foregoing is true and accurate to the best of my
-                    knowledge.
+                    the foregoing is true and accurate to the best of my knowledge.
                   </p>
                   <div className="flex items-start space-x-3">
                     <input
