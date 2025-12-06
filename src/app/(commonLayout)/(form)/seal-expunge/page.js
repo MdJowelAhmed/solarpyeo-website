@@ -13,7 +13,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, FileText } from "lucide-react";
+import { Calendar as CalendarIcon, FileText, X } from "lucide-react";
+import Image from "next/image";
 // import { useCreateSealOrExpungeMutation } from "@/redux/api/sealOrExpungeApi";
 import { toast } from "sonner";
 import { useCreateSealOrExpungeMutation } from "@/redux/featured/sealForm/SealOrExpungeApi";
@@ -30,10 +31,10 @@ const SealExpungeForm = ({ recordData }) => {
   // : "[Your-Name-Here]";
   // const submissionDate = recordData?.createdAt || "[Submission-Date-Here]";
 
-    const [selectedCaseId, setSelectedCaseId] = useState("");
+  const [selectedCaseId, setSelectedCaseId] = useState("");
   const { data: submissionFormResponse, isLoading: isDataLoading } =
     useSearchMySubmissionFormQuery();
-    console.log(submissionFormResponse);
+  console.log(submissionFormResponse);
 
   const submissionData = submissionFormResponse?.data || [];
 
@@ -45,16 +46,15 @@ const SealExpungeForm = ({ recordData }) => {
   const caseId = selectedCase?.submissionId?.caseId || "[Case-ID-Here]";
   const submissionId =
     selectedCase?.submissionId?._id || "[Submission-ID-Here]";
-const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
+  const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
   const respondent = selectedCase
-    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
-        selectedCase.user.lastName
+    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${selectedCase.user.lastName
       }`.trim()
     : "[Your-Name-Here]";
   const email = selectedCase?.user?.email || "[Email-Here]";
 
   const [createSealOrExpunge, { isLoading }] = useCreateSealOrExpungeMutation();
-  const {data:userData}=useMyProfileQuery()
+  const { data: userData } = useMyProfileQuery()
   console.log("user data form seal page", userData)
 
   // Form State
@@ -69,6 +69,7 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
   const [statement, setStatement] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
   const [document, setDocument] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const requestingPartyOptions = [
     "initiator",
@@ -125,6 +126,20 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
     }
   };
 
+  React.useEffect(() => {
+    if (!document) {
+      setPreviewUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(document);
+    setPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [document]);
+
+  const removeFile = () => {
+    setDocument(null);
+  };
+
   const handleSubmit = async () => {
     // Validation
     if (!requestingParty) {
@@ -167,10 +182,10 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
     try {
       // Create FormData
       const formData = new FormData();
-      
+
       // Generate submission ID
       const submissionId = `SUB-${Date.now()}`;
-      
+
       formData.append("submittionId", submissionId);
       formData.append("requestingParty", requestingParty);
       formData.append("recordedDetails[]", recordedDetails.join(", "));
@@ -178,23 +193,23 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
       formData.append("Date", dateOfRecord.toISOString());
       formData.append("request[]", requestType);
       formData.append("besisForRequest[]", legalBasis.join(", "));
-      
+
       // Add document if exists
       if (document) {
         formData.append("documents", document);
       }
-      
+
       formData.append("statement", statement);
       formData.append("submissionType", "Seal/Expunge Request");
 
       // Submit to API
       const response = await createSealOrExpunge(formData).unwrap();
-      
+
       toast.success("Form submitted successfully!");
-      
+
       // Reset form
       resetForm();
-      
+
     } catch (error) {
       console.error("Submission error:", error);
       toast.error(error?.data?.message || "Failed to submit form. Please try again.");
@@ -230,37 +245,37 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
           </p>
 
 
-            <div className="w-full md:w-1/2 lg:w-1/3 flex items-center justify-center mx-auto">
-              <Label className="text-sm font-medium ">
-                Select a Case to Auto fill *
-              </Label>
-              <select
-                value={selectedCaseId}
-                onChange={(e) => setSelectedCaseId(e.target.value)}
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
-              >
-                <option value="">-- Choose a case --</option>
-                {isDataLoading ? (
-                  <option disabled>Loading cases...</option>
-                ) : submissionData.length === 0 ? (
-                  <option disabled>No cases found</option>
-                ) : (
-                  submissionData.map((item) => (
-                    <option key={item._id} value={item.submissionId.caseId}>
-                      {item.submissionId.caseId} - {item.user.firstName}{" "}
-                      {item.user.lastName} ({item.status})
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
+          <div className="w-full md:w-1/2 lg:w-1/3 flex items-center justify-center mx-auto">
+            <Label className="text-sm font-medium ">
+              Select a Case to Auto fill *
+            </Label>
+            <select
+              value={selectedCaseId}
+              onChange={(e) => setSelectedCaseId(e.target.value)}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+            >
+              <option value="">-- Choose a case --</option>
+              {isDataLoading ? (
+                <option disabled>Loading cases...</option>
+              ) : submissionData.length === 0 ? (
+                <option disabled>No cases found</option>
+              ) : (
+                submissionData.map((item) => (
+                  <option key={item._id} value={item.submissionId.caseId}>
+                    {item.submissionId.caseId} - {item.user.firstName}{" "}
+                    {item.user.lastName} ({item.status})
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
         </div>
 
         <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
           <CardHeader className="w-full lg:w-1/5">
             <CardHeader className="mb-5">
               <p className="">Submission ID: <span className="font-medium">{caseId}</span></p>
-              <p className="">Submission Date: <span className="font-medium">{ moment(submissionDate).format('L')}</span></p>
+              <p className="">Submission Date: <span className="font-medium">{moment(submissionDate).format('L')}</span></p>
             </CardHeader>
           </CardHeader>
 
@@ -293,7 +308,7 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
                   id="platform-account-email"
                   type="email"
                   placeholder="Write email address"
-                  value={ platformEmail}
+                  value={platformEmail}
                   onChange={(e) => setPlatformEmail(e.target.value)}
                 />
               </div>
@@ -454,25 +469,63 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
               <label className="block text-gray-700 font-medium mb-3">
                 Upload Supporting Document (if applicable):
               </label>
-              <div className="relative">
-                <input
-                  type="file"
-                  id="document"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                />
-                <label
-                  htmlFor="document"
-                  className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                >
-                  <span className="text-gray-700">
-                    {document ? document.name : "Choose File"}
-                  </span>
-                  <span className="text-gray-500 text-sm">
-                    {document ? "" : "No file chosen"}
-                  </span>
-                </label>
+
+              <div className="space-y-4">
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="document"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  />
+                  <label
+                    htmlFor="document"
+                    className="flex items-center justify-between w-full md:w-1/2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 hover:border-primary transition-colors"
+                  >
+                    <span className="text-gray-700 font-medium">
+                      {document ? "Change File" : "Choose File"}
+                    </span>
+                    <span className="text-gray-500 text-sm">
+                      Max 32MB
+                    </span>
+                  </label>
+                </div>
+
+                {document && (
+                  <div className="relative group w-full md:w-1/2 border-2 border-gray-200 rounded-lg overflow-hidden p-2">
+                    <div className="flex items-center gap-3">
+                      {document.type.startsWith("image/") && previewUrl ? (
+                        <Image
+                          src={previewUrl}
+                          alt="Preview"
+                          width={80}
+                          height={80}
+                          className="w-20 h-20 object-cover rounded-md"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 flex items-center justify-center bg-gray-100 rounded-md">
+                          <FileText className="w-8 h-8 text-gray-500" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {document.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {(document.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeFile}
+                        className="text-red-500 hover:text-red-700 p-1"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -553,7 +606,7 @@ const submissionDate = selectedCase?.createdAt || "[Submission-Date-Here]";
         </div>
 
         <div className="w-full mt-6 flex justify-end">
-          <Button 
+          <Button
             onClick={handleSubmit}
             className="md:w-1/2 py-6 lg:w-1/5"
             disabled={isLoading}

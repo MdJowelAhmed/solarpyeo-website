@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, AlertTriangle, X, Loader2, CloudCog } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/searchFilesApi";
 import { useAppealSubmissionForPaymentMutation, useCreateAppealFormMutation } from "@/redux/featured/appealForm/appealFormApi";
@@ -19,6 +20,7 @@ const AppealRequestForm = () => {
   const [appealBasis, setAppealBasis] = useState("");
   const [digitalSignature, setDigitalSignature] = useState("");
   const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const { data: submissionFormResponse, isLoading: isDataLoading } = useSearchMySubmissionFormQuery();
@@ -54,6 +56,21 @@ const AppealRequestForm = () => {
 
   const removeFile1 = (index) =>
     setFiles(files.filter((_, i) => i !== index));
+
+  React.useEffect(() => {
+    // Create previews
+    const newPreviews = files.map((file) => ({
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file),
+    }));
+    setPreviews(newPreviews);
+
+    // Cleanup
+    return () => {
+      newPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [files]);
 
   const handleGroundChange = (ground, checked) => {
     if (checked) {
@@ -365,32 +382,48 @@ const AppealRequestForm = () => {
                     />
                   </div>
 
-                  {files.length > 0 && (
-                    <div className="mt-4 space-y-2">
-                      <p className="text-sm font-medium text-gray-700">
+                  {previews.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">
                         Uploaded Files ({files.length}/15):
                       </p>
-                      {files.map((file, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-2 bg-gray-50 rounded border"
-                        >
-                          <div className="flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-gray-600" />
-                            <span className="text-sm text-gray-700">
-                              {file.name} (
-                              {(file.size / 1024 / 1024).toFixed(2)} MB)
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeFile1(index)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
+                      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {previews.map((preview, index) => (
+                          <li key={index} className="relative group">
+                            <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary transition-colors">
+                              {preview.type.startsWith("image/") ? (
+                                <Image
+                                  src={preview.url}
+                                  alt={preview.name}
+                                  width={120}
+                                  height={120}
+                                  className="w-full h-28 object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-28 flex items-center justify-center bg-gray-50">
+                                  <div className="text-center px-2">
+                                    <div className="text-2xl mb-1">📄</div>
+                                    <div className="text-xs text-gray-600 truncate max-w-[100px]">
+                                      {preview.name.split('.').pop().toUpperCase()}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => removeFile1(index)}
+                                className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                title="Remove file"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                            <div className="text-xs mt-1 text-gray-600 truncate text-center" title={preview.name}>
+                              {preview.name}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>

@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, X } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useCreateMisuseFormMutation } from "@/redux/featured/misuseForm/misuseFormApi";
 
@@ -32,6 +33,7 @@ export default function MisuseReportForm() {
 
   // Supporting Evidence - UPDATED: Single array for multiple files
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [supportingLink, setSupportingLink] = useState("");
 
   // Resolution Requested
@@ -47,11 +49,27 @@ export default function MisuseReportForm() {
 
   // UPDATED: Handle multiple file selection
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
+    const files = event.target.files;
     if (files && files.length > 0) {
-      setSelectedFiles(files);
+      const newFiles = Array.from(files);
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
     }
   };
+
+  React.useEffect(() => {
+    // Create previews
+    const newPreviews = selectedFiles.map((file) => ({
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file),
+    }));
+    setPreviews(newPreviews);
+
+    // Cleanup
+    return () => {
+      newPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [selectedFiles]);
 
   // UPDATED: Remove individual file
   const removeFile = (indexToRemove) => {
@@ -193,403 +211,423 @@ export default function MisuseReportForm() {
 
   return (
     <div className="min-h-screen">
-   
-        {/* Title Section */}
-        <div className="bg-secondary-foreground custom-padding ">
-        
-            <div className="mb-6">
-              <div className="flex items-center justify-center gap-2">
-                <AlertTriangle className="h-8 w-8 text-red-500" />
-                <h2 className="text-2xl lg:text-4xl font-bold text-center">
-                  Misuse Report Form
-                </h2>
-                
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed text-justify max-w-2xl mx-auto mt-3">
-                Use this form to report any misuse of power, fraud, waste, abuse
-                of authority, or any violation of law or policy. Your report
-                will be treated confidentially to the extent permitted by law.
-              </p>
-            </div>
 
-            
-            <div className="">
-              <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
-                <CardHeader className="pb-4 w-full lg:w-1/5">
-                  <CardTitle>Reporter Information</CardTitle>
-                  <p className="text-sm text-gray-600 mt-1 ">
-                    Please provide your contact information. Anonymous reporting
-                    is allowed.
-                  </p>
+      {/* Title Section */}
+      <div className="bg-secondary-foreground custom-padding ">
 
-                  <div>
-                    <p className="text-sm font-medium mb-2 text-justify mt-4">
-                      Are you personally knowledgeable about the problem or
-                      event reported? (or this disclosure):
-                    </p>
-                    <RadioGroup
-                      value={isKnowledgeable}
-                      onValueChange={setIsKnowledgeable}
-                      className="flex gap-6"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="yes" id="yes" />
-                        <p htmlFor="yes">Yes</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="no" id="no" />
-                        <p htmlFor="no">No</p>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                </CardHeader>
+        <div className="mb-6">
+          <div className="flex items-center justify-center gap-2">
+            <AlertTriangle className="h-8 w-8 text-red-500" />
+            <h2 className="text-2xl lg:text-4xl font-bold text-center">
+              Misuse Report Form
+            </h2>
 
-                <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-                  <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div>
-                      <p htmlFor="fullName">Full Name *</p>
-                      <Input
-                        id="fullName"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <p htmlFor="username">Username (if applicable)</p>
-                      <Input
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                      />
-                    </div>
-                      <div>
-                      <p htmlFor="email">Email Address *</p>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={emailAddress}
-                        onChange={(e) => setEmailAddress(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-               
-
-                  <div className="flex items-center  space-x-2 mt-6">
-                    <Checkbox
-                      id="anonymous"
-                      checked={anonymousPreferred}
-                      onCheckedChange={setAnonymousPreferred}
-                    />
-                    <p htmlFor="anonymous">
-                      Prefer to remain anonymous
-                    </p>
-                  </div>
-                </CardContent>
-              </div>
-            </div>
-       
-        </div>
-
-        {/* Section 2: Nature of Misuse */}
-        <div className="custom-padding bg-secondary">
-          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
-            <CardHeader className="w-full lg:w-1/5">
-              <CardTitle className="text-red-700">
-                Nature Of The Reported Misuse
-              </CardTitle>
-              <h4 className="text-center mb-6">(Select all that apply)</h4>
-            </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-              <div className="grid md:grid-cols-1 gap-4">
-                {[
-                  "Exceeding normal budgetary expenditures",
-                  "Budgetary misapplication",
-                  "Harassment or threats per coercive funds",
-                  "Identity Misuse From winning Users",
-                  "User endorsement as conflict of interests",
-                  "Assistance of Staff information",
-                  "Data misuse, identity",
-                  "Unauthorized misuse or System forgering",
-                  "Others",
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`misuse-${index}`}
-                      checked={misuseNature.includes(item)}
-                      onCheckedChange={(checked) =>
-                        handleMisuseNatureChange(item, checked)
-                      }
-                    />
-                    <p htmlFor={`misuse-${index}`} className="text-sm">
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
           </div>
-        </div>
-
-        {/* Section 3: Subject of Complaint */}
-        <div className="custom-padding bg-secondary-foreground">
-          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
-            <CardHeader className="w-full lg:w-1/5">
-              <CardTitle className="text-red-700">Subject of The Complaint</CardTitle>
-            </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-4">
-              <div>
-                <p>
-                  Name of the Person Being or Mayor Employer (if known): *
-                </p>
-                <Input
-                  value={complaintSubject}
-                  onChange={(e) => setComplaintSubject(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <p>Email of the person (if known):</p>
-                <Input
-                  type="email"
-                  value={subjectEmail}
-                  onChange={(e) => setSubjectEmail(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <p>What was alleged official or employee:</p>
-                <div className="mt-2 space-y-2">
-                  {[
-                    "initiator",
-                    "respondent",
-                    "juror",
-                    "moderator/staff",
-                    "unknown field",
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`official-${index}`}
-                        checked={allegedOfficial.includes(item)}
-                        onCheckedChange={(checked) =>
-                          handleAllegedOfficialChange(item, checked)
-                        }
-                      />
-                      <p htmlFor={`official-${index}`} className="text-sm">
-                        {item}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </div>
-        </div>
-
-        {/* Section 4: Incident Details */}
-        <div className="custom-padding bg-secondary">
-          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
-            <CardHeader className="w-full lg:w-1/5">
-              <CardTitle className="text-red-700">Incident Details</CardTitle>
-                   <p className="text-justify">
-                Please describe the event(s), behavior(s), and any associated
-                case(s). Include dates, communication, or submissions if known.
-              </p>
-            </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-         
-
-              <div>
-                <p>Description of Incident(s): *</p>
-                <Textarea
-                  className="h-40"
-                  value={incidentDetails}
-                  onChange={(e) => setIncidentDetails(e.target.value)}
-                />
-              </div>
-            </CardContent>
-          </div>
-        </div>
-
-        {/* Section 5: Supporting Evidence */}
-        <div className="custom-padding bg-secondary-foreground">
-          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
-            <CardHeader className="w-full lg:w-1/5">
-              <CardTitle>Supporting Evidence</CardTitle>
-              <p className="text-justify">
-                Attach any documents you cite and the documents that you can
-                provide to support maintaining an administrative filing etc.
-              </p>
-            </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-
-              <div className="mb-6">
-                <p className="block text-gray-700 font-medium mb-3">
-                  Upload Files (Multiple images allowed):
-                </p>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="fileUpload"
-                    multiple
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="fileUpload"
-                    className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                  >
-                    <span className="text-gray-700">
-                      {selectedFiles.length > 0 
-                        ? `${selectedFiles.length} file(s) selected` 
-                        : "Choose File"}
-                    </span>
-                    <span className="text-gray-500 text-sm">
-                      {selectedFiles.length === 0 ? "No file chosen" : ""}
-                    </span>
-                  </label>
-                </div>
-
-                {/* Display selected files */}
-                {selectedFiles.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    {selectedFiles.map((file, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200 text-sm"
-                      >
-                        <span className="text-gray-700 truncate flex-1">
-                          {file.name}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => removeFile(index)}
-                          className="ml-2 text-red-500 hover:text-red-700 font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-8">
-                <p className="block text-gray-700 font-medium mb-3">
-                  Optional Link (e.g., Case ID or Submission URL):
-                </p>
-                <input
-                  type="text"
-                  value={supportingLink}
-                  onChange={(e) => setSupportingLink(e.target.value)}
-                  placeholder="Enter Your Supporting Link"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                />
-              </div>
-            </CardContent>
-          </div>
-        </div>
-
-        {/* Section 6: Resolution Requested */}
-        <div className="custom-padding bg-secondary">
-          <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
-            <CardHeader className="w-full lg:w-1/5">
-              <CardTitle>Resolution Requested</CardTitle>
-                <p className="mb-6 text-justify">
-                Check the outcome that you believe would correct or redress the
-                violation:
-              </p>
-            </CardHeader>
-            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
-            
-
-              <div className="grid md:grid-cols-1 gap-6">
-                {[
-                  "Criminal investigation",
-                  "Disciplinary Personnel security measures",
-                  "Personnel selection criteria",
-                  "Other financial or audit",
-                  "Money to be adding or Effective",
-                  "Disciplinary to employee and personal termina",
-                  "Investigation to check placement and Right to give and continues the community",
-                  "Others",
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`resolution-${index}`}
-                      checked={resolutionRequested.includes(item)}
-                      onCheckedChange={(checked) =>
-                        handleResolutionChange(item, checked)
-                      }
-                    />
-                    <p htmlFor={`resolution-${index}`} className="text-sm">
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </div>
-        </div>
-
-        {/* Section 7: Affirmation & Signature */}
-    
-          <div className="custom-padding bg-secondary">
-           
-            <CardContent className="">
-              <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-md">
-                
-                <p className="text-sm">
-                  I swear or affirm under penalty of perjury that the
-                  information I have provided in this complaint is true and
-                  correct to the best of my knowledge and belief. I understand
-                  that this information may be investigated and may result in
-                  legal action against the named individual(s). I also
-                  understand that knowingly filing a false complaint may subject
-                  me to criminal penalties.
-                </p>
-              </div>
-
-              <div className="flex items-start space-x-2 mt-6">
-                <Checkbox
-                  id="affirmation"
-                  checked={affirmation}
-                  onCheckedChange={setAffirmation}
-                />
-                <p htmlFor="affirmation" className="text-sm">
-                  I affirm and attest to the absolute statement. *
-                </p>
-              </div>
-            </CardContent>
-          </div>
-     
-
-        {/* Submit Section */}
-        <div className="container mx-auto">
-          <p className="mb-4">
-            Upon submission, you will receive a confirmation receipt and
-            tracking number. A member of the Platform`s{" "}
-            <strong>Compliance & Integrity Division</strong> will review your
-            report within <strong>5-10 business days</strong>. You may be
-            contacted for clarification or further evidence if needed.
+          <p className="text-gray-600 text-sm leading-relaxed text-justify max-w-2xl mx-auto mt-3">
+            Use this form to report any misuse of power, fraud, waste, abuse
+            of authority, or any violation of law or policy. Your report
+            will be treated confidentially to the extent permitted by law.
           </p>
+        </div>
 
-          <div className="flex w-full items-center mb-10 justify-end">
-            <Button
-              onClick={handleSubmit}
-              disabled={!affirmation || isLoading}
-              className={`flex ${
-                affirmation && !isLoading
-                  ? "cursor-pointer"
-                  : "opacity-50 cursor-not-allowed"
-              }`}
-            >
-              {isLoading ? "Submitting..." : "Submit Securely"}
-            </Button>
+
+        <div className="">
+          <div className="p-4 md:p-6 lg:p-8 xl:p-12 mx-auto flex flex-col lg:flex-row items-center border-2 justify-between bg-white rounded-md">
+            <CardHeader className="pb-4 w-full lg:w-1/5">
+              <CardTitle>Reporter Information</CardTitle>
+              <p className="text-sm text-gray-600 mt-1 ">
+                Please provide your contact information. Anonymous reporting
+                is allowed.
+              </p>
+
+              <div>
+                <p className="text-sm font-medium mb-2 text-justify mt-4">
+                  Are you personally knowledgeable about the problem or
+                  event reported? (or this disclosure):
+                </p>
+                <RadioGroup
+                  value={isKnowledgeable}
+                  onValueChange={setIsKnowledgeable}
+                  className="flex gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="yes" id="yes" />
+                    <p htmlFor="yes">Yes</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="no" id="no" />
+                    <p htmlFor="no">No</p>
+                  </div>
+                </RadioGroup>
+              </div>
+            </CardHeader>
+
+            <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+              <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <p htmlFor="fullName">Full Name *</p>
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <p htmlFor="username">Username (if applicable)</p>
+                  <Input
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <p htmlFor="email">Email Address *</p>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={emailAddress}
+                    onChange={(e) => setEmailAddress(e.target.value)}
+                  />
+                </div>
+              </div>
+
+
+
+              <div className="flex items-center  space-x-2 mt-6">
+                <Checkbox
+                  id="anonymous"
+                  checked={anonymousPreferred}
+                  onCheckedChange={setAnonymousPreferred}
+                />
+                <p htmlFor="anonymous">
+                  Prefer to remain anonymous
+                </p>
+              </div>
+            </CardContent>
           </div>
-       
-    </div>
+        </div>
+
+      </div>
+
+      {/* Section 2: Nature of Misuse */}
+      <div className="custom-padding bg-secondary">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="text-red-700">
+              Nature Of The Reported Misuse
+            </CardTitle>
+            <h4 className="text-center mb-6">(Select all that apply)</h4>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+            <div className="grid md:grid-cols-1 gap-4">
+              {[
+                "Exceeding normal budgetary expenditures",
+                "Budgetary misapplication",
+                "Harassment or threats per coercive funds",
+                "Identity Misuse From winning Users",
+                "User endorsement as conflict of interests",
+                "Assistance of Staff information",
+                "Data misuse, identity",
+                "Unauthorized misuse or System forgering",
+                "Others",
+              ].map((item, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`misuse-${index}`}
+                    checked={misuseNature.includes(item)}
+                    onCheckedChange={(checked) =>
+                      handleMisuseNatureChange(item, checked)
+                    }
+                  />
+                  <p htmlFor={`misuse-${index}`} className="text-sm">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Section 3: Subject of Complaint */}
+      <div className="custom-padding bg-secondary-foreground">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="text-red-700">Subject of The Complaint</CardTitle>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10 space-y-4">
+            <div>
+              <p>
+                Name of the Person Being or Mayor Employer (if known): *
+              </p>
+              <Input
+                value={complaintSubject}
+                onChange={(e) => setComplaintSubject(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>Email of the person (if known):</p>
+              <Input
+                type="email"
+                value={subjectEmail}
+                onChange={(e) => setSubjectEmail(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <p>What was alleged official or employee:</p>
+              <div className="mt-2 space-y-2">
+                {[
+                  "initiator",
+                  "respondent",
+                  "juror",
+                  "moderator/staff",
+                  "unknown field",
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`official-${index}`}
+                      checked={allegedOfficial.includes(item)}
+                      onCheckedChange={(checked) =>
+                        handleAllegedOfficialChange(item, checked)
+                      }
+                    />
+                    <p htmlFor={`official-${index}`} className="text-sm">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Section 4: Incident Details */}
+      <div className="custom-padding bg-secondary">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle className="text-red-700">Incident Details</CardTitle>
+            <p className="text-justify">
+              Please describe the event(s), behavior(s), and any associated
+              case(s). Include dates, communication, or submissions if known.
+            </p>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+
+
+            <div>
+              <p>Description of Incident(s): *</p>
+              <Textarea
+                className="h-40"
+                value={incidentDetails}
+                onChange={(e) => setIncidentDetails(e.target.value)}
+              />
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Section 5: Supporting Evidence */}
+      <div className="custom-padding bg-secondary-foreground">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle>Supporting Evidence</CardTitle>
+            <p className="text-justify">
+              Attach any documents you cite and the documents that you can
+              provide to support maintaining an administrative filing etc.
+            </p>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+
+            <div className="mb-6">
+              <p className="block text-gray-700 font-medium mb-3">
+                Upload Files (Multiple images allowed):
+              </p>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="fileUpload"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="fileUpload"
+                  className="flex items-center justify-between w-full px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                >
+                  <span className="text-gray-700">
+                    {selectedFiles.length > 0
+                      ? `${selectedFiles.length} file(s) selected`
+                      : "Choose File"}
+                  </span>
+                  <span className="text-gray-500 text-sm">
+                    {selectedFiles.length === 0 ? "No file chosen" : ""}
+                  </span>
+                </label>
+              </div>
+
+              {/* Display selected files */}
+              {previews.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Selected Files:</p>
+                  <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {previews.map((preview, index) => (
+                      <li key={index} className="relative group">
+                        <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary transition-colors">
+                          {preview.type.startsWith("image/") ? (
+                            <Image
+                              src={preview.url}
+                              alt={preview.name}
+                              width={120}
+                              height={120}
+                              className="w-full h-28 object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-28 flex items-center justify-center bg-gray-50">
+                              <div className="text-center px-2">
+                                <div className="text-2xl mb-1">📄</div>
+                                <div className="text-xs text-gray-600 truncate max-w-[100px]">
+                                  {preview.name.split('.').pop().toUpperCase()}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => removeFile(index)}
+                            className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                            title="Remove file"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <div className="text-xs mt-1 text-gray-600 truncate text-center" title={preview.name}>
+                          {preview.name}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="mb-8">
+              <p className="block text-gray-700 font-medium mb-3">
+                Optional Link (e.g., Case ID or Submission URL):
+              </p>
+              <input
+                type="text"
+                value={supportingLink}
+                onChange={(e) => setSupportingLink(e.target.value)}
+                placeholder="Enter Your Supporting Link"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Section 6: Resolution Requested */}
+      <div className="custom-padding bg-secondary">
+        <div className="p-4 md:p-6 lg:p-8 xl:p-12 border-2 mx-auto flex flex-col lg:flex-row items-center justify-between rounded-md">
+          <CardHeader className="w-full lg:w-1/5">
+            <CardTitle>Resolution Requested</CardTitle>
+            <p className="mb-6 text-justify">
+              Check the outcome that you believe would correct or redress the
+              violation:
+            </p>
+          </CardHeader>
+          <CardContent className="w-full lg:w-4/5 lg:border-l-4 lg:pl-10">
+
+
+            <div className="grid md:grid-cols-1 gap-6">
+              {[
+                "Criminal investigation",
+                "Disciplinary Personnel security measures",
+                "Personnel selection criteria",
+                "Other financial or audit",
+                "Money to be adding or Effective",
+                "Disciplinary to employee and personal termina",
+                "Investigation to check placement and Right to give and continues the community",
+                "Others",
+              ].map((item, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`resolution-${index}`}
+                    checked={resolutionRequested.includes(item)}
+                    onCheckedChange={(checked) =>
+                      handleResolutionChange(item, checked)
+                    }
+                  />
+                  <p htmlFor={`resolution-${index}`} className="text-sm">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* Section 7: Affirmation & Signature */}
+
+      <div className="custom-padding bg-secondary">
+
+        <CardContent className="">
+          <div className="bg-primary-foreground border-l-4 border-red-700 p-4 rounded-md">
+
+            <p className="text-sm">
+              I swear or affirm under penalty of perjury that the
+              information I have provided in this complaint is true and
+              correct to the best of my knowledge and belief. I understand
+              that this information may be investigated and may result in
+              legal action against the named individual(s). I also
+              understand that knowingly filing a false complaint may subject
+              me to criminal penalties.
+            </p>
+          </div>
+
+          <div className="flex items-start space-x-2 mt-6">
+            <Checkbox
+              id="affirmation"
+              checked={affirmation}
+              onCheckedChange={setAffirmation}
+            />
+            <p htmlFor="affirmation" className="text-sm">
+              I affirm and attest to the absolute statement. *
+            </p>
+          </div>
+        </CardContent>
+      </div>
+
+
+      {/* Submit Section */}
+      <div className="container mx-auto">
+        <p className="mb-4">
+          Upon submission, you will receive a confirmation receipt and
+          tracking number. A member of the Platform`s{" "}
+          <strong>Compliance & Integrity Division</strong> will review your
+          report within <strong>5-10 business days</strong>. You may be
+          contacted for clarification or further evidence if needed.
+        </p>
+
+        <div className="flex w-full items-center mb-10 justify-end">
+          <Button
+            onClick={handleSubmit}
+            disabled={!affirmation || isLoading}
+            className={`flex ${affirmation && !isLoading
+                ? "cursor-pointer"
+                : "opacity-50 cursor-not-allowed"
+              }`}
+          >
+            {isLoading ? "Submitting..." : "Submit Securely"}
+          </Button>
+        </div>
+
+      </div>
     </div>
   );
 }

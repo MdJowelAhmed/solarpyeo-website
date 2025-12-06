@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Calendar } from "lucide-react";
+import { Calendar, X, FileText } from "lucide-react";
+import Image from "next/image";
 import {
   Popover,
   PopoverContent,
@@ -27,6 +28,7 @@ export default function TechnicalSupportForm() {
   const userId = "YOUR_USER_ID_HERE"; // Replace this with actual user ID
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [initiatorDob, setInitiatorDob] = useState(null);
   const [issueDate, setIssueDate] = useState(null);
 
@@ -60,6 +62,20 @@ export default function TechnicalSupportForm() {
     }
   };
 
+  React.useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const removeFile = () => {
+    setSelectedFile(null);
+  };
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -90,24 +106,8 @@ export default function TechnicalSupportForm() {
         toast.error("Please enter your name");
         return;
       }
-      if (!formData.phone) {
-        toast.error("Please enter your phone number");
-        return;
-      }
       if (!formData.description) {
         toast.error("Please enter issue description");
-        return;
-      }
-      if (!formData.dateAndTime) {
-        toast.error("Please select the issue date");
-        return;
-      }
-      if (formData.deviceType.length === 0) {
-        toast.error("Please select device type");
-        return;
-      }
-      if (formData.browserApp.length === 0) {
-        toast.error("Please select browser/app");
         return;
       }
       if (formData.impact === "") {
@@ -131,11 +131,7 @@ export default function TechnicalSupportForm() {
 
       // Required fields
       submitData.append("name", formData.name);
-      submitData.append("phone", formData.phone);
       submitData.append("description", formData.description);
-      submitData.append("dateAndTime", formData.dateAndTime);
-      submitData.append("deviceType", formData.deviceType.join(", "));
-      submitData.append("browserApp", formData.browserApp.join(", "));
       submitData.append(
         "receiveSupport",
         (formData.receiveSupport || "").toLowerCase()
@@ -143,8 +139,17 @@ export default function TechnicalSupportForm() {
       submitData.append("scheduleCall", formData.scheduleCall);
 
       // Optional fields
-      if (formData.userName) {
-        submitData.append("userName", formData.userName);
+      if (formData.phone) {
+        submitData.append("phone", formData.phone);
+      }
+      if (formData.dateAndTime) {
+        submitData.append("dateAndTime", formData.dateAndTime);
+      }
+      if (formData.deviceType.length > 0) {
+        submitData.append("deviceType", formData.deviceType.join(", "));
+      }
+      if (formData.browserApp.length > 0) {
+        submitData.append("browserApp", formData.browserApp.join(", "));
       }
       if (formData.email) {
         submitData.append("email", formData.email);
@@ -271,7 +276,7 @@ export default function TechnicalSupportForm() {
                 />
               </div>
               <div>
-                <Label htmlFor="userName">Username (if registered):*</Label>
+                <Label htmlFor="userName">Username (if registered):</Label>
                 <Input
                   id="userName"
                   value={formData.userName}
@@ -284,7 +289,7 @@ export default function TechnicalSupportForm() {
               </div>
 
               <div>
-                <Label htmlFor="email">Email Address*</Label>
+                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
@@ -454,7 +459,7 @@ export default function TechnicalSupportForm() {
                     if (val) {
                       const d = new Date(val);
                       setIssueDate(d);
-                      handleInputChange("dateAndTime", `${val}T00:00:00.000Z`);
+                      handleInputChange("dateAndTime", val);
                     } else {
                       setIssueDate(null);
                       handleInputChange("dateAndTime", "");
@@ -495,7 +500,7 @@ export default function TechnicalSupportForm() {
                 </div>
 
                 <div>
-                  <Label>Browser Used:</Label>
+                  <Label>Operating System (OS) used:</Label>
                   <div className="mt-5 space-y-3">
                     {[
                       "Windows",
@@ -556,7 +561,6 @@ export default function TechnicalSupportForm() {
                   </div>
 
                   <div>
-                    <p>Other:</p>
                     <Input
                       className="mt-1"
                       placeholder="Please specify other details"
@@ -595,17 +599,65 @@ export default function TechnicalSupportForm() {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                <label
-                  htmlFor="file"
-                  className="flex items-center justify-between w-1/2 px-4 py-3 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                >
-                  <span className="text-gray-700">
-                    {selectedFile ? selectedFile.name : "Choose File"}
-                  </span>
-                  <span className="text-gray-500 text-sm">
-                    {selectedFile ? "" : "No file chosen"}
-                  </span>
-                </label>
+                <div className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      accept="image/*,.pdf,.doc,.docx"
+                    />
+                    <label
+                      htmlFor="file"
+                      className="flex items-center justify-between w-full md:w-1/2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 hover:border-primary transition-colors"
+                    >
+                      <span className="text-gray-700 font-medium">
+                        {selectedFile
+                          ? "Change File"
+                          : "Click to choose file"}
+                      </span>
+                      <span className="text-gray-500 text-sm">
+                        Max 32MB
+                      </span>
+                    </label>
+                  </div>
+
+                  {selectedFile && (
+                    <div className="relative group w-full md:w-1/2 border-2 border-gray-200 rounded-lg overflow-hidden p-2">
+                      <div className="flex items-center gap-3">
+                        {selectedFile.type.startsWith("image/") && previewUrl ? (
+                          <Image
+                            src={previewUrl}
+                            alt="Preview"
+                            width={80}
+                            height={80}
+                            className="w-20 h-20 object-cover rounded-md"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 flex items-center justify-center bg-gray-100 rounded-md">
+                            <FileText className="w-8 h-8 text-gray-500" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {selectedFile.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeFile}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>

@@ -11,8 +11,11 @@ import {
   Upload,
   Calendar,
   MapPin,
+  MapPin,
   AlertTriangle,
+  X,
 } from "lucide-react";
+import Image from "next/image";
 // import { useCreateRespondentSubmissionMutation } from "@/redux/api/respondentSubmissionApi";
 import { toast } from "sonner"; // or your toast library
 import { useCreateRespondentSubmissionMutation } from "@/redux/featured/RespondentSubmission/RespondentSubmissionApi";
@@ -21,16 +24,17 @@ import { useSearchMySubmissionFormQuery } from "@/redux/featured/searchFiles/sea
 export default function RespondentSubmissionForm() {
   const [selectedResponse, setSelectedResponse] = useState("deny");
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [digitalSignature, setDigitalSignature] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [createRespondentSubmission, { isLoading }] =
     useCreateRespondentSubmissionMutation();
 
-      const [selectedCaseId, setSelectedCaseId] = useState("");
+  const [selectedCaseId, setSelectedCaseId] = useState("");
   const { data: submissionFormResponse, isLoading: isDataLoading } =
     useSearchMySubmissionFormQuery();
-    console.log(submissionFormResponse);
+  console.log(submissionFormResponse);
 
   const submissionData = submissionFormResponse?.data || [];
 
@@ -44,8 +48,7 @@ export default function RespondentSubmissionForm() {
     selectedCase?.submissionId?._id || "[Submission-ID-Here]";
 
   const respondent = selectedCase
-    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${
-        selectedCase.user.lastName
+    ? `${selectedCase.user.firstName} ${selectedCase.user.middleName || ""} ${selectedCase.user.lastName
       }`.trim()
     : "[Your-Name-Here]";
   const email = selectedCase?.user?.email || "[Email-Here]";
@@ -66,8 +69,23 @@ export default function RespondentSubmissionForm() {
       return true;
     });
 
-    setUploadedFiles(validFiles);
+    setUploadedFiles((prev) => [...prev, ...validFiles]);
   };
+
+  React.useEffect(() => {
+    // Create previews
+    const newPreviews = uploadedFiles.map((file) => ({
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file),
+    }));
+    setPreviews(newPreviews);
+
+    // Cleanup
+    return () => {
+      newPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [uploadedFiles]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -147,40 +165,40 @@ export default function RespondentSubmissionForm() {
               📄 Respondent Submission Form
             </h3>
 
-             <div className="w-full flex items-center justify-center mb-6">
-                <div className="w-full md:w-1/2 lg:w-1/3 ">
-              <Label className="text-sm font-medium ">
-                Select a Case to Auto fill *
-              </Label>
-              <select
-                value={selectedCaseId}
-                onChange={(e) => setSelectedCaseId(e.target.value)}
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
-              >
-                <option value="">-- Choose a case --</option>
-                {isDataLoading ? (
-                  <option disabled>Loading cases...</option>
-                ) : submissionData.length === 0 ? (
-                  <option disabled>No cases found</option>
-                ) : (
-                  submissionData.map((item) => (
-                    <option key={item._id} value={item.submissionId.caseId}>
-                      {item.submissionId.caseId} - {item.user.firstName}{" "}
-                      {item.user.lastName} ({item.status})
-                    </option>
-                  ))
-                )}
-              </select>
+            <div className="w-full flex items-center justify-center mb-6">
+              <div className="w-full md:w-1/2 lg:w-1/3 ">
+                <Label className="text-sm font-medium ">
+                  Select a Case to Auto fill *
+                </Label>
+                <select
+                  value={selectedCaseId}
+                  onChange={(e) => setSelectedCaseId(e.target.value)}
+                  className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                >
+                  <option value="">-- Choose a case --</option>
+                  {isDataLoading ? (
+                    <option disabled>Loading cases...</option>
+                  ) : submissionData.length === 0 ? (
+                    <option disabled>No cases found</option>
+                  ) : (
+                    submissionData.map((item) => (
+                      <option key={item._id} value={item.submissionId.caseId}>
+                        {item.submissionId.caseId} - {item.user.firstName}{" "}
+                        {item.user.lastName} ({item.status})
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
             </div>
-             </div>
             <div className="space-y-2 text-sm max-w-xl mx-auto">
               <div>
-                Platform Case Reference ID:<span className="font-medium">  {caseId}</span>{" "} 
-              
+                Platform Case Reference ID:<span className="font-medium">  {caseId}</span>{" "}
+
               </div>
               <div>
                 Respondent Legal Name:<span className="font-medium"> {selectedCase?.user?.firstName} {selectedCase?.user?.middleName} {selectedCase?.user?.lastName}</span>{" "}
-               
+
               </div>
             </div>
           </div>
@@ -281,28 +299,48 @@ export default function RespondentSubmissionForm() {
                     </span>
                   )}
                 </div>
-                {uploadedFiles.length > 0 && (
-                  <div className="mt-4 space-y-2">
-                    <p className="text-sm font-medium text-gray-700">
+                {previews.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2">
                       Uploaded Files: ({uploadedFiles.length}/15)
                     </p>
-                    {uploadedFiles.map((file, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between bg-green-50 p-2 rounded"
-                      >
-                        <span className="text-sm text-green-700">
-                          {file.name}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => removeFile(index)}
-                          className="text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {previews.map((preview, index) => (
+                        <li key={index} className="relative group">
+                          <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary transition-colors">
+                            {preview.type.startsWith("image/") ? (
+                              <Image
+                                src={preview.url}
+                                alt={preview.name}
+                                width={120}
+                                height={120}
+                                className="w-full h-28 object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-28 flex items-center justify-center bg-gray-50">
+                                <div className="text-center px-2">
+                                  <div className="text-2xl mb-1">📄</div>
+                                  <div className="text-xs text-gray-600 truncate max-w-[100px]">
+                                    {preview.name.split('.').pop().toUpperCase()}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => removeFile(index)}
+                              className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                              title="Remove file"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <div className="text-xs mt-1 text-gray-600 truncate text-center" title={preview.name}>
+                            {preview.name}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
