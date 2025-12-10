@@ -183,13 +183,19 @@ const FAQCom = () => {
         {
           id: 'proc3',
           question: 'Can I appeal a decision?',
-          answer: 'Yes. Either using the case from the Appealed Request Reports in each-all-day of the options. Your economic or periodicals and we would be processed for a 2-timer service to meditate the opinion. So girl seemed, top or third level experience over 90% the reason to appeal within the specific time frame.'
+          answer: 'Yes. Either party in the case file an Appeal Request Form within 30 days of the verdict. New evidence or procedural errors must be presented for a review panel to consider the appeal. To get started, log in to your User Dashboard and find the option to appeal within the Active Cases menu.'
         },
         {
           id: 'proc4',
           question: 'How long does a record remain visible?',
-          answer: 'Records have different visibility periods: \n• Limited submission services tracking \n• Insightful promotional and subject for be it of users \n• Mediation and record submission and archived, expired open \n• Adherent submission services for or recorder a medium and method'
+          answer: `
+• Verified submissions remain indefinitely.
+• Unverified submissions are visible for up to 2 years.
+• Rejected submissions are purged within 30 days, except rejection logs.
+• Withdrawn submissions remain for 12 months if a notice was issued.
+`
         }
+
       ]
     },
     {
@@ -200,28 +206,29 @@ const FAQCom = () => {
         {
           id: 'privacy1',
           question: 'Can I view my own record?',
-          answer: 'Yes, all users may access their personal profile and case listings linked to their file. Only moderators and reviewed direct users are publicly disclosed.'
+          answer: 'Yes. All users may access their personal profile and submission history at any time. Juror voting history and moderator decisions are not publicly viewable.'
         },
         {
           id: 'privacy2',
-          question: 'What if I\'ve misunderstood or falsely wronged?',
-          answer: 'You may file a base claiming allowman-liability actions upon providing full connection to supposed law. Court, simply gathering records gotten procedural arrangement. We perform on to suggest it a change in the process when the evidence turns ready to point your challenges, if the related any need to their grant cannot access yet can react to problems list and governmental rally.'
+          question: 'What if I’m misidentified or falsely named?',
+          answer: 'You may file a User Identity Dispute / Mistaken Identity Claim, providing documentation to resolve the issue. Falsely attributed records will be removed or corrected. You will have to be logged in to begin the process within the Active Cases menu on your User Dashboard. If the case does not show in your Active Cases, you will need to contact the platform at [support@platform.org].'
         },
         {
           id: 'privacy3',
-          question: 'Can I request to audit or expunge a record?',
-          answer: 'Yes. The Request for Audit or Expunge Form is available for eligible users. Supreme reports on the type of case, time situation and collected subject.'
+          question: 'Can I request to seal or expunge a record?',
+          answer: 'Yes. The Request to Seal or Expunge Form is available for eligible cases. Approval depends on the type of case, time elapsed, and conduct history'
         },
         {
           id: 'privacy4',
           question: 'Is my data secure?',
-          answer: 'Yes, their traditional cloud encryption systems usage. Such as truthy user authentication, and modulation devices provides vast special sharing that method for providing archived authorization. When in cases and time-stamp your subscription to proven related, method mediation improvement options.'
+          answer: 'Yes. The Platform uses encrypted storage and access logs. Juror activity, user submissions, and sensitive documents are not public-facing and cannot be accessed without authorization. When a Case is Sealed or Expunged, the files affected are tasked to be removed from the online records management system'
         },
         {
           id: 'privacy5',
-          question: 'Is my data in breach confidentiality?',
-          answer: 'All our cases are performed as confidential. If usage the able of breach that do in limited, user most have case law recognised to process or circumstances to be certified, what the guidelines for is at the platform mediation services.'
+          question: 'Is my participation confidential?',
+          answer: 'Juror votes are permanently confidential, through the use of unique Juror IDs on forms. User submissions may remain private dependent on when an outcome is reached, what the outcome is, and the platform’s retention rules.'
         }
+     
       ]
     },
     {
@@ -229,15 +236,15 @@ const FAQCom = () => {
       title: '🤍 General',
       icon: <FileText className="w-5 h-5" />,
       questions: [
-        {
+       {
           id: 'general1',
           question: 'Can I delete my account?',
-          answer: 'Yes, Account Service requests must be automated and account settings are like their connected by modifying support to decision cases and retrieve services, which refresh account within platform services and so on.'
+          answer: 'Yes. Account deletion requests must be submitted via Account Settings within the User Dashboard or by contacting support. Deletion does not remove records, which remain archived under platform retention policies.'
         },
         {
           id: 'general2',
           question: 'How do I report a bug or technical problem?',
-          answer: 'Use the Help link at the top or the Contact Form in our site, associated industry up in operating.'
+          answer: 'Use the Technical Support Request Form or contact [techsupport@[platformname].org].'
         }
       ]
     }
