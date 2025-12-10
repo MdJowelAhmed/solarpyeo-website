@@ -16,11 +16,11 @@ export default function Footer() {
             <div className="col-span-1 md:col-span-1">
               <div className="flex items-center justify-center space-x-4 mb-4">
                 <div className=" flex items-center justify-center ">
-                 <Image src="/assests/logo.png" alt="logo" width={50} height={50} className="m-2 mx-auto"/>
+                  <Image src="/assests/logo.png" alt="logo" width={50} height={50} className="m-2 mx-auto" />
                 </div>
                 <span className="text-4xl ">Glass File</span>
               </div>
-         
+
             </div>
 
             {/* User Resources */}
@@ -52,7 +52,7 @@ export default function Footer() {
             <div>
               <h2 className="text-lg font-semibold mb-6">User Support & Policies</h2>
               <div className="space-y-2 text-sm">
-                <a href="#" className="block text-slate-400 hover:text-white transition-colors">
+                <a href="/faq" className="block text-slate-400 hover:text-white transition-colors">
                   FAQ
                 </a>
                 <a href="/contact" className="block text-slate-400 hover:text-white transition-colors">
@@ -85,14 +85,14 @@ export default function Footer() {
             </div> */}
           </div>
 
-             {/* Bottom Footer */}
+          {/* Bottom Footer */}
           <div className="border-t  border-slate-800 mt-8 pt-8">
             <div className="text-center text-slate-400 text-sm">
               © 2025 Glass File. All rights reserved.
             </div>
           </div>
         </div>
-     
+
       </footer>
 
     </div>

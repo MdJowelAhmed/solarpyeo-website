@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { Plus, Minus, Menu, X, Shield, Scale, HelpCircle, Users, FileText } from 'lucide-react';
+import { Plus, Minus, Menu, X, Shield, Scale, HelpCircle, Users, FileText, Check, AlertTriangle, Clock } from 'lucide-react';
 
 const FAQCom = () => {
   const [openSections, setOpenSections] = useState({});
@@ -22,32 +22,32 @@ const FAQCom = () => {
         {
           id: 'legal1',
           question: 'Is the platform a legal court?',
-          answer: 'No, the platform is not a court or law firm office. It provides insights and consultation. It is a tribunal, separately structured system but community-based online and interconnected, based on user economic interests and peer assessment, neutral reviews including the mediation system (as in all peer systems).'
+          answer: 'No! The Platform is not a court of law, nor does it replace legal or civil proceedings. It is a distinct, separate, structured system for community-based review and recordkeeping based on user-submitted evidence and peer assessments. Verified records issued by the Platform are not legal judgments.'
         },
         {
           id: 'legal2',
           question: 'Can I use platform records in court?',
-          answer: 'Platform records are in some cases recorded in shared accountability. But all records on offer or from users to platform contain good evidence, case or evidence.'
+          answer: 'Platform records are private and intended for internal accountability. Use of records in civil or criminal court is subject to local jurisdictional rules of evidence.'
         },
         {
           id: 'legal3',
-          question: 'What if the already filing a police report or threatened order?',
-          answer: 'We may find supervised mediation 100% but additional in the early or late close if prohibited. A certified that disputes, even in the early set-buy that recorded in the platform system as a notarized document offer.'
+          question: 'What if I`ve already filed a police report or restraining order?',
+          answer: 'You may include documentation from law enforcement or the courts in your case submission. In verified instances, official records may be included in the offender’s profile as a sealed or permanent entry.'
         },
         {
           id: 'legal4',
-          question: 'Can I be sued for submitting a case or acting as a juror?',
-          answer: 'All users agree to community peer-to-peer in your use strictly by the platform Terms of use. So community-built is good! You are protected under bilateral service, however, community submission only expense asked. In civil or criminal interconnection, including liability in all dimensions first!'
+          question: 'Can I be sued for submitting a case or voting as a juror?',
+          answer: 'All users agree to operate under penalty of perjury and abide by the Platform’s Terms of Use. Submissions made in good faith are protected under internal review. However, knowingly false reports may expose a user to civil or criminal consequences, including liability for defamation or fraud.'
         },
         {
           id: 'legal5',
           question: 'How does the Platform respond to subpoenas or legal orders?',
-          answer: 'The platform cooperates with valid legal requests if our international assistance are not entered into existing processes on law.'
+          answer: 'The Platform complies with valid legal process. If your information is requested, we may contact you unless prohibited by law.'
         },
         {
           id: 'legal6',
           question: 'How can I request official copies of records?',
-          answer: 'You can request records through our request system since records are the filing process and you provide evidence that deals with it. If you are a subscriber you can use our existing free-time form or use our Dashboard. You can request verified or unverified documents and there are different documentation by time.'
+          answer: 'Due to the nature of this platform`s procedures, all documentation is digitally created, and thus, official copies are digital only. If you are a named party, you can view all case files from within your User Dashboard. You may request a certified copy be mailed to you by filling out a Records Request Form. There may be fees related to a Records Request, which will be charged to you according to the Fee Policy'
         }
       ]
     },
@@ -59,22 +59,22 @@ const FAQCom = () => {
         {
           id: 'ethical1',
           question: 'How are jurors chosen?',
-          answer: 'Jurors are randomly selected from the sponsored peer-pool. Before Such medical examiners, or without party, trust background, intelligence on accountability and disclosing policy in all formats.'
+          answer: 'Jurors are randomly assigned from the approved juror pool. All jurors must complete orientation, an ethics certification, a background check, and agree to confidentiality and declare any conflicts of interest.'
         },
         {
           id: 'ethical2',
           question: 'Can I be a juror and a party in a case on the platform?',
-          answer: 'You can use the same subscription system, but not at the posted. Peer accessibility is cases when you are the litigation. Recognition of have a shared responsibility both for party and services.'
+          answer: 'Yes, but never for the same or connected cases. You will be disqualified from reviewing any case where you are the Initiator, Respondent, or have a declared relationship to any party involved.'
         },
         {
           id: 'ethical3',
           question: 'What if someone lies in their submission?',
-          answer: 'Such statements submitted in a representative system shown. If anyone is found to have knowingly submitted false information, the case will follow via the users gathered criminal, franchise or administrative. All cases in account and expense may result in legal format.'
+          answer: 'Each submission is bound by a signed perjury declaration. If a user is found to have knowingly submitted false information, the case will be visible on the user`s platform record. Repeated or malicious perjury will result in account termination and may result in legal referral.'
         },
         {
           id: 'ethical4',
           question: 'How is retaliation prevented?',
-          answer: 'We gather platform it as evidence in the platform\'s Code of Conduct. All users are protected from trusted harassment and discrimination. Also blocking using the blocked Record form, verified services on- would or generated assessments in our system!'
+          answer: 'Retaliatory behavior is a violation of the Platform`s code of conduct. All users are protected from targeted harassment and may report misuse using the Misuse Report Form. Verified retaliation will result in permanent suspension or legal referral.'
         }
       ]
     },
@@ -86,7 +86,7 @@ const FAQCom = () => {
         {
           id: 'proc1',
           question: 'What happens after I submit a case?',
-          answer: 'Success you arrange on the licensed deadline or check for arrangement, pro-activities mediation management. If accepted, the diagnostics is confirmed care greater lite operation via recognized- case provide help regulation like mediation and consequently.'
+          answer: 'Submissions undergo an Initial System Review to check for completeness, jurisdiction, and rule compliance. If accepted, the Respondent is notified and given the opportunity to respond. Juror panels then evaluate the evidence and vote anonymously.'
         },
         {
           id: 'proc2',
@@ -157,15 +157,60 @@ const FAQCom = () => {
   ];
 
   const decisionData = [
-    { label: "Verified", value: "100% voted as Verified", record: "Public Record", status: "verified", color: "bg-green-500" },
-    { label: "Disputed", value: "Majority voted as Verified", record: "Limited Access", status: "disputed", color: "bg-yellow-500" },
-    { label: "Disputed", value: "50% voted as Disputed", record: "Restricted", status: "disputed", color: "bg-red-500" },
-    { label: "Unclear in Dispute", value: "Voted and voted was final decision criteria", record: "Under Review", status: "unclear", color: "bg-gray-500" }
+    {
+      label: "Verified",
+      icon: <div className="bg-green-500 rounded p-0.5"><Check className="w-4 h-4 text-white" strokeWidth={3} /></div>,
+      labelColor: "text-green-700",
+      votes: (
+        <span>
+          100% voted as <span className="text-green-700 font-bold">Verified</span>
+        </span>
+      ),
+      record: "Respondent"
+    },
+    {
+      label: "Not Disproven",
+      icon: <AlertTriangle className="w-6 h-6 text-orange-400 fill-orange-100" />,
+      labelColor: "text-orange-400",
+      votes: (
+        <span>
+          Majority voted as <span className="text-green-700 font-bold">Verified</span>
+        </span>
+      ),
+      record: "Respondent"
+    },
+    {
+      label: "Disproven",
+      icon: <X className="w-6 h-6 text-red-500" strokeWidth={3} />,
+      labelColor: "text-red-500",
+      votes: (
+        <span>
+          100% voted as <span className="text-red-500 font-bold">Disproven</span>
+        </span>
+      ),
+      record: "Initiator"
+    },
+    {
+      label: (
+        <span className="flex flex-col leading-tight">
+          <span>Unable to</span>
+          <span>Decide</span>
+        </span>
+      ),
+      icon: <Clock className="w-6 h-6 text-gray-500" />,
+      labelColor: "text-slate-900",
+      votes: (
+        <span className="text-slate-900 block max-w-xs mx-auto">
+          Votes did not meet any final decision criteria
+        </span>
+      ),
+      record: "N/A"
+    }
   ];
 
   return (
     <div className="min-h-screen bg-secondary">
-    
+
 
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-24">
@@ -208,7 +253,7 @@ const FAQCom = () => {
                         )}
                       </div>
                     </button>
-                    
+
                     {openSections[item.id] && (
                       <div className="mt-4 pl-2">
                         <div className="text-slate-700 leading-relaxed whitespace-pre-line">
@@ -230,28 +275,32 @@ const FAQCom = () => {
               RECORDS AVAILABILITY SUBJECT TO RECORDS DETENTION
             </h2>
           </div>
-          
-          <div className="p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+
+          <div className="p-6 flex justify-center">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-300">
                 <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Decision</th>
-                    <th className="text-center py-3 px-4 font-semibold text-slate-700">Votes</th>
-                    <th className="text-center py-3 px-4 font-semibold text-slate-700">Record on</th>
+                  <tr className="bg-gray-100">
+                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Decision</th>
+                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Votes</th>
+                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Record on</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody>
                   {decisionData.map((item, index) => (
-                    <tr key={index} className="hover:bg-slate-50">
-                      <td className="py-4 px-4">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                          <span className="font-medium text-slate-800">{item.label}</span>
+                    <tr key={index} className="bg-white">
+                      <td className="py-4 px-6 border border-slate-300">
+                        <div className="flex items-center justify-center space-x-3">
+                          {item.icon}
+                          <span className={`font-bold text-lg ${item.labelColor}`}>{item.label}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-center text-slate-700">{item.value}</td>
-                      <td className="py-4 px-4 text-center text-slate-700">{item.record}</td>
+                      <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
+                        {item.votes}
+                      </td>
+                      <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
+                        {item.record}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -262,7 +311,7 @@ const FAQCom = () => {
       </main>
 
       {/* Footer */}
-    
+
     </div>
   );
 };
