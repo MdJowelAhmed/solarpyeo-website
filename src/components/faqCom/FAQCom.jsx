@@ -13,6 +13,58 @@ const FAQCom = () => {
     }));
   };
 
+  const decisionData = [
+    {
+      label: "Verified",
+      icon: <div className="bg-green-500 rounded p-0.5"><Check className="w-4 h-4 text-white" strokeWidth={3} /></div>,
+      labelColor: "text-green-700",
+      votes: (
+        <span>
+          100% voted as <span className="text-green-700 font-bold">Verified</span>
+        </span>
+      ),
+      record: "Respondent"
+    },
+    {
+      label: "Not Disproven",
+      icon: <AlertTriangle className="w-6 h-6 text-orange-400 fill-orange-100" />,
+      labelColor: "text-orange-400",
+      votes: (
+        <span>
+          Majority voted as <span className="text-green-700 font-bold">Verified</span>
+        </span>
+      ),
+      record: "Respondent"
+    },
+    {
+      label: "Disproven",
+      icon: <X className="w-6 h-6 text-red-500" strokeWidth={3} />,
+      labelColor: "text-red-500",
+      votes: (
+        <span>
+          100% voted as <span className="text-red-500 font-bold">Disproven</span>
+        </span>
+      ),
+      record: "Initiator"
+    },
+    {
+      label: (
+        <span className="flex flex-col leading-tight">
+          <span>Unable to</span>
+          <span>Decide</span>
+        </span>
+      ),
+      icon: <Clock className="w-6 h-6 text-gray-500" />,
+      labelColor: "text-slate-900",
+      votes: (
+        <span className="text-slate-900 block max-w-xs mx-auto">
+          Votes did not meet any final decision criteria
+        </span>
+      ),
+      record: "N/A"
+    }
+  ];
+
   const faqSections = [
     {
       id: 'legal',
@@ -91,7 +143,42 @@ const FAQCom = () => {
         {
           id: 'proc2',
           question: 'What are the possible outcomes?',
-          answer: 'Can the same about. This takes a price together to leave in their parameters [see: down].'
+          answer: (
+            <div className="w-full space-y-4">
+              <p className="text-slate-700">
+                See the table below. This table is also available to Jurors in their designated Juror Protocol.
+              </p>
+              <div className="w-full overflow-x-auto rounded-lg shadow-sm border border-slate-200">
+                <table className="w-full border-collapse border border-slate-300">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Decision</th>
+                      <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Votes</th>
+                      <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Record on</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {decisionData.map((item, index) => (
+                      <tr key={index} className="bg-white">
+                        <td className="py-4 px-6 border border-slate-300">
+                          <div className="flex items-center justify-center space-x-3">
+                            {item.icon}
+                            <span className={`font-bold text-lg ${item.labelColor}`}>{item.label}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
+                          {item.votes}
+                        </td>
+                        <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
+                          {item.record}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
         },
         {
           id: 'proc3',
@@ -156,57 +243,7 @@ const FAQCom = () => {
     }
   ];
 
-  const decisionData = [
-    {
-      label: "Verified",
-      icon: <div className="bg-green-500 rounded p-0.5"><Check className="w-4 h-4 text-white" strokeWidth={3} /></div>,
-      labelColor: "text-green-700",
-      votes: (
-        <span>
-          100% voted as <span className="text-green-700 font-bold">Verified</span>
-        </span>
-      ),
-      record: "Respondent"
-    },
-    {
-      label: "Not Disproven",
-      icon: <AlertTriangle className="w-6 h-6 text-orange-400 fill-orange-100" />,
-      labelColor: "text-orange-400",
-      votes: (
-        <span>
-          Majority voted as <span className="text-green-700 font-bold">Verified</span>
-        </span>
-      ),
-      record: "Respondent"
-    },
-    {
-      label: "Disproven",
-      icon: <X className="w-6 h-6 text-red-500" strokeWidth={3} />,
-      labelColor: "text-red-500",
-      votes: (
-        <span>
-          100% voted as <span className="text-red-500 font-bold">Disproven</span>
-        </span>
-      ),
-      record: "Initiator"
-    },
-    {
-      label: (
-        <span className="flex flex-col leading-tight">
-          <span>Unable to</span>
-          <span>Decide</span>
-        </span>
-      ),
-      icon: <Clock className="w-6 h-6 text-gray-500" />,
-      labelColor: "text-slate-900",
-      votes: (
-        <span className="text-slate-900 block max-w-xs mx-auto">
-          Votes did not meet any final decision criteria
-        </span>
-      ),
-      record: "N/A"
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -268,46 +305,7 @@ const FAQCom = () => {
           ))}
         </div>
 
-        {/* Records Decision Chart */}
-        <div className="mt-12 bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-100 to-slate-50 px-6 py-4 border-b">
-            <h2 className="text-xl font-semibold text-slate-800 text-center">
-              RECORDS AVAILABILITY SUBJECT TO RECORDS DETENTION
-            </h2>
-          </div>
 
-          <div className="p-6 flex justify-center">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full border-collapse border border-slate-300">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Decision</th>
-                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Votes</th>
-                    <th className="py-4 px-6 text-center font-bold text-slate-900 border border-slate-300 text-lg">Record on</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {decisionData.map((item, index) => (
-                    <tr key={index} className="bg-white">
-                      <td className="py-4 px-6 border border-slate-300">
-                        <div className="flex items-center justify-center space-x-3">
-                          {item.icon}
-                          <span className={`font-bold text-lg ${item.labelColor}`}>{item.label}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
-                        {item.votes}
-                      </td>
-                      <td className="py-4 px-6 text-center text-lg text-slate-700 border border-slate-300 font-medium">
-                        {item.record}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer */}
