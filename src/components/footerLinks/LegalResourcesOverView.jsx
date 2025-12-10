@@ -76,19 +76,19 @@ export default function LegalResourcesOverView() {
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <span>•</span>
-                <a href="#" className="text-blue-600 font-bold underline">
+                <a href="https://www.americanbar.org/groups/legal_services/flh-home/flh-bar-directories-and-lawyer-finders" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline">
                   American Bar Association (ABA) Lawyer Referral Directory
                 </a>
               </div>
               <div className="flex items-start gap-2">
                 <span>•</span>
-                <a href="#" className="text-blue-600 font-bold underline">
+                <a href="https://www.lsc.gov" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline">
                   Legal Aid Services By State
                 </a>
               </div>
               <div className="flex items-start gap-2">
                 <span>•</span>
-                <a href="#" className="text-blue-600 font-bold underline">
+                <a href="https://victimbar.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline">
                   National Crime Victim Bar Association
                 </a>
               </div>
@@ -119,7 +119,7 @@ export default function LegalResourcesOverView() {
               <div>
                 <span className="font-semibold">National Domestic Violence Hotline</span>
                 <span className="text-gray-700"> – 1-800-799-7233 | </span>
-                <a href="#" className="text-blue-600 underline">Thehotline.Org</a>
+                <a href="https://thehotline.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">thehotline.org</a>
               </div>
             </div>
             <div className="flex items-start gap-2">
@@ -127,7 +127,7 @@ export default function LegalResourcesOverView() {
               <div>
                 <span className="font-semibold">RAINN (Rape, Abuse & Incest National Network)</span>
                 <span className="text-gray-700"> – 1-800-656-HOPE | </span>
-                <a href="#" className="text-blue-600 underline">Rainn.Org</a>
+                <a href="https://rainn.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">rainn.org</a>
               </div>
             </div>
             <div className="flex items-start gap-2">
@@ -135,7 +135,7 @@ export default function LegalResourcesOverView() {
               <div>
                 <span className="font-semibold">Cyber Civil Rights Initiative</span>
                 <span className="text-gray-700"> – </span>
-                <a href="#" className="text-blue-600 underline">Cybercivilrights.Org</a>
+                <a href="https://cybercivilrights.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">cybercivilrights.org</a>
                 <span className="text-gray-700"> for image-based abuse or online harassment</span>
               </div>
             </div>
@@ -240,19 +240,19 @@ export default function LegalResourcesOverView() {
           <div className="space-y-5">
             <div className="flex items-start gap-2">
               <span>•</span>
-              <a href="#" className="text-blue-600 font-semibold underline">
+              <a href="https://stoprelationshipabuse.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold underline">
                 The Center For Relationship Abuse Awareness
               </a>
             </div>
             <div className="flex items-start gap-2">
               <span>•</span>
-              <a href="#" className="text-blue-600 font-semibold underline">
+              <a href="https://www.knowyourix.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold underline">
                 Know Your IX (Title IX Rights And Legal Advocacy)
               </a>
             </div>
             <div className="flex items-start gap-2">
               <span>•</span>
-              <a href="#" className="text-blue-600 font-semibold underline">
+              <a href="https://www.aclu.org/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold underline">
                 ACLU Resources On Civil Liberties & Abuse
               </a>
             </div>

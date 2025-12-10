@@ -60,7 +60,7 @@ const GovernanceCharterOverview = () => {
                     </div>
                     <div className="flex items-start space-x-3">
                       <p className="text-sm text-slate-600">
-                        2.Ensure compliance with regulatory requirements and
+                        2. Ensure compliance with regulatory requirements and
                         industry best practices
                       </p>
                     </div>
@@ -74,13 +74,13 @@ const GovernanceCharterOverview = () => {
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
                       <p className="text-sm text-slate-600">
-                        4.Facilitate stakeholder engagement and community
+                        4. Facilitate stakeholder engagement and community
                         participation
                       </p>
                     </div>
                     <div className="flex items-start space-x-3">
                       <p className="text-sm text-slate-600">
-                        5.Maintain data privacy, security, and user
+                        5. Maintain data privacy, security, and user
                         confidentiality standards
                       </p>
                     </div>
@@ -157,80 +157,51 @@ const GovernanceCharterOverview = () => {
             {/* <Separator /> */}
 
             {/* 2.2 Oversight Board Composition And Powers */}
+            {/* 2.2 Oversight Board Composition And Powers */}
             <div>
-              {/* <h3 className="font-semibold mb-3 text-lg text-slate-900">
-                2.2 Oversight Board Composition And Powers
-              </h3>
-              <p className="mb-4">
-                The Oversight Board shall be composed of a minimum of three (3)
-                and no more than seven (7) members, each appointed for a
-                two-year renewable term. The Board shall:
-              </p> */}
+              <h2 className="font-semibold mb-3 text-lg">
+                2.2 Oversight Board Composition and Powers
+              </h2>
+              <p className="mb-4 text-slate-700">
+                The Oversight Board shall be composed of a minimum of
+                three (3) and no more than seven (7) members, each
+                appointed for a two-year renewable term. The Board shall:
+              </p>
+              <ul className="space-y-2 list-disc list-inside text-slate-700">
+                <li>Strategic direction setting</li>
+                <li>Policy approval and oversight</li>
+                <li>Performance monitoring</li>
+                <li>Risk assessment and mitigation</li>
+                <li>Stakeholder representation</li>
+              </ul>
+            </div>
 
-              <div className="grid md:grid-cols-1 gap-4">
-                {/* <div className="">
-                  <CardContent className="p-4">
-                    <h2 className="font-medium text-lg mb-2">
-                      2.1 Organizational Chain of Authority
-                    </h2>
-                    <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                      <li>Independent Chairperson</li>
-                      <li>Technology Expert</li>
-                      <li>Legal and Compliance Advisor</li>
-                      <li>Community Representative</li>
-                      <li>Industry Specialist</li>
-                    </ul>
-                  </CardContent>
-                </div> */}
+            {/* 2.3 Moderator Panel Responsibilities */}
+            <div>
+              <h2 className="font-semibold mb-3 text-lg">
+                2.3 Moderator Panel Responsibilities
+              </h2>
+              <ul className="space-y-2 list-disc list-inside text-slate-700">
+                <li>Strategic direction setting</li>
+                <li>Policy approval and oversight</li>
+                <li>Performance monitoring</li>
+                <li>Risk assessment and mitigation</li>
+                <li>Stakeholder representation</li>
+              </ul>
+            </div>
 
-                <div className="">
-                  <CardContent className="p-4">
-                    <h2 className="font-medium text-lg mb-5">
-                      2.2 Oversight Board Composition and Powers
-                    </h2>
-                    <p className="text-sm mb-3">
-                      The Oversight Board shall be composed of a minimum of
-                      three (3) and no more than seven (7) members, each
-                      appointed for a two-year renewable term. The Board shall:
-                    </p>
-                    <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                      <li>Strategic direction setting</li>
-                      <li>Policy approval and oversight</li>
-                      <li>Performance monitoring</li>
-                      <li>Risk assessment and mitigation</li>
-                      <li>Stakeholder representation</li>
-                    </ul>
-                  </CardContent>
-                </div>
-                <div className="">
-                  <CardContent className="p-4">
-                    <h2 className="font-medium text-lg mb-5">
-                      2.3 Moderator Panel Responsibilities
-                    </h2>
-                    <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                      <li>Strategic direction setting</li>
-                      <li>Policy approval and oversight</li>
-                      <li>Performance monitoring</li>
-                      <li>Risk assessment and mitigation</li>
-                      <li>Stakeholder representation</li>
-                    </ul>
-                  </CardContent>
-                </div>
-                <div className="">
-                  <CardContent className="p-4">
-                    <h2 className="font-medium text-lg mb-5">
-                      2.4 Juror Corps Responsibilities
-                    </h2>
-                    <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-                      <li>Strategic direction setting</li>
-                      <li>Policy approval and oversight</li>
-                      <li>Performance monitoring</li>
-                      <li>Risk assessment and mitigation</li>
-                      <li>Stakeholder representation</li>
-                    </ul>
-                  </CardContent>
-                </div>
-              </div>
+            {/* 2.4 Juror Corps Responsibilities */}
+            <div>
+              <h2 className="font-semibold mb-3 text-lg">
+                2.4 Juror Corps Responsibilities
+              </h2>
+              <ul className="space-y-2 list-disc list-inside text-slate-700">
+                <li>Strategic direction setting</li>
+                <li>Policy approval and oversight</li>
+                <li>Performance monitoring</li>
+                <li>Risk assessment and mitigation</li>
+                <li>Stakeholder representation</li>
+              </ul>
             </div>
           </CardContent>
         </div>
@@ -399,9 +370,9 @@ const GovernanceCharterOverview = () => {
             <Separator />
 
             <div>
-              <h3 className="font-semibold mb-3 text-slate-900">
+              <h2 className="font-semibold mb-5 text-lg text-slate-900">
                 5.2 Sanctions And Disciplinary Authority
-              </h3>
+              </h2>
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
                   <span className="">1</span>
@@ -476,10 +447,10 @@ const GovernanceCharterOverview = () => {
         {/* Section 7.0 - Charter Amendment & Transparency */}
         <div className="mb-8 container mx-auto">
           <CardHeader className="">
-            <h2 className="mb-5">
+            <h3 className="">
               {/* <Users className="w-5 h-5" /> */}
               <span>SECTION 7.0 — CHARTER AMENDMENT & TRANSPARENCY</span>
-            </h2>
+            </h3>
           </CardHeader>
           <CardContent className=" space-y-6">
             <div>
