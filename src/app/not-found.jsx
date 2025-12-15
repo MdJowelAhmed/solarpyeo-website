@@ -1,3 +1,6 @@
+"use client"
+
+
 import React from 'react';
 import { AlertCircle, Home, ArrowLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,7 +41,9 @@ export default function NotFound() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="inline-flex items-center justify-center gap-2  text-white font-medium px-6 rounded-md transition-all duration-200 shadow-lg  py-6 transform hover:-translate-y-0.5">
+            <Button 
+            onClick={() => window.location.href = '/'}
+            className="inline-flex items-center justify-center gap-2  text-white font-medium px-6 rounded-md transition-all duration-200 shadow-lg  py-6 transform hover:-translate-y-0.5">
               <Home className="w-5 h-5" />
               Return Home
             </Button>

@@ -47,7 +47,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="max-w-7xl mx-auto px-4  text-center min-h-[80vh] flex items-center justify-center">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24">
         {/* Left Column - Form */}
         <div>

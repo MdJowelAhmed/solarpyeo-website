@@ -23,25 +23,14 @@ export default function LoginUser() {
   const router = useRouter();
 
   const handleTogglePassword = () => setShowPassword((prev) => !prev);
-  // const {data:accessData}=useGetMyAccessQuery()
-  // const access=accessData?.data?.hasAccess
-
-
-
 
 const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-      console.log(res);
       const accessToken = res.data.accessToken;
-      console.log(accessToken);
-
-      // Save tokens to localStorage
+   
       localStorage.setItem("token", accessToken);
-
-
-      // Dispatch only accessToken (no user)
       dispatch(loginSuccess(accessToken));
 
       // Redirect
