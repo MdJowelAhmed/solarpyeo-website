@@ -2,10 +2,12 @@
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function PigeonHub() {
+  const router=useRouter();
   const handleFileNewRecordClick = () => {
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
   };
 
   return (
