@@ -28,7 +28,6 @@ import {
 import ProfileIcon from "./ProfileIcon";
 import { getImageUrl } from "../share/imageUrl";
 import { toast } from "sonner";
-import { useRunningPackageQuery } from "@/redux/featured/Package/packageApi";
 import Spinner from "../../app/(commonLayout)/Spinner";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -54,8 +53,6 @@ export default function ProfileDashboardComponents() {
   });
   const [phoneError, setPhoneError] = useState("");
   console.log(userData);
-  const { data: packageResponse } = useRunningPackageQuery();
-  const packageData = packageResponse?.data;
 
   useEffect(() => {
     if (userData) {

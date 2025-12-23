@@ -2,12 +2,11 @@
 import Spinner from "@/app/(commonLayout)/Spinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useGetMyAccessQuery } from "@/redux/featured/Package/packageApi";
+
 
 const PrivateRoute = ({ children }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  // const { data: accessData, isLoading: accessLoading } = useGetMyAccessQuery();
 
   useEffect(() => {
     const token = localStorage.getItem("token");

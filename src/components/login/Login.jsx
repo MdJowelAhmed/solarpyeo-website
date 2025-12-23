@@ -11,7 +11,6 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/redux/featured/auth/authSlice"; // Import your authSlice actions
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useGetMyAccessQuery } from "@/redux/featured/Package/packageApi";
 
 export default function LoginUser() {
   const [showPassword, setShowPassword] = useState(false);

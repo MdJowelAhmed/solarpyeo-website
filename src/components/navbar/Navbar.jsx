@@ -38,7 +38,7 @@ import {
   useUserDeleteAccountMutation,
 } from "@/redux/featured/auth/authApi";
 import {
-  useGetNotificationQuery,
+  // useGetNotificationQuery,
   useReadOneNotificationMutation,
   useReadAllNotificationMutation,
 } from "@/redux/featured/notification/NotificationApi";
@@ -59,7 +59,6 @@ import { Input } from "@/components/ui/input";
 import NotificationPagination from "./PaginationInNotification";
 import Spinner from "@/app/(commonLayout)/Spinner";
 import { toast } from "react-hot-toast";
-import { useGetMyAccessQuery } from "@/redux/featured/Package/packageApi";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -79,8 +78,6 @@ export default function Navbar() {
   const socketRef = useRef(null);
   const profileRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
-  const { data: accessData } = useGetMyAccessQuery();
-  const access = accessData?.data;
   // console.log(access);
 
   // Constants
@@ -91,22 +88,22 @@ export default function Navbar() {
   // Redux queries and mutations
   const { data: userData } = useMyProfileQuery();
   //  console.log(userData);
-  const {
-    data: notificationData,
-    isLoading,
-    refetch,
-  } = useGetNotificationQuery(
-    {
-      page: currentPage,
-      limit: NOTIFICATIONS_PER_PAGE,
-    },
-    {
-      pollingInterval: 30000, // Poll every 30 seconds
-      refetchOnMountOrArgChange: true,
-      refetchOnFocus: true,
-      refetchOnReconnect: true,
-    }
-  );
+  // const {
+  //   data: notificationData,
+  //   isLoading,
+  //   refetch,
+  // } = useGetNotificationQuery(
+  //   {
+  //     page: currentPage,
+  //     limit: NOTIFICATIONS_PER_PAGE,
+  //   },
+  //   {
+  //     pollingInterval: 30000, // Poll every 30 seconds
+  //     refetchOnMountOrArgChange: true,
+  //     refetchOnFocus: true,
+  //     refetchOnReconnect: true,
+  //   }
+  // );
   // console.log(notificationData);
 
   const [readOneNotification] = useReadOneNotificationMutation();
@@ -114,158 +111,6 @@ export default function Navbar() {
   const [userDeleteAccount, { isLoading: isDeleteLoading }] =
     useUserDeleteAccountMutation();
 
-  // Calculate unread count from API response
-  const unreadCount = notificationData?.data?.unreadCount || 0;
-  // console.log(unreadCount);
-
-  // Improved Socket.IO setup with better error handling and reconnection
-  useEffect(() => {
-    if (!userData?._id) return;
-
-    const connectSocket = () => {
-      // Clean up existing connection
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-
-      // Initialize socket connection with improved configuration
-      // socketRef.current = io("http://10.10.7.62:7000", {
-      socketRef.current = io("https://api.yogawithjen.life", {
-        transports: ["websocket", "polling"], // Fallback to polling if websocket fails
-        upgrade: true,
-        rememberUpgrade: true,
-        timeout: 20000, // Connection timeout
-        reconnection: true,
-        reconnectionAttempts: MAX_RECONNECTION_ATTEMPTS,
-        reconnectionDelay: RECONNECTION_DELAY,
-        reconnectionDelayMax: 10000,
-        forceNew: true, // Force a new connection
-        autoConnect: true,
-        query: {
-          userId: userData._id,
-        },
-      });
-
-      const handleNewNotification = (data) => {
-        console.log("New notification received:", data);
-        // Force refetch to get latest notifications
-        refetch();
-
-        // Show toast notification if data is provided
-        if (data && data.message) {
-          toast.success(`New notification: ${data.message}`);
-        }
-      };
-
-      // Connection event handlers
-      socketRef.current.on("connect", () => {
-        console.log(
-          "Socket connected successfully with ID:",
-          socketRef.current.id
-        );
-        setIsSocketConnected(true);
-        setConnectionAttempts(0);
-
-        // Join user-specific room with confirmation
-        socketRef.current.emit("join-user-room", userData._id, (response) => {
-          console.log("Joined user room response:", response);
-        });
-
-        // Also emit join-room event as fallback
-        socketRef.current.emit("join-room", userData._id);
-
-        console.log(`User ${userData._id} joined notification room`);
-      });
-
-      socketRef.current.on("disconnect", (reason) => {
-        console.log("Socket disconnected:", reason);
-        setIsSocketConnected(false);
-
-        // Don't attempt to reconnect if it was intentional
-        if (reason === "io client disconnect") return;
-
-        // Handle automatic reconnection for other disconnect reasons
-        if (connectionAttempts < MAX_RECONNECTION_ATTEMPTS) {
-          setConnectionAttempts((prev) => prev + 1);
-          console.log(
-            `Attempting to reconnect... (${
-              connectionAttempts + 1
-            }/${MAX_RECONNECTION_ATTEMPTS})`
-          );
-        }
-      });
-
-      socketRef.current.on("connect_error", (error) => {
-        console.error("Socket connection error:", error.message);
-        setIsSocketConnected(false);
-
-        // Implement exponential backoff for reconnection
-        if (connectionAttempts < MAX_RECONNECTION_ATTEMPTS) {
-          const delay = RECONNECTION_DELAY * Math.pow(2, connectionAttempts);
-          console.log(`Retrying connection in ${delay / 1000} seconds...`);
-
-          reconnectTimeoutRef.current = setTimeout(() => {
-            setConnectionAttempts((prev) => prev + 1);
-            connectSocket();
-          }, delay);
-        } else {
-          console.error(
-            "Max reconnection attempts reached. Please refresh the page."
-          );
-        }
-      });
-
-      socketRef.current.on("reconnect", (attemptNumber) => {
-        console.log(`Reconnected after ${attemptNumber} attempts`);
-        setIsSocketConnected(true);
-        setConnectionAttempts(0);
-      });
-
-      socketRef.current.on("reconnect_error", (error) => {
-        console.error("Reconnection error:", error.message);
-      });
-
-      socketRef.current.on("reconnect_failed", () => {
-        console.error("Failed to reconnect after maximum attempts");
-        setIsSocketConnected(false);
-      });
-
-      // Listen for notifications with proper event names
-      socketRef.current.on(
-        `notification::${userData._id}`,
-        handleNewNotification
-      );
-
-      socketRef.current.on("new-notification", handleNewNotification);
-      socketRef.current.on("notification", handleNewNotification);
-      socketRef.current.on(
-        `user-${userData._id}-notification`,
-        handleNewNotification
-      );
-    };
-
-    // Initial connection
-    connectSocket();
-
-    // Cleanup function
-    return () => {
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
-
-      if (socketRef.current) {
-        socketRef.current.off(`notification::${userData._id}`);
-        socketRef.current.off("new-notification");
-        socketRef.current.off("notification");
-        socketRef.current.off(`user-${userData._id}-notification`);
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-
-      setIsSocketConnected(false);
-    };
-  }, [userData?._id, refetch, connectionAttempts]);
 
   // Enhanced account delete handler with better debugging and error handling
   const handleDeleteAccount = async () => {
@@ -333,14 +178,14 @@ export default function Navbar() {
   };
 
   // Update notifications state when data changes
-  useEffect(() => {
-    if (notificationData?.data) {
-      const data = notificationData.data;
-      setNotifications(data.result || []);
-      setTotalPages(data.pagination?.totalPage || 1);
-      setTotalNotifications(data.pagination?.total || 0);
-    }
-  }, [notificationData]);
+  // useEffect(() => {
+  //   if (notificationData?.data) {
+  //     const data = notificationData.data;
+  //     setNotifications(data.result || []);
+  //     setTotalPages(data.pagination?.totalPage || 1);
+  //     setTotalNotifications(data.pagination?.total || 0);
+  //   }
+  // }, [notificationData]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -761,90 +606,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Notification Dialog */}
-      <Dialog
-        open={isNotificationModalOpen}
-        onOpenChange={setIsNotificationModalOpen}
-      >
-        <DialogContent className="w-[400px] max-w-[400px] top-96 right-4 lg:left-auto lg:transform-none max-h-[640px] overflow-hidden">
-          <DialogHeader className="px- pt-4">
-            <DialogTitle className="flex items-center justify-between">
-              <span>Notifications </span>
-              <div className="flex items-center space-x-2">
-                {unreadCount > 0 && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={markAllAsRead}
-                    className="text-xs"
-                  >
-                    Mark All Read
-                  </Button>
-                )}
-              </div>
-            </DialogTitle>
-          </DialogHeader>
 
-          <div className="flex flex-col h-[calc(630px-120px)]">
-            <ScrollArea className="flex-1 pr-4 overflow-y-auto">
-              <div className="space-y-3">
-                {notifications.length === 0 && !isLoading ? (
-                  <div className="text-center py-8 text-gray-500">
-                    No notifications yet
-                  </div>
-                ) : isLoading ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <Spinner />
-                  </div>
-                ) : (
-                  notifications.map((notification) => (
-                    <div
-                      key={notification._id}
-                      className={`p-4 rounded-lg border transition-colors ${
-                        notification.read
-                          ? "bg-gray-50 border-gray-200"
-                          : "bg-blue-50 border-primary"
-                      }`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-800 mb-1">
-                            {notification.message}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {formatDate(notification.createdAt)}
-                          </p>
-                        </div>
-                        {!notification.read && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => markAsRead(notification._id)}
-                            className="ml-2 text-xs"
-                          >
-                            Mark as Read
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-4 pt-4 border-t">
-                <NotificationPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Enhanced Delete Account Modal */}
       {/* <AlertDialog open={open} onOpenChange={(isOpen) => {
